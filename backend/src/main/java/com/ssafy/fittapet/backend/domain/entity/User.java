@@ -1,19 +1,15 @@
 package com.ssafy.fittapet.backend.domain.entity;
 
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
-import lombok.AccessLevel;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
+import com.ssafy.fittapet.backend.common.constant.Role;
+import com.ssafy.fittapet.backend.common.constant.UserTier;
+import jakarta.persistence.*;
+import lombok.*;
 
 @Entity
 @Getter
-@NoArgsConstructor(access = AccessLevel.PROTECTED)
+@Builder
 @AllArgsConstructor
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class User extends BaseEntity{
 
     @Id
@@ -22,6 +18,14 @@ public class User extends BaseEntity{
     private Long id;
 
     private String userNickname;
+    private String userName;
+    private String providerId;
+    private String provider;
 
+    @Enumerated(EnumType.STRING)
+    private UserTier userTier;
+
+    @Enumerated(EnumType.STRING)
+    private Role role;
 
 }
