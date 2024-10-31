@@ -15,5 +15,9 @@ public class PersonalQuest {
     @Column(name = "personal_quest_id")
     private Long id;
 
+    @ManyToOne(fetch = FetchType.LAZY)
+    private Quest quest;
 
+    @ManyToOne(fetch = FetchType.LAZY)
+    private User user;
 }
