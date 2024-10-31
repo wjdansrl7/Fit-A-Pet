@@ -16,8 +16,13 @@ public class PersonalQuest {
     private Long id;
 
     @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "quest_id")
     private Quest quest;
 
     @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "user_id")
     private User user;
+
+    private boolean questStatus;
+
 }

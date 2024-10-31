@@ -24,6 +24,7 @@ public class Quest {
     private QuestTier questTier;
 
     private long questReward;
+
     private String questName;
 
     @Enumerated(EnumType.STRING)
