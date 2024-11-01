@@ -21,9 +21,13 @@ public class Map {
     @JoinColumn(name = "group_id")
     private Group group;
 
+    @Column
+    private Long groupPosition;
+
     @Builder
-    public Map(User user, Group group) {
+    public Map(User user, Group group, Long groupPosition) {
         this.user = user;
         this.group = group;
+        this.groupPosition = groupPosition;
     }
 }
