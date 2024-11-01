@@ -11,7 +11,12 @@ module.exports = {
   ],
   ignorePatterns: ['dist', '.eslintrc.cjs', 'node_modules'],
   parserOptions: { ecmaVersion: 'latest', sourceType: 'module' },
-  settings: { react: { version: '18.2' } },
+  settings: { 
+    react: { version: '18.2' },
+    'import/resolver': {
+      'babel-module': {}, // babel-module을 import/resolver에 추가
+    },
+  },
   plugins: ['react-refresh', 'prettier', 'react-native'],
   rules: {
     'react/jsx-no-target-blank': 'off',
