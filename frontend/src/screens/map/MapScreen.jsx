@@ -1,12 +1,25 @@
 import React from 'react';
-import { StyleSheet, Text, View, ImageBackground } from 'react-native';
-import mapImg from '@assets/backgrounds/group/mapImg.webp'; // 이미지 절대경로 import
+import { StyleSheet, View, ImageBackground, Image } from 'react-native';
+import map2x from '@assets/backgrounds/group/map2x.webp';
+import house1x from '@assets/backgrounds/group/house1x.webp';
+import house2x from '@assets/backgrounds/group/house2x.webp';
+import house3x from '@assets/backgrounds/group/house3x.webp';
+import house4x from '@assets/backgrounds/group/house4x.webp';
 
 const MapScreen = () => {
   return (
     <View style={styles.container}>
-      <ImageBackground source={mapImg} style={styles.backgroundImage}>
-        <Text style={styles.text}>map</Text>
+      <ImageBackground
+        source={map2x}
+        style={styles.backgroundImage}
+        resizeMode="cover"
+      >
+        {/* 두 번째 webp 이미지 */}
+        <Image
+          source={house4x}
+          style={styles.overlayImage}
+          resizeMode="contain"
+        />
       </ImageBackground>
     </View>
   );
@@ -18,13 +31,15 @@ const styles = StyleSheet.create({
   },
   backgroundImage: {
     flex: 1,
-    justifyContent: 'center', // 텍스트를 가운데 정렬
-    alignItems: 'center', // 텍스트를 가운데 정렬
+    justifyContent: 'center', // 텍스트를 중앙에 배치
+    alignItems: 'center',
   },
-  text: {
-    color: 'white', // 배경과 대비되는 색상 설정
-    fontSize: 24,
-    fontWeight: 'bold',
+  overlayImage: {
+    position: 'absolute', // 원하는 위치에 배치하기 위해 절대 위치 사용
+    top: '45%', // 화면 상단에서부터 20% 아래
+    left: '10%', // 화면 왼쪽에서부터 30% 오른쪽으로 이동
+    width: 100, // 이미지 너비
+    height: 100, // 이미지 높이
   },
 });
 
