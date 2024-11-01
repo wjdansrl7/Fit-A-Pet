@@ -1,0 +1,30 @@
+# 빌드 관련 폴더 (Android/iOS 네이티브 코드)
+android/
+ios/
+
+# Node 모듈 폴더
+node_modules/
+
+# 빌드/번들링된 결과물 폴더
+dist/
+build/
+
+# 잠금 파일 (의존성 버전 고정)
+yarn.lock
+package-lock.json
+
+# 환경 설정 파일 (일반적으로 포맷팅 제외)
+babel.config.js
+metro.config.js
+jest.config.js
+
+# ESLint와 Prettier 설정 파일
+.eslintrc.js
+.prettierrc.js
+
+# Jest 테스트 커버리지 폴더 (테스트 결과물)
+coverage/
+
+# 특정 파일 (필요한 경우만 추가)
+App.jsx
+index.js
