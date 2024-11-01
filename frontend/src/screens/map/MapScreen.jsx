@@ -2,7 +2,7 @@ import React from 'react';
 import { StyleSheet, Text, View, ImageBackground } from 'react-native';
 import mapImg from '@assets/backgrounds/group/mapImg.webp'; // 이미지 절대경로 import
 
-const Map = () => {
+const MapScreen = () => {
   return (
     <View style={styles.container}>
       <ImageBackground source={mapImg} style={styles.backgroundImage}>
@@ -28,4 +28,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default Map;
+export default MapScreen;
