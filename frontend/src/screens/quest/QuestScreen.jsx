@@ -1,18 +1,20 @@
 import React from 'react';
-import { StyleSheet, View } from 'react-native';
+import { Text, StyleSheet, View } from 'react-native';
 import { colors } from '@src/constants';
 
 function QuestScreen() {
-  return <View></View>;
+  return (
+    <View>
+      <Text>퀘스트 스크린</Text>
+    </View>
+  );
 }
 
 const styles = StyleSheet.create({
   container: {
-    flex,
     gap: 20,
   },
   questContainer: {
-    flex,
     paddingHorizontal: 20,
     gap: 14,
   },

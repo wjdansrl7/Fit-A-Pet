@@ -3,6 +3,7 @@ import { SafeAreaView, StyleSheet, Text } from 'react-native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import { NavigationContainer } from '@react-navigation/native';
 import MainScreen from '@screens/main/MainScreen';
+import QuestScreen from '@screens/quest/QuestScreen';
 
 const Stack = createNativeStackNavigator();
 
@@ -12,10 +13,15 @@ function App() {
     <NavigationContainer>
       {isLoggedIn ? (
         <Stack.Navigator screenOptions={{ headerShown: false }}>
-          <Stack.Screen
+          {/* <Stack.Screen
             name="Main"
             component={MainScreen}
             options={{ title: '메인' }}
+          /> */}
+          <Stack.Screen
+            name="Quest"
+            component={QuestScreen}
+            options={{ title: '퀘스트 모아보기' }}
           />
         </Stack.Navigator>
       ) : null}
