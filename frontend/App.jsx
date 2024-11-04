@@ -1,32 +1,42 @@
 import React, { useState } from 'react';
-import { SafeAreaView, StyleSheet, Text } from 'react-native';
+import { QueryClientProvider } from '@tanstack/react-query';
+import { StyleSheet } from 'react-native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import { NavigationContainer } from '@react-navigation/native';
 import MainScreen from '@screens/main/MainScreen';
 import QuestScreen from '@screens/quest/QuestScreen';
+import LoginScreen from '@screens/login/LoginScreen';
+import queryClient from '@src/api/queryClient';
 
 const Stack = createNativeStackNavigator();
 
 function App() {
   const [isLoggedIn, setIsLoggedIn] = useState(true);
   return (
-    <NavigationContainer>
-      {isLoggedIn ? (
-        <Stack.Navigator screenOptions={{ headerShown: false }}>
-          {/* <Stack.Screen
+    <QueryClientProvider client={queryClient}>
+      <NavigationContainer>
+        {isLoggedIn ? (
+          <Stack.Navigator screenOptions={{ headerShown: false }}>
+            {/* <Stack.Screen
             name="Main"
             component={MainScreen}
             options={{ title: '메인' }}
           /> */}
-          <Stack.Screen
-            name="Quest"
-            component={QuestScreen}
-            options={{ title: '퀘스트 모아보기' }}
-          />
-        </Stack.Navigator>
-      ) : null}
-      {/* 여기에 로그인페이지 넣으세여 */}
-    </NavigationContainer>
+            <Stack.Screen
+              name="Login"
+              component={LoginScreen}
+              options={{ title: '로그인' }}
+            />
+            <Stack.Screen
+              name="Quest"
+              component={QuestScreen}
+              options={{ title: '퀘스트 모아보기' }}
+            />
+          </Stack.Navigator>
+        ) : null}
+        {/* 여기에 로그인페이지 넣으세여 */}
+      </NavigationContainer>
+    </QueryClientProvider>
   );
 }
 
