@@ -1,13 +1,25 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { SafeAreaView, StyleSheet, Text } from 'react-native';
+import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import { NavigationContainer } from '@react-navigation/native';
+import MainScreen from '@screens/main/MainScreen';
+
+const Stack = createNativeStackNavigator();
 
 function App() {
+  const [isLoggedIn, setIsLoggedIn] = useState(true);
   return (
     <NavigationContainer>
-      <SafeAreaView style={styles.backgroundStyle}>
-        <Text style={styles.textStyle}>e</Text>
-      </SafeAreaView>
+      {isLoggedIn ? (
+        <Stack.Navigator screenOptions={{ headerShown: false }}>
+          <Stack.Screen
+            name="Main"
+            component={MainScreen}
+            options={{ title: '메인' }}
+          />
+        </Stack.Navigator>
+      ) : null}
+      {/* 여기에 로그인페이지 넣으세여 */}
     </NavigationContainer>
   );
 }
