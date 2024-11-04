@@ -87,6 +87,11 @@ clean {
 	delete file(generated)
 }
 
+// jar 파일 이름 설정
+bootJar{
+	archiveFileName = 'fitapet.jar'
+}
+
 tasks.named('test') {
 	useJUnitPlatform()
 }
