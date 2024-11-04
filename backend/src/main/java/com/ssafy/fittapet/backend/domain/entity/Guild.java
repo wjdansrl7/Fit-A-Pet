@@ -7,22 +7,22 @@ import lombok.NoArgsConstructor;
 
 @Entity
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-public class Group extends BaseEntity {
+public class Guild extends BaseEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "group_id")
+    @Column(name = "guild_id")
     private Long id;
 
     @Column
-    private String groupName;
+    private String guildName;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn
-    private User groupLeader;
+    private User guildLeader;
 
     @Builder
-    public Group(String groupName, User groupLeader) {
-        this.groupName = groupName;
-        this.groupLeader = groupLeader;
+    public Guild(String guildName, User guildLeader) {
+        this.guildName = guildName;
+        this.guildLeader = guildLeader;
     }
 }

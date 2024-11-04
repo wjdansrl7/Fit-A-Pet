@@ -17,16 +17,16 @@ public class UserQuestStatus {
     private Boolean questStatus;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "group_quest_id")
-    private GroupQuest groupQuest;
+    @JoinColumn(name = "guild_quest_id")
+    private GuildQuest guildQuest;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id")
     private User user;
 
     @Builder
-    public UserQuestStatus(Boolean questStatus, GroupQuest groupQuest, User user) {
+    public UserQuestStatus(Boolean questStatus, GuildQuest guildQuest, User user) {
         this.questStatus = questStatus;
-        this.groupQuest = groupQuest;
+        this.guildQuest = guildQuest;
     }
 }

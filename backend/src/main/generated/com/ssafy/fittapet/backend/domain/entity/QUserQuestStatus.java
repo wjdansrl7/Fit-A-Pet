@@ -22,7 +22,7 @@ public class QUserQuestStatus extends EntityPathBase<UserQuestStatus> {
 
     public static final QUserQuestStatus userQuestStatus = new QUserQuestStatus("userQuestStatus");
 
-    public final QGroupQuest groupQuest;
+    public final QGuildQuest guildQuest;
 
     public final NumberPath<Long> id = createNumber("id", Long.class);
 
@@ -48,7 +48,7 @@ public class QUserQuestStatus extends EntityPathBase<UserQuestStatus> {
 
     public QUserQuestStatus(Class<? extends UserQuestStatus> type, PathMetadata metadata, PathInits inits) {
         super(type, metadata, inits);
-        this.groupQuest = inits.isInitialized("groupQuest") ? new QGroupQuest(forProperty("groupQuest"), inits.get("groupQuest")) : null;
+        this.guildQuest = inits.isInitialized("guildQuest") ? new QGuildQuest(forProperty("guildQuest"), inits.get("guildQuest")) : null;
         this.user = inits.isInitialized("user") ? new QUser(forProperty("user")) : null;
     }
 
