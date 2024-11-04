@@ -3,7 +3,9 @@ pipeline {
     stages {
         stage('Clone Repository') {
             steps {
-                git branch: 'develop-be', url: 'https://lab.ssafy.com/s11-final/S11P31A603.git'
+                git branch: 'develop-be',
+		credentialsId: 'fitapet-access-token',
+		url: 'https://lab.ssafy.com/s11-final/S11P31A603.git'
             }
         }
         stage('Build and Deploy') {
