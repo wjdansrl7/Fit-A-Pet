@@ -1,11 +1,14 @@
 import React from 'react';
 import { SafeAreaView, StyleSheet, Text } from 'react-native';
+import { NavigationContainer } from '@react-navigation/native';
 
 function App() {
   return (
-    <SafeAreaView style={styles.backgroundStyle}>
-      <Text style={styles.textStyle}>e</Text>
-    </SafeAreaView>
+    <NavigationContainer>
+      <SafeAreaView style={styles.backgroundStyle}>
+        <Text style={styles.textStyle}>e</Text>
+      </SafeAreaView>
+    </NavigationContainer>
   );
 }
 
