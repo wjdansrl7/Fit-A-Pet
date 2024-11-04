@@ -3,13 +3,13 @@ import { View, Text, Pressable, StyleSheet, Image } from 'react-native';
 
 function MenuButton({ title }) {
   return (
-    <Pressable style={styles.menuButton}>
+    <View style={styles.menuButton}>
       <Image
         source={require('../../assets/heart_icon.png')} // 핑크 하트 이미지 경로
         style={styles.heartIcon}
       />
       <Text style={styles.menuText}>{title}</Text>
-    </Pressable>
+    </View>
   );
 }
 

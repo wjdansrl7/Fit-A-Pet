@@ -1,12 +1,10 @@
-import React from 'react';
+import React, { useCallback } from 'react';
 import { View, Text, StyleSheet, Image, Pressable } from 'react-native';
 import MenuButton from './MenuButton';
 
-function MainScreen() {
+function MainScreen({ navigation }) {
   return (
     <View style={styles.container}>
-      {/* <Text>메인페이지</Text> */}
-
       {/* 상단 - 레벨 및 진행 상태 */}
       <View style={styles.header}>
         <Text style={styles.petName}>동규니</Text>
@@ -35,7 +33,9 @@ function MainScreen() {
       {/* 하단 메뉴 */}
       <View style={styles.bottomMenu}>
         <MenuButton title={'그룹'}></MenuButton>
-        <MenuButton title={'도감'}></MenuButton>
+        <Pressable onPress={() => navigation.navigate('Album')}>
+          <MenuButton title={'도감'}></MenuButton>
+        </Pressable>
         <MenuButton title={'나의기록'}></MenuButton>
       </View>
     </View>

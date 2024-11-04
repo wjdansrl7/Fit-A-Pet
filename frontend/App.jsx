@@ -3,6 +3,7 @@ import { SafeAreaView, StyleSheet, Text } from 'react-native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import { NavigationContainer } from '@react-navigation/native';
 import MainScreen from '@screens/main/MainScreen';
+import AlbumScreen from '@screens/album/AlbumScreen';
 
 const Stack = createNativeStackNavigator();
 
@@ -11,11 +12,16 @@ function App() {
   return (
     <NavigationContainer>
       {isLoggedIn ? (
-        <Stack.Navigator screenOptions={{ headerShown: false }}>
+        <Stack.Navigator initialRouteName="Home">
           <Stack.Screen
             name="Main"
             component={MainScreen}
-            options={{ title: '메인' }}
+            options={{ headerShown: false }}
+          />
+          <Stack.Screen
+            name="Album"
+            component={AlbumScreen}
+            options={{ title: '도감' }}
           />
         </Stack.Navigator>
       ) : null}
