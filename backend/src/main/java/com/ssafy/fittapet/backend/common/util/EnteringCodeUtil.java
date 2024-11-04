@@ -40,14 +40,14 @@ public class EnteringCodeUtil {
         // 인코딩된 암호화 데이터를 디코딩하고 복호화?
         byte[] decrypted = cipher.doFinal(Base64.getDecoder().decode(code));
         String decryptedString = new String(decrypted);
-        Long groupId = Long.parseLong(decryptedString.substring(12));
+        Long guildId = Long.parseLong(decryptedString.substring(12));
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyyMMddHHmm");
         LocalDateTime dateTime = LocalDateTime.parse(decryptedString.substring(0,12), formatter);
 
         LocalDateTime now = LocalDateTime.now();
         Duration duration = Duration.between(dateTime, now);
 
-        if(!duration.isNegative() && duration.toHours() < 24) return groupId;
+        if(!duration.isNegative() && duration.toHours() < 24) return guildId;
         else return -1L;
     }
 }

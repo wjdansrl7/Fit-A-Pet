@@ -22,9 +22,9 @@ public class QMap extends EntityPathBase<Map> {
 
     public static final QMap map = new QMap("map");
 
-    public final QGroup group;
+    public final QGuild guild;
 
-    public final NumberPath<Long> groupPosition = createNumber("groupPosition", Long.class);
+    public final NumberPath<Long> guildPosition = createNumber("guildPosition", Long.class);
 
     public final NumberPath<Long> id = createNumber("id", Long.class);
 
@@ -48,7 +48,7 @@ public class QMap extends EntityPathBase<Map> {
 
     public QMap(Class<? extends Map> type, PathMetadata metadata, PathInits inits) {
         super(type, metadata, inits);
-        this.group = inits.isInitialized("group") ? new QGroup(forProperty("group"), inits.get("group")) : null;
+        this.guild = inits.isInitialized("guild") ? new QGuild(forProperty("guild"), inits.get("guild")) : null;
         this.user = inits.isInitialized("user") ? new QUser(forProperty("user")) : null;
     }
 

@@ -9,10 +9,10 @@ import lombok.NoArgsConstructor;
 @Entity
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-public class GroupQuest {
+public class GuildQuest {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "group_quest_id")
+    @Column(name = "guild_quest_id")
     private Long id;
 
     @ManyToOne(fetch = FetchType.LAZY)
@@ -20,12 +20,12 @@ public class GroupQuest {
     private Quest quest;
 
     @OneToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "group_id")
-    private Group group;
+    @JoinColumn(name = "guild_id")
+    private Guild guild;
 
     @Builder
-    public GroupQuest(Quest quest, Group group) {
+    public GuildQuest(Quest quest, Guild guild) {
         this.quest = quest;
-        this.group = group;
+        this.guild = guild;
     }
 }

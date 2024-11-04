@@ -5,5 +5,5 @@ import org.springframework.data.jpa.repository.JpaRepository;
 
 public interface UserQuestStatusRepository extends JpaRepository<UserQuestStatus, Long> {
 
-    void deleteByUserIdAndGroupRequestId(Long userId, Long groupRequestId);
+    void deleteByUserIdAndGuildQuestId(Long userId, Long guildQuestId);
 }

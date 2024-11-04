@@ -1,6 +1,8 @@
-package com.ssafy.fittapet.backend.domain.repository.Map;
+package com.ssafy.fittapet.backend.domain.repository.guild;
 
 import com.querydsl.jpa.impl.JPAQueryFactory;
+import com.ssafy.fittapet.backend.domain.dto.guild.GuildInfoResponse;
+import com.ssafy.fittapet.backend.domain.dto.guild.QGuildInfoResponse;
 import com.ssafy.fittapet.backend.domain.dto.map.MapResponse;
 import com.ssafy.fittapet.backend.domain.dto.map.QMapResponse;
 import com.ssafy.fittapet.backend.domain.entity.QGuild;
@@ -11,10 +13,10 @@ import org.springframework.web.bind.annotation.RequestMapping;
 
 import java.util.List;
 
-@Repository
 @RequestMapping
+@Repository
 @RequiredArgsConstructor
-public class MapCustomRepositoryImpl implements MapCustomRepository {
+public class GuildCustomRepositoryImpl implements GuildCustomRepository {
     private final JPAQueryFactory queryFactory;
 
     @Override
@@ -32,5 +34,19 @@ public class MapCustomRepositoryImpl implements MapCustomRepository {
                 .join(map.guild, guild)
                 .where(map.user.id.eq(userId))
                 .fetch();
+    }
+
+    @Override
+    public GuildInfoResponse findInfoById(Long guildId) {
+        QGuild guild = QGuild.guild;
+
+        return queryFactory
+                .select(new QGuildInfoResponse(
+                        guild.guildName,
+                        guild.guildLeader.id
+                ))
+                .from(guild)
+                .where(guild.id.eq(guildId))
+                .fetchOne();
     }
 }

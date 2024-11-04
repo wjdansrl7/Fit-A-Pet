@@ -7,6 +7,7 @@ import com.querydsl.core.types.dsl.*;
 import com.querydsl.core.types.PathMetadata;
 import javax.annotation.processing.Generated;
 import com.querydsl.core.types.Path;
+import com.querydsl.core.types.dsl.PathInits;
 
 
 /**
@@ -31,6 +32,8 @@ public class QUser extends EntityPathBase<User> {
 
     //inherited
     public final DateTimePath<java.time.LocalDateTime> modifiedAt = _super.modifiedAt;
+
+    public final ListPath<PersonalQuest, QPersonalQuest> personalQuests = this.<PersonalQuest, QPersonalQuest>createList("personalQuests", PersonalQuest.class, QPersonalQuest.class, PathInits.DIRECT2);
 
     public final StringPath provider = createString("provider");
 

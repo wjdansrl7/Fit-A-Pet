@@ -11,16 +11,16 @@ import com.querydsl.core.types.dsl.PathInits;
 
 
 /**
- * QGroup is a Querydsl query type for Group
+ * QGuild is a Querydsl query type for Guild
  */
 @Generated("com.querydsl.codegen.DefaultEntitySerializer")
-public class QGroup extends EntityPathBase<Group> {
+public class QGuild extends EntityPathBase<Guild> {
 
-    private static final long serialVersionUID = 351156862L;
+    private static final long serialVersionUID = 351240178L;
 
     private static final PathInits INITS = PathInits.DIRECT2;
 
-    public static final QGroup group = new QGroup("group1");
+    public static final QGuild guild = new QGuild("guild");
 
     public final QBaseEntity _super = new QBaseEntity(this);
 
@@ -30,34 +30,34 @@ public class QGroup extends EntityPathBase<Group> {
     //inherited
     public final DateTimePath<java.time.LocalDateTime> deletedAt = _super.deletedAt;
 
-    public final QUser groupLeader;
+    public final QUser guildLeader;
 
-    public final StringPath groupName = createString("groupName");
+    public final StringPath guildName = createString("guildName");
 
     public final NumberPath<Long> id = createNumber("id", Long.class);
 
     //inherited
     public final DateTimePath<java.time.LocalDateTime> modifiedAt = _super.modifiedAt;
 
-    public QGroup(String variable) {
-        this(Group.class, forVariable(variable), INITS);
+    public QGuild(String variable) {
+        this(Guild.class, forVariable(variable), INITS);
     }
 
-    public QGroup(Path<? extends Group> path) {
+    public QGuild(Path<? extends Guild> path) {
         this(path.getType(), path.getMetadata(), PathInits.getFor(path.getMetadata(), INITS));
     }
 
-    public QGroup(PathMetadata metadata) {
+    public QGuild(PathMetadata metadata) {
         this(metadata, PathInits.getFor(metadata, INITS));
     }
 
-    public QGroup(PathMetadata metadata, PathInits inits) {
-        this(Group.class, metadata, inits);
+    public QGuild(PathMetadata metadata, PathInits inits) {
+        this(Guild.class, metadata, inits);
     }
 
-    public QGroup(Class<? extends Group> type, PathMetadata metadata, PathInits inits) {
+    public QGuild(Class<? extends Guild> type, PathMetadata metadata, PathInits inits) {
         super(type, metadata, inits);
-        this.groupLeader = inits.isInitialized("groupLeader") ? new QUser(forProperty("groupLeader")) : null;
+        this.guildLeader = inits.isInitialized("guildLeader") ? new QUser(forProperty("guildLeader")) : null;
     }
 
 }
