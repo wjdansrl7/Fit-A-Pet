@@ -68,6 +68,9 @@ dependencies {
 	testImplementation 'org.springframework.boot:spring-boot-starter-test'
 	testImplementation 'org.springframework.security:spring-security-test'
 	testRuntimeOnly 'org.junit.platform:junit-platform-launcher'
+
+	// nano id
+	implementation("com.aventrix.jnanoid:jnanoid:2.0.0")
 }
 
 def generated = 'src/main/generated'
