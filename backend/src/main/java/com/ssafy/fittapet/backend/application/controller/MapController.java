@@ -22,13 +22,4 @@ public class MapController {
         return new ResponseEntity<>(map, HttpStatus.OK);
     }
 
-    @PostMapping(path = "/{groupPosition}/groups")
-    public ResponseEntity<?> createGroup(
-            @PathVariable String groupPosition,
-            @RequestBody String groupName
-    ){
-
-        return new ResponseEntity<>(HttpStatus.OK);
-    }
-
 }

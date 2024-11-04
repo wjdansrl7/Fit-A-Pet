@@ -5,4 +5,5 @@ import org.springframework.data.jpa.repository.JpaRepository;
 
 public interface GroupQuestRepository extends JpaRepository<GroupQuest, Long> {
 
+    GroupQuest findByGroupId(Long groupId);
 }

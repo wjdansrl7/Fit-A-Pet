@@ -1,6 +1,8 @@
 package com.ssafy.fittapet.backend.domain.repository.group;
 
 import com.querydsl.jpa.impl.JPAQueryFactory;
+import com.ssafy.fittapet.backend.domain.dto.group.GroupInfoResponse;
+import com.ssafy.fittapet.backend.domain.dto.group.QGroupInfoResponse;
 import com.ssafy.fittapet.backend.domain.dto.map.MapResponse;
 import com.ssafy.fittapet.backend.domain.dto.map.QMapResponse;
 import com.ssafy.fittapet.backend.domain.entity.QGroup;
@@ -30,5 +32,19 @@ public class GroupCustomRepositoryImpl implements GroupCustomRepository {
                 .join(map.group, group)
                 .where(map.user.id.eq(userId))
                 .fetch();
+    }
+
+    @Override
+    public GroupInfoResponse findInfoById(Long groupId) {
+        QGroup group = QGroup.group;
+
+        return queryFactory
+                .select(new QGroupInfoResponse(
+                        group.groupName,
+                        group.groupLeader.id
+                ))
+                .from(group)
+                .where(group.id.eq(groupId))
+                .fetchOne();
     }
 }

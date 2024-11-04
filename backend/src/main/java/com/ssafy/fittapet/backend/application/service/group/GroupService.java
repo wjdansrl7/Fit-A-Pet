@@ -1,5 +1,6 @@
 package com.ssafy.fittapet.backend.application.service.group;
 
+import com.ssafy.fittapet.backend.domain.dto.group.GroupInfoResponse;
 import com.ssafy.fittapet.backend.domain.dto.group.GroupRequest;
 import com.ssafy.fittapet.backend.domain.dto.map.MapResponse;
 
@@ -10,5 +11,11 @@ public interface GroupService {
 
     void createGroup(GroupRequest groupRequest);
 
-    Long getEnteringCode(int groupId);
+    String getEnteringCode(Long groupId);
+
+    Boolean joinGroup(String enteringCode, Long groupPosition);
+
+    void leaveGroup(Long groupId);
+
+    GroupInfoResponse getGroupInfo(Long groupId);
 }
