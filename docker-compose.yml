@@ -1,16 +1,4 @@
 services:
-  mysql:
-    image: mysql:latest
-    container_name: mysql
-    environment:
-      TZ: Asia/Seoul
-      MYSQL_ROOT_PASSWORD: root
-      MYSQL_DATABASE: fitapet
-    ports:
-      - "3306:3306"
-    networks:
-      - app-network
-
   backend:
     image: backend
     build:
@@ -29,6 +17,19 @@ services:
     networks:
       - app-network
 
+  mysql:
+    image: mysql:latest
+    container_name: mysql
+    environment:
+      TZ: Asia/Seoul
+      MYSQL_ROOT_PASSWORD: root
+      MYSQL_DATABASE: fitapet
+    ports:
+      - "3306:3306"
+    networks:
+      - app-network
+
 networks:
   app-network:
     driver: bridge
+
