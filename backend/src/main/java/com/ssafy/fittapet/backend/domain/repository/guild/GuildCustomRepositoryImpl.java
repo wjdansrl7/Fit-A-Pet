@@ -2,11 +2,12 @@ package com.ssafy.fittapet.backend.domain.repository.guild;
 
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import com.ssafy.fittapet.backend.domain.dto.guild.GuildInfoResponse;
+import com.ssafy.fittapet.backend.domain.dto.guild.GuildMemberInfoResponse;
 import com.ssafy.fittapet.backend.domain.dto.guild.QGuildInfoResponse;
+import com.ssafy.fittapet.backend.domain.dto.guild.QGuildMemberInfoResponse;
 import com.ssafy.fittapet.backend.domain.dto.map.MapResponse;
 import com.ssafy.fittapet.backend.domain.dto.map.QMapResponse;
-import com.ssafy.fittapet.backend.domain.entity.QGuild;
-import com.ssafy.fittapet.backend.domain.entity.QMap;
+import com.ssafy.fittapet.backend.domain.entity.*;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Repository;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -48,5 +49,30 @@ public class GuildCustomRepositoryImpl implements GuildCustomRepository {
                 .from(guild)
                 .where(guild.id.eq(guildId))
                 .fetchOne();
+    }
+
+    @Override
+    public List<GuildMemberInfoResponse> findAllMemberByGuild(Long guildId) {
+        QMap map = QMap.map;
+        QGuild guild = QGuild.guild;
+        QUser user = QUser.user;
+        QPetBook petBook = QPetBook.petBook;
+        QUserQuestStatus userQuestStatus = QUserQuestStatus.userQuestStatus;
+
+        return queryFactory
+                .select(new QGuildMemberInfoResponse(
+                        user.id,
+                        user.userName,
+                        petBook.pet.id,
+                        userQuestStatus.questStatus
+                ))
+                .from(map)
+                .join(map.guild, guild)
+                .join(map.user, user)
+                .leftJoin(petBook).on(petBook.user.eq(user))
+                .leftJoin(userQuestStatus).on(userQuestStatus.user.eq(user))
+                .where(guild.id.eq(guildId)
+                        .and(petBook.isMain.isTrue()))
+                .fetch();
     }
 }
