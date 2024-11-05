@@ -20,13 +20,10 @@ public class User extends BaseEntity {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    private String userNickname;
-
     private String userName;
-
-    private String providerId;
-
+    private String userNickname;
     private String provider;
+    private String providerId;
 
     @Enumerated(EnumType.STRING)
     private UserTier userTier;
