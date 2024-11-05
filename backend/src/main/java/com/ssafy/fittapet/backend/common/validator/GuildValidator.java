@@ -2,7 +2,6 @@ package com.ssafy.fittapet.backend.common.validator;
 
 import com.ssafy.fittapet.backend.domain.entity.Guild;
 import com.ssafy.fittapet.backend.domain.repository.guild.GuildRepository;
-import lombok.NoArgsConstructor;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 
@@ -18,7 +17,7 @@ public class GuildValidator {
     }
 
     public boolean isNameUnique(String guildName){
-        return guildRepository.findByGuildName(guildName).equals(null);
+        return guildRepository.findByGuildName(guildName)==null;
     }
 
     public boolean isGuildLeader(Long guildId, Long userId){

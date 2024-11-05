@@ -14,10 +14,10 @@ public class MapValidator {
     }
 
     public boolean isAlreadyJoined(Long userId, Long guildId){
-        return mapRepository.findByUserIdAndGuildId(userId, guildId).equals(null);
+        return mapRepository.findByUserIdAndGuildId(userId, guildId)!=null;
     }
 
     public boolean isAblePosition(Long userId, Long guildPosition){
-        return mapRepository.findByUserIdAndGuildPosition(userId, guildPosition).equals(null);
+        return mapRepository.findByUserIdAndGuildPosition(userId, guildPosition) == null;
     }
 }
