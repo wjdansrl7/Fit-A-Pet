@@ -46,3 +46,25 @@ function useGetRefreshToken() {
   }, [isError]);
   return { isSuccess, isError };
 }
+
+function useGetProfile() {
+  return useQuery({
+    queryKey: ['auth', 'getProfile'],
+    queryFn: getProfile,
+    ...queryOptions,
+  });
+}
+
+function useAuth() {
+  // const kakaoLoginMutation = useKakaoLogin();
+  const refreshTokenQuery = useGetRefreshToken();
+  const getProfileQuery = useGetProfile({
+    enabled: refreshTokenQuery.isSuccess,
+  });
+  const isLogin = getProfileQuery.isSuccess;
+  const kakaoLoginMutation = useKakaoLogin();
+
+  return { kakaoLoginMutation, isLogin, getProfileQuery };
+}
+
+export default useAuth;

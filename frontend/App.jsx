@@ -7,11 +7,14 @@ import MainScreen from '@screens/main/MainScreen';
 import QuestScreen from '@screens/quest/QuestScreen';
 import LoginScreen from '@screens/login/LoginScreen';
 import queryClient from '@src/api/queryClient';
+import useAuth from '@src/hooks/queries/useAuth';
 
 const Stack = createNativeStackNavigator();
 
 function App() {
-  const [isLoggedIn, setIsLoggedIn] = useState(true);
+  // const isLoggedIn = useAuth();
+  const isLoggedIn = true;
+
   return (
     <QueryClientProvider client={queryClient}>
       <NavigationContainer>
@@ -33,8 +36,9 @@ function App() {
               options={{ title: '퀘스트 모아보기' }}
             />
           </Stack.Navigator>
-        ) : null}
-        {/* 여기에 로그인페이지 넣으세여 */}
+        ) : (
+          <LoginScreen />
+        )}
       </NavigationContainer>
     </QueryClientProvider>
   );

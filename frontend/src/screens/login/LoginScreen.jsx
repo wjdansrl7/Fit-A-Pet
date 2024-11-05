@@ -1,6 +1,9 @@
+import useAuth from '@src/hooks/queries/useAuth';
 import React from 'react';
 import { Dimensions, Image, StyleSheet, Text, View } from 'react-native';
+
 function LoginScreen() {
+  const { loginMutation } = useAuth();
   return (
     <View style={styles.container}>
       <View style={styles.imageContainer}>
