@@ -22,7 +22,6 @@ services:
       SPRING_DATASOURCE_URL: jdbc:mysql://mysql:3306/fitapet
       SPRING_DATASOURCE_USERNAME: root
       SPRING_DATASOURCE_PASSWORD: root
-    command: sh -c "./wait-for-it.sh mysql:3306 -- java -jar /build/libs/fitapet.jar"
     depends_on:
       - mysql
     ports:
