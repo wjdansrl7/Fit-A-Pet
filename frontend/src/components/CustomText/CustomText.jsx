@@ -13,6 +13,7 @@ const styles = StyleSheet.create({
   customFontText: {
     fontSize: 20,
     fontFamily: 'DungGeunMo', // 추가한 폰트 이름
+    color: 'black',
   },
 });
 
