@@ -3,7 +3,7 @@ package com.ssafy.fittapet.backend.common.config;
 import com.ssafy.fittapet.backend.common.constant.Role;
 import com.ssafy.fittapet.backend.common.constant.UserTier;
 import com.ssafy.fittapet.backend.domain.entity.User;
-import com.ssafy.fittapet.backend.domain.repository.UserRepository;
+import com.ssafy.fittapet.backend.domain.repository.auth.UserRepository;
 import jakarta.annotation.PostConstruct;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
