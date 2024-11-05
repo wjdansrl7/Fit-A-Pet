@@ -1,23 +1,4 @@
 services:
-  backend:
-    image: backend
-    build:
-      context: ./backend # Jenkins가 GitLab에서 가져온 backend 폴더를 빌드할 수 있도록 설정
-      dockerfile: Dockerfile # Dockerfile 경로 설정
-    container_name: backend
-    environment:
-      TZ: Asia/Seoul
-      SPRING_DATASOURCE_URL: jdbc:mysql://mysql:3306/fitapet
-      MYSQL_DATABASE: fitapet
-      SPRING_DATASOURCE_USERNAME: root
-      SPRING_DATASOURCE_PASSWORD: root
-    depends_on:
-      - mysql
-    ports:
-      - "80:8080"
-    networks:
-      - app-network
-
   mysql:
     image: mysql:latest
     container_name: mysql
@@ -27,6 +8,29 @@ services:
       MYSQL_DATABASE: fitapet
     ports:
       - "3306:3306"
+    networks:
+      - app-network
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "localhost"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  backend:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+    container_name: backend
+    environment:
+      TZ: Asia/Seoul
+      SPRING_DATASOURCE_URL: jdbc:mysql://mysql:3306/fitapet
+      SPRING_DATASOURCE_USERNAME: root
+      SPRING_DATASOURCE_PASSWORD: root
+    depends_on:
+      mysql:
+        condition: service_healthy # mysql이 healthcheck를 통과할 때까지 대기
+    ports:
+      - "80:8080"
     networks:
       - app-network
 
