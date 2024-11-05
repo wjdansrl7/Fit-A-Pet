@@ -112,7 +112,7 @@ public class GuildServiceImpl implements GuildService {
 
     @Override
     public GuildInfoResponse getGuildInfo(Long guildId) {
-        if(guildValidator.isExist(guildId).equals(null)) return null;
+        if(guildValidator.isExist(guildId)==null) return null;
         return guildRepository.findInfoById(guildId);
     }
 

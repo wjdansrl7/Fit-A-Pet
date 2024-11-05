@@ -1,16 +1,21 @@
 //package com.ssafy.fittapet.backend;
 //
 //import com.ssafy.fittapet.backend.application.service.guild.GuildService;
+//import com.ssafy.fittapet.backend.application.service.map.MapService;
 //import com.ssafy.fittapet.backend.common.util.EnteringCodeUtil;
 //import com.ssafy.fittapet.backend.common.validator.GuildValidator;
 //import com.ssafy.fittapet.backend.common.validator.MapValidator;
 //import com.ssafy.fittapet.backend.domain.dto.guild.GuildRequest;
+//import com.ssafy.fittapet.backend.domain.dto.map.MapResponse;
 //import com.ssafy.fittapet.backend.domain.entity.Guild;
+//import com.ssafy.fittapet.backend.domain.entity.GuildQuest;
 //import com.ssafy.fittapet.backend.domain.entity.Map;
 //import com.ssafy.fittapet.backend.domain.entity.User;
 //import com.ssafy.fittapet.backend.domain.repository.Map.MapRepository;
 //import com.ssafy.fittapet.backend.domain.repository.UserRepository;
 //import com.ssafy.fittapet.backend.domain.repository.guild.GuildRepository;
+//import com.ssafy.fittapet.backend.domain.repository.guild_quest.GuildQuestRepository;
+//import com.ssafy.fittapet.backend.domain.repository.user_quest.UserQuestStatusRepository;
 //import org.junit.jupiter.api.Assertions;
 //import org.junit.jupiter.api.DisplayName;
 //import org.junit.jupiter.api.Test;
@@ -19,6 +24,8 @@
 //import org.springframework.test.annotation.Rollback;
 //import org.springframework.transaction.annotation.Transactional;
 //
+//import java.util.List;
+//
 //@SpringBootTest
 //@Transactional
 //public class GuildTest {
@@ -26,13 +33,19 @@
 //    @Autowired
 //    private GuildService guildService;
 //    @Autowired
+//    private MapService mapService;
+//
+//    @Autowired
 //    private MapRepository mapRepository;
 //    @Autowired
 //    private UserRepository userRepository;
 //    @Autowired
 //    private GuildRepository guildRepository;
 //    @Autowired
-//    private EnteringCodeUtil enteringCodeUtil;
+//    private GuildQuestRepository guildQuestRepository;
+//    @Autowired
+//    private UserQuestStatusRepository userQuestStatusRepository;
+//
 //    @Autowired
 //    private MapValidator mapValidator;
 //    @Autowired
@@ -74,8 +87,8 @@
 //    }
 //
 //    @Test
-//    @DisplayName("길드 생성")
-//    @Rollback(false)
+//    @DisplayName("길드 가입")
+//    @Rollback(true)
 //    public void testJoinGuild() throws Exception {
 //        String enteringCode = guildService.getEnteringCode(1L);
 //        User user = userRepository.findById(2L).orElseThrow();
@@ -99,5 +112,41 @@
 //                guildPosition(guildPosition).
 //                build());
 //        Assertions.assertNotNull(map);
+//    }
+//
+//    @Test
+//    @DisplayName("맵 정보 갖고오기")
+//    @Rollback(true)
+//    public void testGetAll(){
+//        List<MapResponse> map = mapService.getAll();
+//
+//        Assertions.assertNotEquals(map.size(), 0);
+//    }
+//
+//    @Test
+//    @DisplayName("길드 정보 갖고오기")
+//    @Rollback(true)
+//    public void testGetGuildInfo(){
+//        Long guildId = 1L;
+//        Assertions.assertNotNull(guildValidator.isExist(guildId));
+//        Assertions.assertNotNull(guildRepository.findInfoById(guildId));
+//    }
+//
+//    @Test
+//    @DisplayName("길드 나가기")
+//    @Rollback(true)
+//    public void testLeaveGuild(){
+//        User user = userRepository.findById(2L).orElseThrow();
+//        Long guildId = 1L;
+//
+//        Assertions.assertTrue(mapValidator.isAlreadyJoined(user.getId(), guildId));
+//        Assertions.assertNotNull(guildValidator.isExist(guildId));
+//
+//        mapRepository.deleteByGuildIdAndUserId(guildId, user.getId());
+//
+//        // userQuestStatus에서 삭제
+//        GuildQuest guildQuest = guildQuestRepository.findByGuildId(guildId);
+//        if(guildQuest == null) return;
+//        userQuestStatusRepository.deleteByUserIdAndGuildQuestId(user.getId(), guildQuest.getId());
 //    }
 //}
