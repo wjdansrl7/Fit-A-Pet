@@ -1,10 +1,10 @@
 import React from 'react';
 import { View, Text } from 'react-native';
-
+import CustomText from '@components/CustomText/CustomText';
 function MainScreen() {
   return (
     <View>
-      <Text>메인페이지</Text>
+      <CustomText>메인페이지</CustomText>
     </View>
   );
 }
