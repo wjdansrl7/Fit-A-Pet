@@ -17,7 +17,7 @@ function App() {
           initialRouteName="Home"
           // 헤더 부분 커스텀
           screenOptions={({ navigation }) => ({
-            headerTransparent: true,
+            headerStyle: {},
             // 타이틀 텍스트 스타일
             headerTitleStyle: {
               fontFamily: 'DungGeunMo',

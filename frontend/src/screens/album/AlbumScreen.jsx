@@ -1,21 +1,49 @@
-import React, { useEffect } from 'react';
-import { View, Text, StyleSheet, Pressable, Image } from 'react-native';
+import React from 'react';
+import {
+  View,
+  Text,
+  StyleSheet,
+  Pressable,
+  Image,
+  ScrollView,
+} from 'react-native';
 import CustomText from '@components/CustomText/CustomText';
+import AlbumFrame from './AlbumFrame';
 
-function AlbumScreen({}) {
+const pets = [
+  { name: '뭉기', image: require('../../assets/pets/beluga_3.png') },
+  null,
+  null,
+  { name: '동규니', image: require('../../assets/pets/egg_gray_1.png') },
+  null,
+  null,
+  null,
+  null,
+];
+
+function AlbumScreen() {
   return (
-    <View style={styles.container}>
-      <Text>도감페이지입니당</Text>
-    </View>
+    <ScrollView contentContainerStyle={styles.container}>
+      <View style={styles.grid}>
+        {pets.map((pet, index) => (
+          <AlbumFrame key={index} pet={pet} style={styles.frameBorder} />
+        ))}
+      </View>
+    </ScrollView>
   );
 }
 
 const styles = StyleSheet.create({
   container: {
-    flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
-    backgroundColor: 'tomato',
+    flexGrow: 1,
+    padding: 40,
+    backgroundColor: '#FFF7D2',
+  },
+
+  grid: {
+    flexDirection: 'row',
+    flexWrap: 'wrap',
+    gap: 30,
   },
 });
 
