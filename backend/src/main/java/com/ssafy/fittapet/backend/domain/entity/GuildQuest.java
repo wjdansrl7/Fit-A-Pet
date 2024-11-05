@@ -1,10 +1,7 @@
 package com.ssafy.fittapet.backend.domain.entity;
 
 import jakarta.persistence.*;
-import lombok.AccessLevel;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 @Entity
 @Getter
@@ -17,6 +14,7 @@ public class GuildQuest {
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "quest_id")
+    @Setter
     private Quest quest;
 
     @OneToOne(fetch = FetchType.LAZY)

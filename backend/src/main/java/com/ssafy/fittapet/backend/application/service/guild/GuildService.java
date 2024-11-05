@@ -7,15 +7,17 @@ import com.ssafy.fittapet.backend.domain.dto.map.MapResponse;
 import java.util.List;
 
 public interface GuildService {
-    List<MapResponse> getAll();
+//    List<MapResponse> getAll();
 
-    void createGuild(GuildRequest guildRequest);
+//    void createGuild(GuildRequest guildRequest);
 
     String getEnteringCode(Long guildId);
 
-    Boolean joinGuild(String enteringCode, Long guildPosition);
+//    Boolean joinGuild(String enteringCode, Long guildPosition);
 
-    void leaveGuild(Long guildId);
+//    void leaveGuild(Long guildId);
 
     GuildInfoResponse getGuildInfo(Long guildId);
+
+    void updateGuildQuest(Long guildId, Long questId);
 }

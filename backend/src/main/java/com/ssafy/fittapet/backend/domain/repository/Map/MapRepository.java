@@ -7,4 +7,8 @@ public interface MapRepository extends JpaRepository<Map, Long>, MapCustomReposi
     Long countByGuildId(Long guildId);
 
     void deleteByGuildIdAndUserId(Long guildId, Long userId);
+
+    Map findByUserIdAndGuildPosition(Long userId, Long guildPosition);
+
+    Map findByUserIdAndGuildId(Long userId, Long guildId);
 }
