@@ -1,9 +1,10 @@
 import React, { useState } from 'react';
-import { SafeAreaView, StyleSheet, Text } from 'react-native';
+import { Pressable, SafeAreaView, StyleSheet, Text, View } from 'react-native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import { NavigationContainer } from '@react-navigation/native';
 import MainScreen from '@screens/main/MainScreen';
 import AlbumScreen from '@screens/album/AlbumScreen';
+import CustomText from '@components/CustomText/CustomText';
 
 const Stack = createNativeStackNavigator();
 
@@ -12,7 +13,31 @@ function App() {
   return (
     <NavigationContainer>
       {isLoggedIn ? (
-        <Stack.Navigator initialRouteName="Home">
+        <Stack.Navigator
+          initialRouteName="Home"
+          // 헤더 부분 커스텀
+          screenOptions={({ navigation }) => ({
+            headerTransparent: true,
+            // 타이틀 텍스트 스타일
+            headerTitleStyle: {
+              fontFamily: 'DungGeunMo',
+              fontSize: 20,
+              color: 'black',
+            },
+            headerTitleAlign: 'center',
+            headerLeft: () => (
+              <Pressable onPress={navigation.goBack}>
+                <CustomText
+                  style={{
+                    fontSize: 30,
+                  }}
+                >
+                  {'<'}
+                </CustomText>
+              </Pressable>
+            ),
+          })}
+        >
           <Stack.Screen
             name="Main"
             component={MainScreen}
