@@ -1,12 +1,47 @@
-import React from 'react';
-import { StyleSheet, Text, View, ImageBackground } from 'react-native';
-import mapImg from '@assets/backgrounds/group/mapImg.webp'; // 이미지 절대경로 import
+import React, { useState } from 'react';
+import {
+  StyleSheet,
+  View,
+  TouchableOpacity,
+  ImageBackground,
+} from 'react-native';
+import mapImg from '@assets/backgrounds/group/mapImg.webp';
+import CustomModal from '@components/CustomModal/CustomModal';
+import CustomText from '@components/CustomText/CustomText';
 
 const MapScreen = () => {
+  const [isModalVisible, setModalVisible] = useState(false);
+
   return (
     <View style={styles.container}>
       <ImageBackground source={mapImg} style={styles.backgroundImage}>
-        <Text style={styles.text}>map</Text>
+        <TouchableOpacity
+          onPress={() => setModalVisible(true)}
+          activeOpacity={1}
+        >
+          {/* Custom 모달 예시 */}
+          <CustomText>모달 열기</CustomText>
+        </TouchableOpacity>
+        <CustomModal
+          isVisible={isModalVisible}
+          wantClose={true} // 불리언 값
+          title="알을 받을까나?"
+          onClose={() => setModalVisible(false)} // 모달을 닫는 함수
+        >
+          <CustomText>
+            Lorem, ipsum dolor sit amet consectetur adipisicing elit.
+            Voluptatibus iusto laboriosam nostrum officia error provident esse
+            obcaecati molestias odit amet.
+          </CustomText>
+
+          <TouchableOpacity
+            onPress={() => setModalVisible(false)}
+            activeOpacity={1}
+          >
+            <CustomText>모달 닫기</CustomText>
+          </TouchableOpacity>
+        </CustomModal>
+        {/*  */}
       </ImageBackground>
     </View>
   );
@@ -18,13 +53,8 @@ const styles = StyleSheet.create({
   },
   backgroundImage: {
     flex: 1,
-    justifyContent: 'center', // 텍스트를 가운데 정렬
-    alignItems: 'center', // 텍스트를 가운데 정렬
-  },
-  text: {
-    color: 'white', // 배경과 대비되는 색상 설정
-    fontSize: 24,
-    fontWeight: 'bold',
+    justifyContent: 'center',
+    alignItems: 'center',
   },
 });
 
