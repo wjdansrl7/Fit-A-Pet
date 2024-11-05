@@ -3,6 +3,7 @@ services:
     image: mysql:latest
     container_name: mysql
     environment:
+      TZ: Asia/Seoul
       MYSQL_ROOT_PASSWORD: root
       MYSQL_DATABASE: fitapet
     ports:
@@ -11,12 +12,14 @@ services:
       - app-network
 
   backend:
+    image: backend
     build:
-      context: ./backend  # Jenkins가 GitLab에서 가져온 backend 폴더를 빌드할 수 있도록 설정
-      dockerfile: Dockerfile  # Dockerfile 경로 설정
+      context: ./backend # Jenkins가 GitLab에서 가져온 backend 폴더를 빌드할 수 있도록 설정
+      dockerfile: Dockerfile # Dockerfile 경로 설정
     container_name: backend
     environment:
-      SPRING_DATASOURCE_URL: jdbc:mysql://mysql:3306/fitapet?serverTimezone=UTC
+      TZ: Asia/Seoul
+      SPRING_DATASOURCE_URL: jdbc:mysql://mysql:3306/fitapet
       SPRING_DATASOURCE_USERNAME: root
       SPRING_DATASOURCE_PASSWORD: root
     depends_on:
@@ -29,4 +32,3 @@ services:
 networks:
   app-network:
     driver: bridge
-
