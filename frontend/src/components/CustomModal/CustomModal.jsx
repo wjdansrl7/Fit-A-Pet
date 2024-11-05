@@ -25,7 +25,11 @@ const CustomModal = ({
           <CustomText style={styles.headerText}>{title}</CustomText>
         </View>
         {wantClose && (
-          <TouchableOpacity onPress={onClose} style={styles.closeButton}>
+          <TouchableOpacity
+            activeOpacity={0.5}
+            onPress={onClose}
+            style={styles.closeButton}
+          >
             <CustomText style={{ fontSize: 30, color: 'black' }}>⨉</CustomText>
           </TouchableOpacity>
         )}

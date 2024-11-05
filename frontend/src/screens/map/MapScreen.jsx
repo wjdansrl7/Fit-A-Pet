@@ -8,6 +8,7 @@ import {
 import mapImg from '@assets/backgrounds/group/mapImg.webp';
 import CustomModal from '@components/CustomModal/CustomModal';
 import CustomText from '@components/CustomText/CustomText';
+import CustomButton from '@components/CustomButton/CustomButton';
 
 const MapScreen = () => {
   const [isModalVisible, setModalVisible] = useState(false);
@@ -15,11 +16,11 @@ const MapScreen = () => {
   return (
     <View style={styles.container}>
       <ImageBackground source={mapImg} style={styles.backgroundImage}>
+        {/* Custom 모달 예시 */}
         <TouchableOpacity
           onPress={() => setModalVisible(true)}
           activeOpacity={1}
         >
-          {/* Custom 모달 예시 */}
           <CustomText>모달 열기</CustomText>
         </TouchableOpacity>
         <CustomModal
@@ -33,13 +34,13 @@ const MapScreen = () => {
             Voluptatibus iusto laboriosam nostrum officia error provident esse
             obcaecati molestias odit amet.
           </CustomText>
-
-          <TouchableOpacity
+          {/* Custom 버튼 예시 */}
+          <CustomButton
+            title="아,, 패스!"
+            style={{ backgroundColor: 'red' }}
             onPress={() => setModalVisible(false)}
-            activeOpacity={1}
-          >
-            <CustomText>모달 닫기</CustomText>
-          </TouchableOpacity>
+          />
+          {/*  */}
         </CustomModal>
         {/*  */}
       </ImageBackground>
