@@ -4,8 +4,11 @@ pipeline {
         stage('Build and Deploy') {
             steps {
                 script {
-                    sh 'docker-compose down'  // 기존 실행 중인 컨테이너 종료
-                    sh 'docker-compose up -d --build'  // 도커 컴포즈로 빌드 및 실행
+                    // `docker-compose.yml` 파일이 있는 디렉토리에서 명령을 실행
+                    dir("${env.WORKSPACE}") {
+                        sh 'docker-compose down'
+                        sh 'docker-compose up -d'
+                    }
                 }
             }
         }
