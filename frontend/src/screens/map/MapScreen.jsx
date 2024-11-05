@@ -6,18 +6,57 @@ import {
   ImageBackground,
   Image,
 } from 'react-native';
-import map2x from '@assets/backgrounds/group/map2x.webp';
-import house1x from '@assets/backgrounds/group/house1x.webp';
-import house2x from '@assets/backgrounds/group/house2x.webp';
-import house3x from '@assets/backgrounds/group/house3x.webp';
-import house4x from '@assets/backgrounds/group/house4x.webp';
-
-import CustomModal from '@components/CustomModal/CustomModal';
+// import { useNavigation } from '@react-navigation/native';  페이지 이동 생기면
 import CustomText from '@components/CustomText/CustomText';
-import CustomButton from '@components/CustomButton/CustomButton';
+
+import map2x from '@assets/backgrounds/group/map2x.webp';
+import ActiveHouse from '@assets/backgrounds/group/ActiveHouse.png';
+import InActiveHouse from '@assets/backgrounds/group/InActiveHouse.png';
+import MapModal from '@screens/map/MapModal';
 
 const MapScreen = () => {
   const [isModalVisible, setModalVisible] = useState(false);
+  const [modalViewState, setModalViewState] = useState('init'); // init, create, join 중 하나로 상태 관리
+  const [selectedHouse, setSelectedHouse] = useState(null);
+
+  const houses = [
+    {
+      id: 1,
+      name: 'House A',
+      isActive: true,
+      position: { top: 120, right: 20 },
+    },
+    {
+      id: 2,
+      name: 'House B',
+      isActive: false,
+      position: { top: 380, left: 40 },
+    },
+    {
+      id: 3,
+      name: 'House C',
+      isActive: true,
+      position: { bottom: 150, right: 20 },
+    },
+  ];
+
+  const openCreateGroupModal = () => {
+    setModalViewState('create');
+  };
+
+  const openJoinGroupModal = () => {
+    setModalViewState('join');
+  };
+
+  const handleHouseClick = (house) => {
+    if (house.isActive) {
+      console.log(house); // 나중에 네비게이션 코드 추가
+    } else {
+      setSelectedHouse(house);
+      setModalViewState('init');
+      setModalVisible(true);
+    }
+  };
 
   return (
     <View style={styles.container}>
@@ -26,38 +65,32 @@ const MapScreen = () => {
         style={styles.backgroundImage}
         resizeMode="cover"
       >
-        <Image
-          source={house4x}
-          style={styles.overlayImage}
-          resizeMode="contain"
-        />
-        {/* Custom 모달 예시 */}
-        <TouchableOpacity
-          onPress={() => setModalVisible(true)}
-          activeOpacity={1}
-        >
-          <CustomText>모달 열기</CustomText>
-        </TouchableOpacity>
-        <CustomModal
+        {houses.map((house) => (
+          <TouchableOpacity
+            key={house.id}
+            activeOpacity={0.9}
+            style={[styles.house, house.position]}
+            onPress={() => handleHouseClick(house)}
+          >
+            <Image
+              source={house.isActive ? ActiveHouse : InActiveHouse}
+              style={styles.overlayImage}
+              resizeMode="contain"
+            />
+            {house.isActive && (
+              <CustomText style={styles.houseName}>{house.name}</CustomText>
+            )}
+          </TouchableOpacity>
+        ))}
+
+        {/* 단일 모달 컴포넌트 */}
+        <MapModal
           isVisible={isModalVisible}
-          wantClose={true} // 불리언 값
-          title="알을 받을까나?"
-          onClose={() => setModalVisible(false)} // 모달을 닫는 함수
-        >
-          <CustomText>
-            Lorem, ipsum dolor sit amet consectetur adipisicing elit.
-            Voluptatibus iusto laboriosam nostrum officia error provident esse
-            obcaecati molestias odit amet.
-          </CustomText>
-          {/* Custom 버튼 예시 */}
-          <CustomButton
-            title="아,, 패스!"
-            style={{ backgroundColor: 'red' }}
-            onPress={() => setModalVisible(false)}
-          />
-          {/*  */}
-        </CustomModal>
-        {/*  */}
+          viewState={modalViewState} // init, create, join 중 하나
+          onClose={() => setModalVisible(false)}
+          onCreateGroup={openCreateGroupModal}
+          onJoinGroup={openJoinGroupModal}
+        />
       </ImageBackground>
     </View>
   );
@@ -69,17 +102,21 @@ const styles = StyleSheet.create({
   },
   backgroundImage: {
     flex: 1,
-    justifyContent: 'center', // 텍스트를 중앙에 배치
+    justifyContent: 'center',
     alignItems: 'center',
   },
   overlayImage: {
-    position: 'absolute', // 원하는 위치에 배치하기 위해 절대 위치 사용
-    top: '45%', // 화면 상단에서부터 20% 아래
-    left: '10%', // 화면 왼쪽에서부터 30% 오른쪽으로 이동
-    width: 100, // 이미지 너비
-    height: 100, // 이미지 높이
-    justifyContent: 'center',
+    width: 100,
+    height: 100,
+  },
+  house: {
+    position: 'absolute',
     alignItems: 'center',
+  },
+  houseName: {
+    marginTop: 5,
+    color: 'white',
+    fontSize: 16,
   },
 });
 
