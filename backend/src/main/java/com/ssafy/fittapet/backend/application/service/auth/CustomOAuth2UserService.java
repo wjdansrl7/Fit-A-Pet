@@ -16,7 +16,7 @@ import org.springframework.stereotype.Service;
 /**
  * OAuth2 사용자 정보 처리 서비스
  * 1. Authorization Code 를 활용해 인증 서버로부터 accessToken 발급
- * 2. accessToken 으로 리소스 서버로부터 유저 정보 획득 후 처리
+ * 2. accessToken 으로 리소스 서버로부터 유저 정보 획득 후 처리 -> SecurityContextHolder 사용자 인증 정보 등록
  */
 @Service
 @RequiredArgsConstructor
@@ -71,8 +71,8 @@ public class CustomOAuth2UserService extends DefaultOAuth2UserService {
             userRepository.save(user); // 유저 엔티티 생성 후 저장
 
             UserDTO userDTO = UserDTO.builder()
-                    .username(username)
-                    .name(oAuth2Response.getName())
+                    .userId(user.getId())
+                    .userNickname(username)
                     .role(String.valueOf(Role.USER))
                     .build();
 
@@ -81,8 +81,8 @@ public class CustomOAuth2UserService extends DefaultOAuth2UserService {
         } else { // 유저 정보가 있으면
 
             UserDTO userDTO = UserDTO.builder()
-                    .username(existData.getUserNickname())
-                    .name(existData.getUserName())
+                    .userId(existData.getId())
+                    .userNickname(username)
                     .role(String.valueOf(existData.getRole()))
                     .build();
 
