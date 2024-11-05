@@ -1,42 +1,46 @@
 import React, { useCallback } from 'react';
 import { View, Text, StyleSheet, Image, Pressable } from 'react-native';
 import MenuButton from './MenuButton';
+import CustomText from '@components/CustomText/CustomText';
 
-function MainScreen({ navigation }) {
+function MainScreen() {
   return (
-    <View style={styles.container}>
-      {/* 상단 - 레벨 및 진행 상태 */}
-      <View style={styles.header}>
-        <Text style={styles.petName}>동규니</Text>
-        <View style={styles.levelContainer}>
-          <Text style={styles.levelText}>1</Text>
-          <View style={styles.progressBar}>
-            <View style={styles.progressFill} />
+    <View>
+      <CustomText>메인페이지</CustomText>
+      <View style={styles.container}>
+        {/* 상단 - 레벨 및 진행 상태 */}
+        <View style={styles.header}>
+          <Text style={styles.petName}>동규니</Text>
+          <View style={styles.levelContainer}>
+            <Text style={styles.levelText}>1</Text>
+            <View style={styles.progressBar}>
+              <View style={styles.progressFill} />
+            </View>
           </View>
         </View>
-      </View>
 
-      {/* 중앙 - 펫(알 모양) */}
-      <View style={styles.petContainer}>
-        <Image
-          source={require('../../assets/pets/egg_gray_1.png')} // 알 이미지 경로
-          style={styles.petImage}
-        />
-      </View>
+        {/* 중앙 - 펫(알 모양) */}
+        <View style={styles.petContainer}>
+          <Image
+            source={require('../../assets/pets/egg_gray_1.png')} // 알 이미지 경로
+            style={styles.petImage}
+          />
+        </View>
 
-      {/* 우측 메뉴 */}
-      <View style={styles.rightMenu}>
-        <MenuButton title={'식단기록'}></MenuButton>
-        <MenuButton title={'퀘스트'}></MenuButton>
-      </View>
+        {/* 우측 메뉴 */}
+        <View style={styles.rightMenu}>
+          <MenuButton title={'식단기록'}></MenuButton>
+          <MenuButton title={'퀘스트'}></MenuButton>
+        </View>
 
-      {/* 하단 메뉴 */}
-      <View style={styles.bottomMenu}>
-        <MenuButton title={'그룹'}></MenuButton>
-        <Pressable onPress={() => navigation.navigate('Album')}>
-          <MenuButton title={'도감'}></MenuButton>
-        </Pressable>
-        <MenuButton title={'나의기록'}></MenuButton>
+        {/* 하단 메뉴 */}
+        <View style={styles.bottomMenu}>
+          <MenuButton title={'그룹'}></MenuButton>
+          <Pressable onPress={() => navigation.navigate('Album')}>
+            <MenuButton title={'도감'}></MenuButton>
+          </Pressable>
+          <MenuButton title={'나의기록'}></MenuButton>
+        </View>
       </View>
     </View>
   );
