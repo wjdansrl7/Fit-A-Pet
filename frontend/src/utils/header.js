@@ -1,10 +1,10 @@
 import axiosInstance from '@src/api/axios';
 
-function setHeader() {
+function setHeader(key, value) {
   axiosInstance.defaults.headers.common[key] = value;
 }
 
-function removeHeader() {
+function removeHeader(key) {
   if (!axiosInstance.defaults.headers.common[key]) {
     return;
   }

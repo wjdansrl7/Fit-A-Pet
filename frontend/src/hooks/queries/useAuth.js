@@ -1,9 +1,8 @@
-import { getAccessToken, getProfilepostKakaoLogin } from '@src/api/auth';
-import { axiosInstance } from '@src/api/axios';
+import { getAccessToken, postKakaoLogin, getProfile } from '@src/api/auth';
 import { queryClient } from '@src/api/queryClient';
 import { removeEncryptStorage } from '@src/utils';
 import { setHeader, removeHeader } from '@src/utils/header';
-import { useMutation } from '@tanstack/react-query';
+import { useQuery, useMutation } from '@tanstack/react-query';
 import { useEffect } from 'react';
 
 function useKakaoLogin() {
@@ -17,7 +16,7 @@ function useKakaoLogin() {
       queryClient.refetchQueries({ queryKey: ['auth', 'getAccessToken'] });
       queryClient.invalidateQueries({ queryKey: ['auth', 'getProfile'] });
     },
-    ...mutationOptions,
+    // ...mutationOptions,
   });
 }
 
@@ -51,7 +50,7 @@ function useGetProfile() {
   return useQuery({
     queryKey: ['auth', 'getProfile'],
     queryFn: getProfile,
-    ...queryOptions,
+    // ...queryOptions,
   });
 }
 

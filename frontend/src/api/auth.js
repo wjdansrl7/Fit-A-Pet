@@ -1,15 +1,17 @@
 import axiosInstance from './axios';
 
+// 1. 카카오 로그인
 const postKakaoLogin = async () => {
   const { data } = await axiosInstance.post('/auth/login');
   return data;
 };
 
-// 로그인 후, 유저 정보 가져오는 api
-// const getProfile = async () => {
-//   const { data } = await axiosInstance.get('/auth/me');
-// };
+// 2. 로그인 후, 유저 정보 가져오는 api
+const getProfile = async () => {
+  const { data } = await axiosInstance.get(`/auth/${userId}`);
+};
 
+// 3. refreshToken 가지고 access토큰 받아오는 api
 const getAccessToken = async () => {
   const refreshToken = await getEncryptStorage('refreshToken');
   const { data } = await axiosInstance.get('/auth/refresh', {
@@ -20,7 +22,8 @@ const getAccessToken = async () => {
   return data;
 };
 
+// 4. 로그아웃 api
 const logout = async () => {
   await axiosInstance.post('/auth/logout');
 };
-export { postKakaoLogin, logout };
+export { postKakaoLogin, getProfile, getAccessToken, logout };

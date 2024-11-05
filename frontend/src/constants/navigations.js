@@ -1,6 +1,6 @@
 const authNavigations = {
   AUTH_HOME: 'AuthHome',
-  LOGIN: 'Login',
+  KAKAO_LOGIN: 'KakaoLogin',
 };
 
 export { authNavigations };

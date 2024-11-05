@@ -1,8 +1,16 @@
+import { authNavigations } from '@src/constants';
 import useAuth from '@src/hooks/queries/useAuth';
 import React from 'react';
-import { Dimensions, Image, StyleSheet, Text, View } from 'react-native';
+import {
+  Dimensions,
+  Image,
+  Pressable,
+  StyleSheet,
+  Text,
+  View,
+} from 'react-native';
 
-function LoginScreen() {
+function AuthHomeScreen({ navigation }) {
   const { loginMutation } = useAuth();
   return (
     <View style={styles.container}>
@@ -15,11 +23,15 @@ function LoginScreen() {
         />
       </View>
       <View style={styles.kakaoLoginContainer}>
-        <Image
-          resizeMode="contain"
-          style={styles.image}
-          source={require('@assets/login/kakaoLogin.png')}
-        />
+        <Pressable
+          onPress={() => navigation.navigate(authNavigations.KAKAO_LOGIN)}
+        >
+          <Image
+            resizeMode="contain"
+            style={styles.image}
+            source={require('@assets/login/kakaoLogin.png')}
+          />
+        </Pressable>
       </View>
     </View>
   );
@@ -47,4 +59,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default LoginScreen;
+export default AuthHomeScreen;

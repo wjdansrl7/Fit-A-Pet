@@ -1,13 +1,17 @@
 import React, { useState } from 'react';
-import { QueryClientProvider } from '@tanstack/react-query';
 import { StyleSheet } from 'react-native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import { NavigationContainer } from '@react-navigation/native';
-import MainScreen from '@screens/main/MainScreen';
-import QuestScreen from '@screens/quest/QuestScreen';
-import LoginScreen from '@screens/login/LoginScreen';
+
+import { QueryClientProvider } from '@tanstack/react-query';
 import queryClient from '@src/api/queryClient';
+import { authNavigations } from '@src/constants';
 import useAuth from '@src/hooks/queries/useAuth';
+
+import MainScreen from '@screens/main/MainScreen';
+import AuthHomeScreen from '@screens/auth/AuthHomeScreen';
+import KakaoLoginScreen from '@screens/auth/KakaoLoginScreen';
+import QuestScreen from '@screens/quest/QuestScreen';
 
 const Stack = createNativeStackNavigator();
 
@@ -18,27 +22,33 @@ function App() {
   return (
     <QueryClientProvider client={queryClient}>
       <NavigationContainer>
-        {isLoggedIn ? (
-          <Stack.Navigator screenOptions={{ headerShown: false }}>
-            {/* <Stack.Screen
+        {
+          isLoggedIn ? (
+            <Stack.Navigator screenOptions={{ headerShown: false }}>
+              {/* <Stack.Screen
             name="Main"
             component={MainScreen}
             options={{ title: '메인' }}
           /> */}
-            <Stack.Screen
-              name="Login"
-              component={LoginScreen}
-              options={{ title: '로그인' }}
-            />
-            <Stack.Screen
-              name="Quest"
-              component={QuestScreen}
-              options={{ title: '퀘스트 모아보기' }}
-            />
-          </Stack.Navigator>
-        ) : (
-          <LoginScreen />
-        )}
+              <Stack.Screen
+                name={authNavigations.AUTH_HOME}
+                component={AuthHomeScreen}
+                options={{ title: '로고와 로그인' }}
+              />
+              <Stack.Screen
+                name={authNavigations.KAKAO_LOGIN}
+                component={KakaoLoginScreen}
+                options={{ title: '카카오 로그인' }}
+              />
+              <Stack.Screen
+                name="Quest"
+                component={QuestScreen}
+                options={{ title: '퀘스트 모아보기' }}
+              />
+            </Stack.Navigator>
+          ) : null
+          // <LoginScreen />
+        }
       </NavigationContainer>
     </QueryClientProvider>
   );
