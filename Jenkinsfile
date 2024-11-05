@@ -1,6 +1,13 @@
 pipeline {
     agent any
     stages {
+    	stage('Check File Access') {
+            steps {
+                script {
+                    sh 'cat /home/ubuntu/docker-compose.yml'
+                }
+            }
+        }
         stage('Build and Deploy') {
             steps {
                 script {
