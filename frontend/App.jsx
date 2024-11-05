@@ -5,6 +5,7 @@ import { NavigationContainer } from '@react-navigation/native';
 import MainScreen from '@screens/main/MainScreen';
 import AlbumScreen from '@screens/album/AlbumScreen';
 import CustomText from '@components/CustomText/CustomText';
+import MapScreen from '@screens/map/MapScreen';
 
 const Stack = createNativeStackNavigator();
 
@@ -47,6 +48,11 @@ function App() {
             name="Album"
             component={AlbumScreen}
             options={{ title: '도감' }}
+          />
+          <Stack.Screen
+            name="Map"
+            component={MapScreen}
+            options={{ title: '지도' }}
           />
         </Stack.Navigator>
       ) : null}
