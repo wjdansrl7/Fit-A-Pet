@@ -1,5 +1,6 @@
 import React from 'react';
 import { View, Text, Pressable, StyleSheet, Image } from 'react-native';
+import CustomText from '@components/CustomText/CustomText';
 
 function MenuButton({ title }) {
   return (
@@ -8,7 +9,7 @@ function MenuButton({ title }) {
         source={require('../../assets/heart_icon.png')} // 핑크 하트 이미지 경로
         style={styles.heartIcon}
       />
-      <Text style={styles.menuText}>{title}</Text>
+      <CustomText style={styles.menuText}>{title}</CustomText>
     </View>
   );
 }

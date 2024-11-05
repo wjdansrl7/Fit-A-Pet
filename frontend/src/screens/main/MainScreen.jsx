@@ -3,44 +3,48 @@ import { View, Text, StyleSheet, Image, Pressable } from 'react-native';
 import MenuButton from './MenuButton';
 import CustomText from '@components/CustomText/CustomText';
 
-function MainScreen() {
+function MainScreen({ navigation }) {
   return (
-    <View>
-      <CustomText>메인페이지</CustomText>
-      <View style={styles.container}>
-        {/* 상단 - 레벨 및 진행 상태 */}
-        <View style={styles.header}>
-          <Text style={styles.petName}>동규니</Text>
-          <View style={styles.levelContainer}>
-            <Text style={styles.levelText}>1</Text>
-            <View style={styles.progressBar}>
-              <View style={styles.progressFill} />
-            </View>
+    <View style={styles.container}>
+      {/* 상단 - 레벨 및 진행 상태 */}
+      <View style={styles.header}>
+        <View></View>
+        <CustomText style={styles.petName}>동규니</CustomText>
+        <Pressable style={styles.petNameUpdate}>
+          <Text>수정</Text>
+        </Pressable>
+        <View style={styles.levelContainer}>
+          <CustomText style={styles.levelText}>1</CustomText>
+          <View style={styles.progressBar}>
+            <View style={styles.progressFill} />
           </View>
         </View>
+      </View>
 
-        {/* 중앙 - 펫(알 모양) */}
-        <View style={styles.petContainer}>
-          <Image
-            source={require('../../assets/pets/egg_gray_1.png')} // 알 이미지 경로
-            style={styles.petImage}
-          />
-        </View>
+      {/* 중앙 - 펫(알 모양) */}
+      <View style={styles.petContainer}>
+        <Image
+          source={require('../../assets/pets/egg_gray_1.png')} // 알 이미지 경로
+          style={styles.petImage}
+        />
+      </View>
 
-        {/* 우측 메뉴 */}
-        <View style={styles.rightMenu}>
-          <MenuButton title={'식단기록'}></MenuButton>
-          <MenuButton title={'퀘스트'}></MenuButton>
-        </View>
+      {/* 우측 메뉴 */}
+      <View style={styles.rightMenu}>
+        {/* 푸드렌즈 카메라 */}
+        <MenuButton title={'식단기록'}></MenuButton>
+        {/* 퀘스트 모아보기 페이지로 이동 */}
+        <MenuButton title={'퀘스트'}></MenuButton>
+      </View>
 
-        {/* 하단 메뉴 */}
-        <View style={styles.bottomMenu}>
-          <MenuButton title={'그룹'}></MenuButton>
-          <Pressable onPress={() => navigation.navigate('Album')}>
-            <MenuButton title={'도감'}></MenuButton>
-          </Pressable>
-          <MenuButton title={'나의기록'}></MenuButton>
-        </View>
+      {/* 하단 메뉴 */}
+      <View style={styles.bottomMenu}>
+        {/* 나머지 페이지 만들어지면 연결 */}
+        <MenuButton title={'그룹'}></MenuButton>
+        <Pressable onPress={() => navigation.navigate('Album')}>
+          <MenuButton title={'도감'}></MenuButton>
+        </Pressable>
+        <MenuButton title={'나의기록'}></MenuButton>
       </View>
     </View>
   );
@@ -55,7 +59,7 @@ const styles = StyleSheet.create({
   header: {
     justifyContent: 'space-between',
     alignItems: 'center',
-    padding: 10,
+    padding: 15,
     marginTop: 30,
     marginBottom: 20,
     marginHorizontal: 20,
@@ -67,15 +71,23 @@ const styles = StyleSheet.create({
   },
   petName: {
     fontSize: 26,
-    fontWeight: 'bold',
+    // fontWeight: 'bold',
     marginBottom: 5,
+    width: '80%',
+    textAlign: 'center',
+  },
+  petNameUpdate: {
+    backgroundColor: 'yellowgreen',
+    position: 'absolute',
+    right: 20,
+    top: 20,
   },
   levelContainer: {
     flexDirection: 'row',
     alignItems: 'center',
   },
   levelText: {
-    fontWeight: 'bold',
+    // fontWeight: 'bold',
     fontSize: 30,
     backgroundColor: '#00BFFF',
     marginRight: -20,
@@ -100,8 +112,10 @@ const styles = StyleSheet.create({
   },
   petContainer: {
     alignItems: 'center',
-    marginTop: 230,
+    padding: 10,
+    marginTop: 220,
     marginBottom: 20,
+    backgroundColor: 'rgba(0, 0, 0, 0.2)',
   },
   petImage: {
     width: 270,
