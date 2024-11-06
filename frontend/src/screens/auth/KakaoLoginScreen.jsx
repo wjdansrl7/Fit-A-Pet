@@ -2,6 +2,8 @@ import React, { useState } from 'react';
 
 import { ActivityIndicator, Dimensions, StyleSheet, View } from 'react-native';
 import WebView from 'react-native-webview';
+import Config from 'react-native-config';
+
 import { colors } from '@src/constants';
 import useAuth from '@src/hooks/queries/useAuth';
 
