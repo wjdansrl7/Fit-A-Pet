@@ -7,22 +7,89 @@ import {
   Modal,
   Text,
 } from 'react-native';
-import TreasureBox from '@assets/backgrounds/group/TreasureBox.png';
-import GroupGoalModal from './GroupGoalModal';
-import GroupInviteModal from './GroupInviteModal';
-import GroupByeModal from './GroupByeModal';
+import TreasureBox from '@assets/backgrounds/guild/TreasureBox.png';
+import GuildQuestModal from './GuildQuestModal';
+import GuildInviteModal from './GuildInviteModal';
+import GuildByeModal from './GuildByeModal';
 
 import CustomText from '@components/CustomText/CustomText';
 import CustomButton from '@components/CustomButton/CustomButton';
 
-function GroupScreen({ navigation }) {
-  const [goal, setGoal] = useState('하루 20000보 걷기');
-  const [isGoalModalVisible, setGoalModalVisible] = useState(false);
+function GuildScreen({ navigation }) {
+  const [quest, setQuest] = useState(''); // quest로 변수명 통일
+  const [isQuestModalVisible, setQuestModalVisible] = useState(false); // goal을 quest로 변경
   const [isInviteModalVisible, setInviteModalVisible] = useState(false);
   const [isLeaveModalVisible, setLeaveModalVisible] = useState(false);
-  const members = Array(6).fill(null); // 예시 멤버 리스트 (빈 슬롯 포함)
-  const groupName = '문기의 보금자리';
+  const members = Array(6).fill(null);
+  const guildName = '문기의 보금자리';
   const inviteCode = '12312123';
+
+  const quests = [
+    {
+      questId: 3,
+      questCategory: 'DIET',
+      questName: '삼시세끼 탄단지 섭취',
+      questContent: '하루 세끼 모두 탄단지 섭취하기',
+      questTier: 'HARD',
+      questReward: '경험치 100, 공적치 100',
+    },
+    {
+      questId: 4,
+      questCategory: 'SLEEP',
+      questName: '내일은 주말!',
+      questContent: '수면시간 9시간 채우기',
+      questTier: 'NORMAL',
+      questReward: '경험치 200, 공적치 100',
+    },
+    {
+      questId: 5,
+      questCategory: 'WALK',
+      questName: '지옥의 행군..?',
+      questContent: '15,000보 걷기',
+      questTier: 'EASY',
+      questReward: '경험치 150, 공적치 100',
+    },
+    {
+      questId: 6,
+      questCategory: 'WALK',
+      questName: '지옥의 행군..?',
+      questContent: '15,000보 걷기',
+      questTier: 'EASY',
+      questReward: '경험치 150, 공적치 100',
+    },
+    {
+      questId: 7,
+      questCategory: 'WALK',
+      questName: '지옥의 행군..?',
+      questContent: '15,000보 걷기',
+      questTier: 'EASY',
+      questReward: '경험치 150, 공적치 100',
+    },
+    {
+      questId: 8,
+      questCategory: 'WALK',
+      questName: '지옥의 행군..?',
+      questContent: '15,000보 걷기',
+      questTier: 'EASY',
+      questReward: '경험치 150, 공적치 100',
+    },
+    {
+      questId: 9,
+      questCategory: 'WALK',
+      questName: '지옥의 행군..?',
+      questContent: '15,000보 걷기',
+      questTier: 'EASY',
+      questReward: '경험치 150, 공적치 100',
+    },
+    {
+      questId: 10,
+      questCategory: 'WALK',
+      questName: '지옥의 행군..?',
+      questContent: '15,000보 걷기',
+      questTier: 'EASY',
+      questReward: '경험치 150, 공적치 100',
+    },
+  ];
   return (
     <View style={styles.container}>
       {/* 진행 상태 바 */}
@@ -33,13 +100,13 @@ function GroupScreen({ navigation }) {
         <Image source={TreasureBox} style={styles.treasureBox} />
       </View>
 
-      {/* 목표 설정 영역 */}
+      {/* 퀘스트 설정 영역 */}
       <TouchableOpacity
         activeOpacity={0.8}
-        style={styles.goalContainer}
-        onPress={() => setGoalModalVisible(true)}
+        style={styles.questContainer}
+        onPress={() => setQuestModalVisible(true)}
       >
-        <CustomText>{goal ? goal : '목표를 설정해주세요!'}</CustomText>
+        <CustomText>{quest ? quest : '일일 퀘스트를 설정해주세요'}</CustomText>
       </TouchableOpacity>
 
       {/* 멤버 리스트 */}
@@ -58,7 +125,6 @@ function GroupScreen({ navigation }) {
                     style={styles.memberImage}
                   />
                 </TouchableOpacity>
-
                 <CustomText style={styles.memberName}>{member.name}</CustomText>
               </>
             ) : (
@@ -86,18 +152,22 @@ function GroupScreen({ navigation }) {
       />
 
       {/* 모달 컴포넌트 */}
-      <GroupGoalModal
-        isVisible={isGoalModalVisible}
-        onClose={() => setGoalModalVisible(false)}
-        onSetGoal={() => setGoalModalVisible(false)}
+      <GuildQuestModal
+        isVisible={isQuestModalVisible}
+        onClose={() => setQuestModalVisible(false)}
+        onSetQuest={(newQuest) => {
+          setQuest(newQuest);
+          setQuestModalVisible(false);
+        }}
+        quests={quests}
       />
-      <GroupInviteModal
+      <GuildInviteModal
         inviteCode={inviteCode}
         isVisible={isInviteModalVisible}
         onClose={() => setInviteModalVisible(false)}
       />
-      <GroupByeModal
-        groupName={groupName}
+      <GuildByeModal
+        guildName={guildName}
         isVisible={isLeaveModalVisible}
         onClose={() => setLeaveModalVisible(false)}
         onLeave={() => {
@@ -127,7 +197,7 @@ const styles = StyleSheet.create({
     borderRadius: 20,
   },
   progressFill: {
-    width: '100%', // 진행 상태 (예: 30%로 가정)
+    width: '100%',
     height: '100%',
     backgroundColor: 'red',
     borderRadius: 20,
@@ -139,7 +209,7 @@ const styles = StyleSheet.create({
     width: 100,
     height: 100,
   },
-  goalContainer: {
+  questContainer: {
     marginTop: 50,
     marginHorizontal: 10,
     alignItems: 'center',
@@ -157,9 +227,8 @@ const styles = StyleSheet.create({
     marginTop: 20,
   },
   memberSlot: {
-    width: '50%', // 3열로 배치하기 위해 너비를 33.3%로 설정
+    width: '50%',
     alignItems: 'center',
-
     marginVertical: 10,
   },
   imageContainer: {
@@ -197,8 +266,8 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: 'center',
     alignItems: 'center',
-    backgroundColor: 'rgba(0, 0, 0, 0.5)', // 반투명 배경
+    backgroundColor: 'rgba(0, 0, 0, 0.5)',
   },
 });
 
-export default GroupScreen;
+export default GuildScreen;

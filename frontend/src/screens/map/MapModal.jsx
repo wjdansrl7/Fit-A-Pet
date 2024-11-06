@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { View, StyleSheet, TextInput } from 'react-native';
+import { View, StyleSheet, TextInput, TouchableOpacity } from 'react-native';
 import CustomModal from '@components/CustomModal/CustomModal';
 import CustomText from '@components/CustomText/CustomText';
 import CustomButton from '@components/CustomButton/CustomButton';
@@ -9,34 +9,35 @@ const MapModal = ({
   isVisible,
   viewState,
   onClose,
-  onCreateGroup,
-  onJoinGroup,
+  onCreateGuild, // 그룹 생성 함수 (길드 생성 함수로 변경 필요)
+  onJoinGuild, // 그룹 참여 함수 (길드 참여 함수로 변경 필요)
 }) => {
   const [errorState, setErrorState] = useState(null); // 에러 상태: 'duplicate', 'invalidCode', 'full'
-  const [newGroupValue, setNewGroupValue] = useState('');
+  const [newGuildValue, setNewGuildValue] = useState('');
   const [inviteCodeValue, setInviteCodeValue] = useState('');
 
-  const handleCreateGroup = () => {
-    const groupExists = true; // 예시 로직
-    if (groupExists) {
+  const handleCreateGuild = () => {
+    // 그룹 생성 핸들러 (길드 생성 핸들러로 변경 필요)
+    const guildExists = true; // 예시 로직
+    if (guildExists) {
       setErrorState('duplicate');
     } else {
-      onCreateGroup();
+      onCreateGuild();
       setErrorState(null); // 성공 시 에러 상태 초기화
     }
-    setNewGroupValue(''); // 입력 값 초기화
+    setNewGuildValue(''); // 입력 값 초기화
   };
 
-  const handleJoinGroup = () => {
+  const handleJoinGuild = () => {
+    // 그룹 참여 핸들러 (길드 참여 핸들러로 변경 필요)
     const isCodeValid = true; // 예시 로직
-    const isGroupFull = true; // 예시 로직
+    const isGuildFull = true; // 예시 로직
     if (!isCodeValid) {
       setErrorState('invalidCode');
-    } else if (isGroupFull) {
-      console.log('꽉참');
+    } else if (isGuildFull) {
       setErrorState('full');
     } else {
-      onJoinGroup();
+      onJoinGuild();
       setErrorState(null); // 성공 시 에러 상태 초기화
     }
     setInviteCodeValue(''); // 입력 값 초기화
@@ -57,12 +58,12 @@ const MapModal = ({
           : errorState === 'invalidCode'
           ? '코드 불일치!'
           : errorState === 'full'
-          ? '그룹 인원 제한!'
+          ? '길드 인원 제한!'
           : viewState === 'init'
-          ? '빈 그룹이네요!'
+          ? '빈 길드네요!'
           : viewState === 'create'
-          ? '그룹을 만들어봐요!'
-          : '그룹에 들어가요!'
+          ? '길드를 만들어봐요!'
+          : '초대코드 입력'
       }
       onClose={() => {
         onClose();
@@ -71,28 +72,24 @@ const MapModal = ({
     >
       {viewState === 'init' && (
         <>
-          <View style={styles.mapModalBody}>
-            <CustomText>아래 버튼 중 하나를 눌러</CustomText>
-            <CustomText style={{ marginBottom: 10 }}>
-              그룹을 만들거나 들어가요!
-            </CustomText>
+          <View style={styles.mapModalTwoBtnContainer}>
+            <TouchableOpacity
+              activeOpacity={0.8}
+              style={styles.mapTwoBtn}
+              onPress={() => setErrorState(null) || onCreateGuild()}
+            >
+              <CustomText>길드</CustomText>
+              <CustomText>생성하기</CustomText>
+            </TouchableOpacity>
 
-            <CustomText style={styles.alertText}>
-              * 들어가기는 친구가 보내준 그룹
-            </CustomText>
-            <CustomText style={styles.alertText}>
-              초대코드가 필요해요!
-            </CustomText>
-          </View>
-          <View style={styles.mapModalBottomTwoB}>
-            <CustomButton
-              title="만들기"
-              onPress={() => setErrorState(null) || onCreateGroup()}
-            />
-            <CustomButton
-              title="들어가기"
-              onPress={() => setErrorState(null) || onJoinGroup()}
-            />
+            <TouchableOpacity
+              activeOpacity={0.8}
+              style={styles.mapTwoBtn}
+              onPress={() => setErrorState(null) || onJoinGuild()}
+            >
+              <CustomText>초대코드</CustomText>
+              <CustomText>입력</CustomText>
+            </TouchableOpacity>
           </View>
         </>
       )}
@@ -100,36 +97,27 @@ const MapModal = ({
       {viewState === 'create' && (
         <>
           <View style={styles.mapModalBody}>
+            <TextInput
+              style={styles.input}
+              placeholder="길드 이름은?"
+              value={newGuildValue}
+              onChangeText={setNewGuildValue}
+              keyboardType="default"
+            />
             {errorState === 'duplicate' ? (
               <>
                 <CustomText style={styles.errorText}>
-                  이미 있는 그룹 이름이네요..
+                  이미 있는 길드 이름이네요
                 </CustomText>
-                <CustomText style={styles.errorText}>
-                  다시 입력해주세요!
-                </CustomText>
-
-                <View style={styles.mapModalBottom}>
-                  <CustomButton title="알겠어" onPress={goBack} />
-                </View>
               </>
             ) : (
               <>
-                <CustomText>
-                  새로운 그룹을 생성을 위해 그룹 이름을 지어주세요!
-                </CustomText>
-                <TextInput
-                  style={styles.input}
-                  placeholder="그룹 이름은?"
-                  value={newGroupValue}
-                  onChangeText={setNewGroupValue}
-                  keyboardType="default"
-                />
-                <View style={styles.mapModalBottom}>
-                  <CustomButton title="이거야" onPress={handleCreateGroup} />
-                </View>
+                <CustomText></CustomText>
               </>
             )}
+            <View style={styles.mapModalBottom}>
+              <CustomButton title="이거야" onPress={handleCreateGuild} />
+            </View>
           </View>
         </>
       )}
@@ -137,48 +125,33 @@ const MapModal = ({
       {viewState === 'join' && (
         <>
           <View style={styles.mapModalBody}>
+            <TextInput
+              style={styles.input}
+              placeholder="초대코드는.."
+              value={inviteCodeValue}
+              onChangeText={setInviteCodeValue}
+              keyboardType="default"
+            />
             {errorState === 'invalidCode' ? (
               <>
                 <CustomText style={styles.errorText}>
-                  초대 코드가 맞지 않아요!
+                  없는 초대코드예요!
                 </CustomText>
-                <CustomText style={styles.errorText}>
-                  다시 코드를 입력해봐요!
-                </CustomText>
-                <View style={styles.mapModalBottom}>
-                  <CustomButton title="알겠어" onPress={goBack} />
-                </View>
               </>
             ) : errorState === 'full' ? (
               <>
                 <CustomText style={styles.errorText}>
-                  해당 그룹은 이미 6명이라
+                  길드 인원이 다 찼어요
                 </CustomText>
-                <CustomText style={styles.errorText}>못들어가요</CustomText>
-                <CustomText style={styles.errorText}>
-                  다시 코드를 입력해봐요!
-                </CustomText>
-
-                <View style={styles.mapModalBottom}>
-                  <CustomButton title="알겠어" onPress={goBack} />
-                </View>
               </>
             ) : (
               <>
-                <CustomText>선택한 그룹에 참여하려면</CustomText>
-                <CustomText>초대 코드를 입력해주세요!</CustomText>
-                <TextInput
-                  style={styles.input}
-                  placeholder="초대 코드는.."
-                  value={inviteCodeValue}
-                  onChangeText={setInviteCodeValue}
-                  keyboardType="default"
-                />
-                <View style={styles.mapModalBottom}>
-                  <CustomButton title="이거야" onPress={handleJoinGroup} />
-                </View>
+                <CustomText></CustomText>
               </>
             )}
+            <View style={styles.mapModalBottom}>
+              <CustomButton title="이거야" onPress={handleJoinGuild} />
+            </View>
           </View>
         </>
       )}
@@ -188,35 +161,33 @@ const MapModal = ({
 
 const styles = StyleSheet.create({
   mapModalContainer: {
-    height: 250,
-    position: 'relative',
+    height: 200,
+    alignItems: 'center',
   },
   mapModalBody: {
     width: 280,
-    padding: 10,
+    gap: 5,
+    justifyContent: 'center',
+  },
 
-    justifyContent: 'center',
-  },
   mapModalBottom: {
-    position: 'absolute',
-    top: 130,
-    width: '100%',
-    flexDirection: 'row',
-    justifyContent: 'center',
-    alignContent: 'center',
-    paddingHorizontal: 20,
+    paddingHorizontal: 80,
   },
-  mapModalBottomTwoB: {
-    position: 'absolute',
-    top: 130,
-    width: '100%',
+  mapModalTwoBtnContainer: {
     flexDirection: 'row',
     justifyContent: 'space-between',
-    paddingHorizontal: 20,
+    gap: 20, // 더 적은 간격으로 카드 스타일을 부각
   },
-  alertText: {
-    fontSize: 16,
-    color: colors.MAIN_ORANGE,
+  mapTwoBtn: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+    paddingVertical: 20,
+    borderRadius: 10,
+    borderWidth: 1,
+    borderColor: colors.BACKGROUND_COLOR,
+    backgroundColor: colors.WHITE,
+    elevation: 8,
   },
   errorText: {
     color: colors.MAIN_ORANGE,
@@ -227,8 +198,13 @@ const styles = StyleSheet.create({
     backgroundColor: colors.BACKGROUND_COLOR,
     paddingLeft: 15,
     borderRadius: 20,
-    marginTop: 10,
   },
 });
 
 export default MapModal;
+
+// 주석:
+// - onCreateGuild: 그룹 생성 함수 (길드 생성 함수로 변경 필요)
+// - onJoinGuild: 그룹 참여 함수 (길드 참여 함수로 변경 필요)
+// - handleCreateGuild: 그룹 생성 핸들러 (길드 생성 핸들러로 변경 필요)
+// - handleJoinGuild: 그룹 참여 핸들러 (길드 참여 핸들러로 변경 필요)

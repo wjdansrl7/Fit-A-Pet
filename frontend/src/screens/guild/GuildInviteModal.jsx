@@ -5,7 +5,7 @@ import CustomModal from '@components/CustomModal/CustomModal';
 import CustomText from '@components/CustomText/CustomText';
 import CustomButton from '@components/CustomButton/CustomButton';
 import { colors } from '@src/constants';
-const GroupInviteModal = ({ inviteCode, isVisible, onClose }) => {
+const GuildInviteModal = ({ inviteCode, isVisible, onClose }) => {
   const [isAlertVisible, setAlertVisible] = useState(false);
 
   const handleCopyInviteCode = () => {
@@ -20,8 +20,8 @@ const GroupInviteModal = ({ inviteCode, isVisible, onClose }) => {
 
   return (
     <CustomModal title="친구 초대하기" isVisible={isVisible} onClose={onClose}>
-      <View style={styles.groupModalBody}>
-        <CustomText>초대 코드에요.</CustomText>
+      <View style={styles.guildModalBody}>
+        <CustomText>초대 코드예요.</CustomText>
         <CustomText>클릭해서 복사해가세요!</CustomText>
         <TouchableOpacity activeOpacity={0.8} onPress={handleCopyInviteCode}>
           <CustomText style={styles.inviteCodeText}>{inviteCode}</CustomText>
@@ -34,9 +34,9 @@ const GroupInviteModal = ({ inviteCode, isVisible, onClose }) => {
         isVisible={isAlertVisible}
         onClose={() => setAlertVisible(false)}
       >
-        <View style={styles.groupModalBody}>
+        <View style={styles.guildModalBody}>
           <CustomText style={styles.alertText}>
-            초대 코드가 복사되었답니다~
+            초대 코드가 복사되었답니다
           </CustomText>
         </View>
         <CustomButton title="확인" onPress={handleCloseInviteCode} />
@@ -46,7 +46,7 @@ const GroupInviteModal = ({ inviteCode, isVisible, onClose }) => {
 };
 
 const styles = StyleSheet.create({
-  groupModalBody: {
+  guildModalBody: {
     alignItems: 'center',
     marginBottom: 20,
   },
@@ -56,7 +56,7 @@ const styles = StyleSheet.create({
     color: colors.MAIN_GREEN,
     textDecorationLine: 'underline',
   },
-  groupModalBottom: {
+  guildModalBottom: {
     marginTop: 20,
     paddingHorizontal: 20,
   },
@@ -71,4 +71,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default GroupInviteModal;
+export default GuildInviteModal;

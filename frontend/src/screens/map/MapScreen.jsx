@@ -40,18 +40,18 @@ function MapScreen({ navigation }) {
     },
   ];
 
-  const openCreateGroupModal = () => {
+  const openCreateGuildModal = () => {
     setModalViewState('create');
   };
 
-  const openJoinGroupModal = () => {
+  const openJoinGuildModal = () => {
     setModalViewState('join');
   };
 
   const handleHouseClick = (house) => {
     if (house.isActive) {
-      // 적힌 코드롤 같이 전해줘야지 특정 Group으로 이동
-      navigation.navigate('Group');
+      // 적힌 코드롤 같이 전해줘야지 특정 Guild으로 이동
+      navigation.navigate('Guild');
     } else {
       setSelectedHouse(house);
       setModalViewState('init');
@@ -89,8 +89,8 @@ function MapScreen({ navigation }) {
           isVisible={isModalVisible}
           viewState={modalViewState} // init, create, join 중 하나
           onClose={() => setModalVisible(false)}
-          onCreateGroup={openCreateGroupModal}
-          onJoinGroup={openJoinGroupModal}
+          onCreateGuild={openCreateGuildModal}
+          onJoinGuild={openJoinGuildModal}
         />
       </ImageBackground>
     </View>

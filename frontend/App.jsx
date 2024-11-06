@@ -15,7 +15,7 @@ import QuestScreen from '@screens/quest/QuestScreen';
 import AlbumScreen from '@screens/album/AlbumScreen';
 import CustomText from '@components/CustomText/CustomText';
 import MapScreen from '@screens/map/MapScreen';
-import GroupScreen from '@screens/group/GroupScreen';
+import GuildScreen from '@screens/guild/GuildScreen';
 const Stack = createNativeStackNavigator();
 
 function App() {
@@ -67,9 +67,9 @@ function App() {
               options={{ title: '지도' }}
             />
             <Stack.Screen
-              name="Group"
-              component={GroupScreen}
-              options={{ title: '그룹' }}
+              name="Guild"
+              component={GuildScreen}
+              options={{ title: '길드' }}
             />
             <Stack.Screen
               name={authNavigations.AUTH_HOME}
