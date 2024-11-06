@@ -5,7 +5,6 @@ import useAuth from '@src/hooks/queries/useAuth';
 import { authNavigations } from '@src/constants';
 import Config from 'react-native-config';
 
-console.log('Config.TEST', Config.TEST);
 function AuthHomeScreen({ navigation }) {
   const { loginMutation } = useAuth();
   return (
