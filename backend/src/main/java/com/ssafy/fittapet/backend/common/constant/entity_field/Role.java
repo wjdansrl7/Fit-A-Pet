@@ -1,4 +1,4 @@
-package com.ssafy.fittapet.backend.common.constant;
+package com.ssafy.fittapet.backend.common.constant.entity_field;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;

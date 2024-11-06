@@ -39,13 +39,13 @@ public class QUser extends EntityPathBase<User> {
 
     public final StringPath providerId = createString("providerId");
 
-    public final EnumPath<com.ssafy.fittapet.backend.common.constant.Role> role = createEnum("role", com.ssafy.fittapet.backend.common.constant.Role.class);
+    public final EnumPath<com.ssafy.fittapet.backend.common.constant.entity_field.Role> role = createEnum("role", com.ssafy.fittapet.backend.common.constant.entity_field.Role.class);
 
     public final StringPath userName = createString("userName");
 
     public final StringPath userNickname = createString("userNickname");
 
-    public final EnumPath<com.ssafy.fittapet.backend.common.constant.UserTier> userTier = createEnum("userTier", com.ssafy.fittapet.backend.common.constant.UserTier.class);
+    public final EnumPath<com.ssafy.fittapet.backend.common.constant.entity_field.UserTier> userTier = createEnum("userTier", com.ssafy.fittapet.backend.common.constant.entity_field.UserTier.class);
 
     public QUser(String variable) {
         super(User.class, forVariable(variable));
