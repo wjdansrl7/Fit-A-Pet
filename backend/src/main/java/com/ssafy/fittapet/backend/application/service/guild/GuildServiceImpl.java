@@ -64,7 +64,6 @@ public class GuildServiceImpl implements GuildService {
                     build());
         }
         else{
-            // 이미 할당된 퀘스트면 반환. todo : 예외처리
             if(guildQuest.getQuest().getId().equals(questId)) throw new CustomException(ALREADY_SET_QUEST);
             guildQuest.setQuest(quest);
             guildQuestRepository.save(guildQuest);
