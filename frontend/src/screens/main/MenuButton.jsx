@@ -8,12 +8,12 @@ function MenuButton({ title, icon }) {
       {icon ? (
         <Image
           source={icon} // 지정된 이미지 경로
-          style={styles.heartIcon}
+          style={styles.iconImage}
         ></Image>
       ) : (
         <Image
           source={require('@assets/heart_icon.png')} // 핑크 하트 이미지 경로
-          style={styles.heartIcon}
+          style={styles.iconImage}
         />
       )}
       <CustomText style={styles.menuText}>{title}</CustomText>
@@ -26,7 +26,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     marginBottom: 20,
   },
-  heartIcon: {
+  iconImage: {
     width: 70,
     height: 70,
   },
