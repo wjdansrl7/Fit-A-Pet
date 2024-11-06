@@ -40,22 +40,22 @@ public class ReissueService {
             }
         }
 
-        //get refresh token
+        //refresh null check
         if (refresh == null) {
-            return new ResponseEntity<>("refresh token null", HttpStatus.BAD_REQUEST);
+            return new ResponseEntity<>("refreshToken null", HttpStatus.BAD_REQUEST);
         }
 
         //Blacklist 확인
         boolean inBlacklist = blacklistRepository.existsById(refresh);
         if (inBlacklist) {
-            return new ResponseEntity<>("refresh token is blacklisted", HttpStatus.BAD_REQUEST);
+            return new ResponseEntity<>("refreshToken is blacklisted", HttpStatus.BAD_REQUEST);
         }
 
         //expired check
         try {
             jwtUtil.isExpired(refresh);
         } catch (ExpiredJwtException e) {
-            return new ResponseEntity<>("refresh token expired", HttpStatus.BAD_REQUEST);
+            return new ResponseEntity<>("refreshToken expired", HttpStatus.BAD_REQUEST);
         }
 
         // refresh 확인 (발급시 페이로드에 명시)
@@ -64,7 +64,7 @@ public class ReissueService {
         if (!category.equals("refresh")) {
 
             //response status code
-            return new ResponseEntity<>("invalid refresh token", HttpStatus.BAD_REQUEST);
+            return new ResponseEntity<>("invalid refreshToken", HttpStatus.BAD_REQUEST);
         }
 
         //DB에 저장되어 있는지 확인
@@ -99,7 +99,7 @@ public class ReissueService {
         response.addCookie(createCookie("accessToken", newAccess));
         response.addCookie(createCookie("refreshToken", newRefresh));
 
-        return new ResponseEntity<>(HttpStatus.OK);
+        return new ResponseEntity<>("Token reissued successfully", HttpStatus.OK);
     }
 
     private Cookie createCookie(String key, String value) {
