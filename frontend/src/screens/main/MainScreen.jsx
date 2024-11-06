@@ -2,6 +2,7 @@ import React, { useCallback } from 'react';
 import { View, Text, StyleSheet, Image, Pressable } from 'react-native';
 import MenuButton from './MenuButton';
 import CustomText from '@components/CustomText/CustomText';
+import AlbumIcon from '@assets/icons/도감_icon.png';
 
 function MainScreen({ navigation }) {
   return (
@@ -32,19 +33,19 @@ function MainScreen({ navigation }) {
       {/* 우측 메뉴 */}
       <View style={styles.rightMenu}>
         {/* 푸드렌즈 카메라 */}
-        <MenuButton title={'식단기록'}></MenuButton>
+        <MenuButton title={'식단기록'} icon={null}></MenuButton>
         {/* 퀘스트 모아보기 페이지로 이동 */}
-        <MenuButton title={'퀘스트'}></MenuButton>
+        <MenuButton title={'퀘스트'} icon={null}></MenuButton>
       </View>
 
       {/* 하단 메뉴 */}
       <View style={styles.bottomMenu}>
         {/* 나머지 페이지 만들어지면 연결 */}
-        <MenuButton title={'그룹'}></MenuButton>
+        <MenuButton title={'그룹'} icon={null}></MenuButton>
         <Pressable onPress={() => navigation.navigate('Album')}>
-          <MenuButton title={'도감'}></MenuButton>
+          <MenuButton title={'도감'} icon={AlbumIcon}></MenuButton>
         </Pressable>
-        <MenuButton title={'나의기록'}></MenuButton>
+        <MenuButton title={'나의기록'} icon={null}></MenuButton>
       </View>
     </View>
   );
