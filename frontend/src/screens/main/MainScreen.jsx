@@ -34,7 +34,9 @@ function MainScreen({ navigation }) {
         {/* 푸드렌즈 카메라 */}
         <MenuButton title={'식단기록'}></MenuButton>
         {/* 퀘스트 모아보기 페이지로 이동 */}
-        <MenuButton title={'퀘스트'}></MenuButton>
+        <Pressable onPress={() => navigation.navigate('Quest')}>
+          <MenuButton title={'퀘스트'}></MenuButton>
+        </Pressable>
       </View>
 
       {/* 하단 메뉴 */}
