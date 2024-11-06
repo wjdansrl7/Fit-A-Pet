@@ -1,6 +1,18 @@
 pipeline {
     agent any
+
+
+    
     stages {
+        stage('Prepare') {
+            steps {
+                // 기존 컨테이너 종료
+                script {
+                    sh 'docker-compose -f docker-compose.yml down'
+                }
+            }
+        }
+
         stage('Build and Deploy') {
             steps {
                 script {
