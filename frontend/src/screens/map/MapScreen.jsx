@@ -9,11 +9,11 @@ import {
 // import { useNavigation } from '@react-navigation/native';  페이지 이동 생기면
 import CustomText from '@components/CustomText/CustomText';
 
-import map2x from '@assets/backgrounds/group/map2x.webp';
-import ActiveHouse from '@assets/backgrounds/group/ActiveHouse.png';
-import InActiveHouse from '@assets/backgrounds/group/InActiveHouse.png';
+import map2x from '@assets/backgrounds/map/map2x.webp';
+import ActiveHouse from '@assets/backgrounds/map/ActiveHouse.png';
+import InActiveHouse from '@assets/backgrounds/map/InActiveHouse.png';
 import MapModal from '@screens/map/MapModal';
-
+import { colors } from '@src/constants';
 function MapScreen({ navigation }) {
   const [isModalVisible, setModalVisible] = useState(false);
   const [modalViewState, setModalViewState] = useState('init'); // init, create, join 중 하나로 상태 관리

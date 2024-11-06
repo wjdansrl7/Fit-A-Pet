@@ -2,6 +2,7 @@ import React from 'react';
 import { View, StyleSheet, TouchableOpacity, Image } from 'react-native';
 import Modal from 'react-native-modal';
 import CustomText from '@components/CustomText/CustomText';
+import { colors } from '@src/constants';
 
 const CustomModal = ({
   title, // 초록색 제목
@@ -11,6 +12,7 @@ const CustomModal = ({
   animationOut = 'zoomOut',
   wantClose = false, // 취소 아이콘 필요하면
   onClose, // 취소 효과 받을 수 있도록 설정 필요함
+  modalStyle,
 }) => {
   return (
     <Modal
@@ -20,7 +22,7 @@ const CustomModal = ({
       backdropColor="black"
       backdropOpacity={0.5}
     >
-      <View style={styles.modalContainer}>
+      <View style={[styles.modalContainer, modalStyle]}>
         <View style={styles.modalHeader}>
           <CustomText style={styles.headerText}>{title}</CustomText>
         </View>
@@ -42,14 +44,11 @@ const CustomModal = ({
 const styles = StyleSheet.create({
   modalContainer: {
     width: '100%',
-    backgroundColor: 'white',
+    backgroundColor: colors.WHITE,
     paddingHorizontal: 20,
     paddingTop: 5,
     paddingBottom: 20,
     borderRadius: 20,
-    borderWidth: 2,
-    borderColor: 'transparent',
-    justifyContent: 'center',
     alignItems: 'center',
     minHeight: '20%',
   },
@@ -59,19 +58,22 @@ const styles = StyleSheet.create({
     padding: 10,
     width: '70%',
     borderRadius: 10,
-    backgroundColor: 'green',
+    backgroundColor: colors.MAIN_GREEN,
     alignItems: 'center',
   },
   headerText: {
-    color: 'white',
+    color: colors.WHITE,
   },
   closeButton: {
+    position: 'absolute',
+    top: 10,
+    right: 20,
     alignSelf: 'flex-end',
   },
   modalBody: {
-    marginTop: 5,
+    marginTop: 50,
     paddingHorizontal: 20,
-    justifyContent: 'center',
+    paddingLeft: 30,
     alignItems: 'center',
   },
 });

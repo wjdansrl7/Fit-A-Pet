@@ -3,6 +3,7 @@ import { View, StyleSheet, TextInput } from 'react-native';
 import CustomModal from '@components/CustomModal/CustomModal';
 import CustomText from '@components/CustomText/CustomText';
 import CustomButton from '@components/CustomButton/CustomButton';
+import { colors } from '@src/constants';
 
 const MapModal = ({
   isVisible,
@@ -47,6 +48,7 @@ const MapModal = ({
 
   return (
     <CustomModal
+      modalStyle={styles.mapModalContainer}
       isVisible={isVisible}
       wantClose={true}
       title={
@@ -185,38 +187,46 @@ const MapModal = ({
 };
 
 const styles = StyleSheet.create({
+  mapModalContainer: {
+    height: 250,
+    position: 'relative',
+  },
   mapModalBody: {
     width: 280,
+    padding: 10,
+
+    justifyContent: 'center',
   },
   mapModalBottom: {
-    marginTop: 10,
-    width: 300,
+    position: 'absolute',
+    top: 130,
+    width: '100%',
     flexDirection: 'row',
     justifyContent: 'center',
+    alignContent: 'center',
     paddingHorizontal: 20,
   },
   mapModalBottomTwoB: {
-    marginTop: 20,
-    width: 300,
+    position: 'absolute',
+    top: 130,
+    width: '100%',
     flexDirection: 'row',
     justifyContent: 'space-between',
     paddingHorizontal: 20,
   },
   alertText: {
     fontSize: 16,
-    color: 'gray',
+    color: colors.MAIN_ORANGE,
   },
   errorText: {
-    color: 'red', // 에러 메시지 스타일
+    color: colors.MAIN_ORANGE,
   },
   input: {
     fontFamily: 'DungGeunMo',
     fontSize: 16,
-    backgroundColor: 'gray', // 색 변화시킬거
+    backgroundColor: colors.BACKGROUND_COLOR,
     paddingLeft: 15,
     borderRadius: 20,
-    borderWidth: 2,
-    borderColor: 'transparent',
     marginTop: 10,
   },
 });
