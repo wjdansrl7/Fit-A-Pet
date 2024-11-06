@@ -49,12 +49,19 @@ const AlbumDetailModal = ({ isVisible, onClose, pet }) => {
           </View>
 
           {/* 메인 펫 설정 버튼(상황에 따라 비활성화) */}
+          {/* 메인 펫으로 설정하는 api 달기 */}
           <TouchableOpacity
             activeOpacity={0.8}
-            style={styles.button}
+            style={[
+              styles.button,
+              pet.isMain ? { backgroundColor: 'gray' } : null,
+            ]}
             onPress={onClose}
+            disabled={pet.isMain}
           >
-            <CustomText style={styles.buttonText}>메인 펫으로 설정</CustomText>
+            <CustomText style={styles.buttonText}>
+              {pet.isMain ? '메인 펫으로 설정 됨' : '메인 펫으로 설정'}
+            </CustomText>
           </TouchableOpacity>
         </View>
       </View>
