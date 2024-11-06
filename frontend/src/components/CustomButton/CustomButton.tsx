@@ -22,7 +22,8 @@ const styles = StyleSheet.create({
     borderWidth: 2,
     borderColor: 'transparent',
     backgroundColor: 'green',
-    padding: 15,
+    paddingHorizontal: 15,
+    paddingVertical: 8,
   },
   customFontText: {
     fontSize: 20,

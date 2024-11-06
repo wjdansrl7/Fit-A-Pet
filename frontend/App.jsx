@@ -6,7 +6,7 @@ import MainScreen from '@screens/main/MainScreen';
 import AlbumScreen from '@screens/album/AlbumScreen';
 import CustomText from '@components/CustomText/CustomText';
 import MapScreen from '@screens/map/MapScreen';
-
+import GroupScreen from '@screens/group/GroupScreen';
 const Stack = createNativeStackNavigator();
 
 function App() {
@@ -53,6 +53,11 @@ function App() {
             name="Map"
             component={MapScreen}
             options={{ title: '지도' }}
+          />
+          <Stack.Screen
+            name="Group"
+            component={GroupScreen}
+            options={{ title: '그룹' }}
           />
         </Stack.Navigator>
       ) : null}

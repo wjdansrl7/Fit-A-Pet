@@ -14,7 +14,7 @@ import ActiveHouse from '@assets/backgrounds/group/ActiveHouse.png';
 import InActiveHouse from '@assets/backgrounds/group/InActiveHouse.png';
 import MapModal from '@screens/map/MapModal';
 
-const MapScreen = () => {
+function MapScreen({ navigation }) {
   const [isModalVisible, setModalVisible] = useState(false);
   const [modalViewState, setModalViewState] = useState('init'); // init, create, join 중 하나로 상태 관리
   const [selectedHouse, setSelectedHouse] = useState(null);
@@ -50,7 +50,8 @@ const MapScreen = () => {
 
   const handleHouseClick = (house) => {
     if (house.isActive) {
-      console.log(house); // 나중에 네비게이션 코드 추가
+      // 적힌 코드롤 같이 전해줘야지 특정 Group으로 이동
+      navigation.navigate('Group');
     } else {
       setSelectedHouse(house);
       setModalViewState('init');
@@ -94,7 +95,7 @@ const MapScreen = () => {
       </ImageBackground>
     </View>
   );
-};
+}
 
 const styles = StyleSheet.create({
   container: {
