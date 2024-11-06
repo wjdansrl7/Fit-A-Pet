@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import {
   View,
   Text,
@@ -6,15 +6,30 @@ import {
   Pressable,
   Image,
   ScrollView,
+  Button,
 } from 'react-native';
-import CustomText from '@components/CustomText/CustomText';
 import AlbumFrame from './AlbumFrame';
+import AlbumDetailModal from './AlbumDetailModal';
 
 const pets = [
-  { name: '뭉기', image: require('../../assets/pets/beluga_3.png') },
+  {
+    type: '벨루가',
+    name: '뭉기',
+    image: require('../../assets/pets/beluga_3.png'),
+    status: '성체',
+    dateMet: '24-10-30',
+    level: 40,
+  },
   null,
   null,
-  { name: '동규니', image: require('../../assets/pets/egg_gray_1.png') },
+  {
+    type: '사자',
+    name: '동규니',
+    image: require('../../assets/pets/egg_gray_1.png'),
+    status: '알',
+    dateMet: '24-10-30',
+    level: 1,
+  },
   null,
   null,
   null,
@@ -22,13 +37,38 @@ const pets = [
 ];
 
 function AlbumScreen() {
+  const [selectedPet, setSelectedPet] = useState(null);
+  const [isModalVisible, setModalVisible] = useState(false);
+
+  const openModal = (pet) => {
+    setSelectedPet(pet);
+    setModalVisible(true);
+  };
+
+  const closeModal = () => {
+    // setSelectedPet(null);
+    setModalVisible(false);
+  };
+
   return (
     <ScrollView contentContainerStyle={styles.container}>
       <View style={styles.grid}>
         {pets.map((pet, index) => (
-          <AlbumFrame key={index} pet={pet} style={styles.frameBorder} />
+          <AlbumFrame
+            key={index}
+            pet={pet}
+            onPress={() => pet && openModal(pet)}
+            style={styles.frameBorder}
+          />
         ))}
       </View>
+
+      {/* 실제 모달: 컴포넌트로 따로 */}
+      <AlbumDetailModal
+        isVisible={isModalVisible}
+        onClose={closeModal}
+        pet={selectedPet}
+      />
     </ScrollView>
   );
 }
@@ -37,7 +77,7 @@ const styles = StyleSheet.create({
   container: {
     flexGrow: 1,
     padding: 40,
-    backgroundColor: '#FFF7D2',
+    backgroundColor: '#FFF8DC',
   },
 
   grid: {

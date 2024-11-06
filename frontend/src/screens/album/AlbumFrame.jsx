@@ -1,21 +1,23 @@
 import React from 'react';
-import { View, StyleSheet, Text, Image } from 'react-native';
+import { View, StyleSheet, Text, Image, Pressable } from 'react-native';
 import CustomText from '@components/CustomText/CustomText';
 
-function AlbumFrame({ pet }) {
+function AlbumFrame({ pet, onPress }) {
   return (
     <View style={styles.container}>
       <View style={styles.doubleContainer}>
+        {/* <Pressable onPress={onPress}> */}
         {pet ? (
-          <>
+          <Pressable style={{ alignItems: 'center' }} onPress={onPress}>
             <View style={styles.imageContainer}>
               <Image source={pet.image} style={styles.image} />
             </View>
             <CustomText style={styles.name}>{pet.name}</CustomText>
-          </>
+          </Pressable>
         ) : (
           <CustomText style={styles.placeholder}>?</CustomText>
         )}
+        {/* </Pressable> */}
       </View>
     </View>
   );
@@ -26,7 +28,7 @@ const styles = StyleSheet.create({
     width: 150, // 사각형의 너비
     height: 200, // 사각형의 높이
     borderWidth: 4,
-    borderColor: '#713C10', // 테두리 색상
+    borderColor: '#713C10',
     backgroundColor: 'white', // 배경 색상
     borderRadius: 8,
   },
