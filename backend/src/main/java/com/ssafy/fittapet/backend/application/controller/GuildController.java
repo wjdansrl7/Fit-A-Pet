@@ -1,6 +1,7 @@
 package com.ssafy.fittapet.backend.application.controller;
 
 import com.ssafy.fittapet.backend.application.service.guild.GuildService;
+import com.ssafy.fittapet.backend.common.exception.CustomException;
 import com.ssafy.fittapet.backend.domain.dto.guild.GuildInfoResponse;
 import com.ssafy.fittapet.backend.domain.dto.guild.GuildMemberInfoResponse;
 import lombok.RequiredArgsConstructor;
@@ -16,22 +17,6 @@ import java.util.List;
 public class GuildController {
     private final GuildService guildService;
 
-//    @GetMapping
-//    public ResponseEntity<?>getMap(){
-//        List<MapResponse> map = guildService.getAll();
-//
-//        return new ResponseEntity<>(map, HttpStatus.OK);
-//    }
-
-//    @PostMapping
-//    public ResponseEntity<?> createGuild(
-//            // todo : request dto로 받을지 그냥 requestParam으로 받을지 (1)
-//            @RequestBody GuildRequest guildRequest
-//    ){
-//        guildService.createGuild(guildRequest);
-//        return new ResponseEntity<>(HttpStatus.OK);
-//    }
-
     @GetMapping(path = "/{guildId}/entering-code")
     public ResponseEntity<?> getEnteringCode(
             @PathVariable Long guildId
@@ -40,28 +25,10 @@ public class GuildController {
         return new ResponseEntity<>(enteringCode, HttpStatus.OK);
     }
 
-//    @PostMapping(path = "/join")
-//    public ResponseEntity<?> joinGuild(
-//            // todo : request dto로 받을지 그냥 requestParam으로 받을지 (2)
-//            @RequestParam String enteringCode,
-//            @RequestParam Long guildPosition
-//    ){
-//        guildService.joinGuild(enteringCode, guildPosition);
-//        return new ResponseEntity<>(HttpStatus.OK);
-//    }
-
-//    @DeleteMapping(path = "/{guildId}")
-//    public ResponseEntity<?> leaveGuild(
-//            @PathVariable Long guildId
-//    ){
-//        guildService.leaveGuild(guildId);
-//        return new ResponseEntity<>(HttpStatus.OK);
-//    }
-
     @GetMapping(path = "/{guildId}/guild-info")
     public ResponseEntity<?> getGuildInfo(
             @PathVariable Long guildId
-    ){
+    ) throws CustomException {
         GuildInfoResponse guildInfoResponse = guildService.getGuildInfo(guildId);
         return new ResponseEntity<>(guildInfoResponse, HttpStatus.OK);
     }
@@ -69,16 +36,16 @@ public class GuildController {
     @GetMapping(path = "/{guildId}/member-info")
     public ResponseEntity<?> getMemberInfo(
             @PathVariable Long guildId
-    ){
+    ) throws CustomException {
         List<GuildMemberInfoResponse> members = guildService.getMemberInfo(guildId);
-        return new ResponseEntity<>(HttpStatus.OK);
+        return new ResponseEntity<>(members, HttpStatus.OK);
     }
 
     @PutMapping(path = "/{guildId}/quests/{questId}")
     public ResponseEntity<?> updateGuildQuest(
             @PathVariable Long guildId,
             @PathVariable Long questId
-    ){
+    ) throws CustomException {
         guildService.updateGuildQuest(guildId, questId);
         return new ResponseEntity<>(HttpStatus.OK);
     }

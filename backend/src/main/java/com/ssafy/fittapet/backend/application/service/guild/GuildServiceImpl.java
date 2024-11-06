@@ -1,5 +1,6 @@
 package com.ssafy.fittapet.backend.application.service.guild;
 
+import com.ssafy.fittapet.backend.common.exception.CustomException;
 import com.ssafy.fittapet.backend.common.util.EnteringCodeUtil;
 import com.ssafy.fittapet.backend.common.validator.GuildValidator;
 import com.ssafy.fittapet.backend.common.validator.QuestValidator;
@@ -15,6 +16,9 @@ import org.springframework.stereotype.Service;
 
 import java.util.List;
 
+import static com.ssafy.fittapet.backend.common.constant.error_code.GuildErrorCode.*;
+import static com.ssafy.fittapet.backend.common.constant.error_code.QuestErrorCode.NO_QUEST;
+
 @Service
 @RequiredArgsConstructor
 public class GuildServiceImpl implements GuildService {
@@ -24,108 +28,34 @@ public class GuildServiceImpl implements GuildService {
     private final GuildValidator guildValidator;
     private final QuestValidator questValidator;
 
-//    @Override
-//    public List<MapResponse> getAll() {
-//        // todo : 로그인한 유저 id 갖고오기
-//        Long userId = 1L;
-//
-//        return guildRepository.findAllByUserId(userId);
-//    }
-
-//    @Override
-//    public void createGuild(GuildRequest guildRequest) {
-//        // 1. todo : 로그인한 유저 id
-//        Long userId = 1L;
-//        User user = User.builder().id(userId).build();
-//        // 2. position 유효 검사
-//        if(!mapValidator.isAblePosition(userId, guildRequest.getGuildPosition())) return;
-//        // 3. 그룹 이름 유효 검사?
-//        if(!guildValidator.isNameUnique(guildRequest.getGuildName())) return;
-//        // 4. 그룹 생성
-//        Guild guild = Guild.builder().
-//                guildLeader(user).
-//                guildName(guildRequest.getGuildName()).
-//                build();
-//        guild = guildRepository.save(guild);
-//        // 5. 맵 db에 정보 저장
-//        mapRepository.save(Map.builder().
-//                user(user).
-//                guild(guild).
-//                guildPosition(guildRequest.getGuildPosition()).
-//                build());
-//    }
 
     @Override
     public String getEnteringCode(Long guildId) {
         // 생성날짜 + 그룹 id로 인코딩된 코드 받아오기
         try {
             // todo : 요청자가 그룹장인지 validation check
-            if(!guildValidator.isGuildLeader(guildId, 1L)) return null;
+            if(!guildValidator.isGuildLeader(guildId, 1L)) throw new CustomException(NOT_GUILD_LEADER);
             return EnteringCodeUtil.encrypt(guildId);
         } catch (Exception e) {
             throw new RuntimeException(e);
         }
     }
 
-//    @Override
-//    public Boolean joinGuild(String enteringCode, Long guildPosition) {
-//        try {
-//            // todo : 요청자 정보 받아오기
-//            User user = User.builder().id(1L).build();
-//
-//            // 초대 코드 기간이 유효하면 guildId, 유효하지 않으면 -1 반환
-//            Long guildId = enteringCodeUtil.isCodeValid(enteringCode);
-//            if(guildId == -1) return false;
-//            // 그룹 없으면 가입 불가
-//            Guild guild = guildValidator.isExist(guildId).orElseThrow();
-//            // 이미 가입되어 있으면 가입 불가
-//            if(mapValidator.isAlreadyJoined(user.getId(), guildId)) return false;
-//            // 그룹 인원 수가 6명보다 많으면 가입 불가
-//            if(!mapValidator.isUnder6(guildId)) return false;
-//            // 위치가 유효하지 않으면 가입 불가
-//            if(!mapValidator.isAblePosition(user.getId(), guildPosition)) return false;
-//            // 조건 다 만족하면 가입
-//            mapRepository.save(Map.builder().
-//                    user(user).
-//                    guild(guild).
-//                    guildPosition(guildPosition).
-//                    build());
-//
-//            return true;
-//        } catch (Exception e) {
-//            throw new RuntimeException(e);
-//        }
-//    }
-
-//    @Override
-//    public void leaveGuild(Long guildId) {
-//        // map에서 삭제
-//        // todo : 요청자 정보 가져오기
-//        User user = User.builder().id(1L).build();
-//        if(!mapValidator.isAlreadyJoined(user.getId(), guildId)) return;
-//        if(!guildValidator.isExist(guildId).equals(null)) return;
-//
-//        mapRepository.deleteByGuildIdAndUserId(guildId, user.getId());
-//
-//        // userQuestStatus에서 삭제
-//        GuildQuest guildQuest = guildQuestRepository.findByGuildId(guildId);
-//        if(guildQuest == null) return;
-//        userQuestStatusRepository.deleteByUserIdAndGuildQuestId(user.getId(), guildQuest.getId());
-//    }
-
     @Override
-    public GuildInfoResponse getGuildInfo(Long guildId) {
-        if(guildValidator.isExist(guildId)==null) return null;
+    public GuildInfoResponse getGuildInfo(Long guildId) throws CustomException {
+        if(guildValidator.isExist(guildId)==null) throw new CustomException(NO_GUILD);
         return guildRepository.findInfoById(guildId);
     }
 
     @Override
-    public void updateGuildQuest(Long guildId, Long questId) {
+    public void updateGuildQuest(Long guildId, Long questId) throws CustomException {
         // validation
-        // todo : 반환할 Excetipion
-        Guild guild = guildValidator.isExist(guildId).orElseThrow();
-        Quest quest = questValidator.isExist(questId).orElseThrow();
+        // 길드 존재하는지
+        Guild guild = guildValidator.isExist(guildId).orElseThrow(()-> new CustomException(NO_GUILD));
+        // 퀘스트 존재하는지
+        Quest quest = questValidator.isExist(questId).orElseThrow(() -> new CustomException(NO_QUEST));
 
+        // GuildQuest 테이블 확인
         GuildQuest guildQuest = guildQuestRepository.findByGuildId(guildId);
         if(guildQuest == null){
             guildQuestRepository.save(GuildQuest.builder().
@@ -134,6 +64,8 @@ public class GuildServiceImpl implements GuildService {
                     build());
         }
         else{
+            // 이미 할당된 퀘스트면 반환. todo : 예외처리
+            if(guildQuest.getQuest().getId().equals(questId)) throw new CustomException(ALREADY_SET_QUEST);
             guildQuest.setQuest(quest);
             guildQuestRepository.save(guildQuest);
         }
@@ -141,8 +73,8 @@ public class GuildServiceImpl implements GuildService {
     }
 
     @Override
-    public List<GuildMemberInfoResponse> getMemberInfo(Long guildId) {
-        Guild guild = guildValidator.isExist(guildId).orElseThrow();
+    public List<GuildMemberInfoResponse> getMemberInfo(Long guildId) throws CustomException {
+        Guild guild = guildValidator.isExist(guildId).orElseThrow(() -> new CustomException(NO_GUILD));
 
         return guildRepository.findAllMemberByGuild(guild.getId());
     }

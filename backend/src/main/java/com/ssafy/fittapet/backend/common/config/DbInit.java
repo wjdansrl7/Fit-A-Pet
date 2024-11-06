@@ -1,6 +1,6 @@
 package com.ssafy.fittapet.backend.common.config;
 
-import com.ssafy.fittapet.backend.common.constant.*;
+import com.ssafy.fittapet.backend.common.constant.entity_field.*;
 import com.ssafy.fittapet.backend.domain.entity.Quest;
 import com.ssafy.fittapet.backend.domain.entity.User;
 import com.ssafy.fittapet.backend.domain.repository.UserRepository;

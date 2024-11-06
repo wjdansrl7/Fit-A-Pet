@@ -1,14 +1,8 @@
 package com.ssafy.fittapet.backend.domain.entity;
 
-import com.ssafy.fittapet.backend.common.constant.PetStatus;
-import com.ssafy.fittapet.backend.common.constant.PetType;
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.EnumType;
-import jakarta.persistence.Enumerated;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
+import com.ssafy.fittapet.backend.common.constant.entity_field.PetStatus;
+import com.ssafy.fittapet.backend.common.constant.entity_field.PetType;
+import jakarta.persistence.*;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
