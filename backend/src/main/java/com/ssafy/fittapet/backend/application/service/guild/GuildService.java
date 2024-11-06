@@ -1,8 +1,7 @@
 package com.ssafy.fittapet.backend.application.service.guild;
 
 import com.ssafy.fittapet.backend.domain.dto.guild.GuildInfoResponse;
-import com.ssafy.fittapet.backend.domain.dto.guild.GuildRequest;
-import com.ssafy.fittapet.backend.domain.dto.map.MapResponse;
+import com.ssafy.fittapet.backend.domain.dto.guild.GuildMemberInfoResponse;
 
 import java.util.List;
 
@@ -20,4 +19,6 @@ public interface GuildService {
     GuildInfoResponse getGuildInfo(Long guildId);
 
     void updateGuildQuest(Long guildId, Long questId);
+
+    List<GuildMemberInfoResponse> getMemberInfo(Long guildId);
 }

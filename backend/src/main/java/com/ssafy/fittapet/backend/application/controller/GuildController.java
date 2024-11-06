@@ -2,8 +2,7 @@ package com.ssafy.fittapet.backend.application.controller;
 
 import com.ssafy.fittapet.backend.application.service.guild.GuildService;
 import com.ssafy.fittapet.backend.domain.dto.guild.GuildInfoResponse;
-import com.ssafy.fittapet.backend.domain.dto.guild.GuildRequest;
-import com.ssafy.fittapet.backend.domain.dto.map.MapResponse;
+import com.ssafy.fittapet.backend.domain.dto.guild.GuildMemberInfoResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -65,6 +64,14 @@ public class GuildController {
     ){
         GuildInfoResponse guildInfoResponse = guildService.getGuildInfo(guildId);
         return new ResponseEntity<>(guildInfoResponse, HttpStatus.OK);
+    }
+
+    @GetMapping(path = "/{guildId}/member-info")
+    public ResponseEntity<?> getMemberInfo(
+            @PathVariable Long guildId
+    ){
+        List<GuildMemberInfoResponse> members = guildService.getMemberInfo(guildId);
+        return new ResponseEntity<>(HttpStatus.OK);
     }
 
     @PutMapping(path = "/{guildId}/quests/{questId}")
