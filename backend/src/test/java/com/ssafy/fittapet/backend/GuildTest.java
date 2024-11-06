@@ -2,6 +2,7 @@
 //
 //import com.ssafy.fittapet.backend.application.service.guild.GuildService;
 //import com.ssafy.fittapet.backend.application.service.map.MapService;
+//import com.ssafy.fittapet.backend.application.service.quest.QuestService;
 //import com.ssafy.fittapet.backend.common.util.EnteringCodeUtil;
 //import com.ssafy.fittapet.backend.common.validator.GuildValidator;
 //import com.ssafy.fittapet.backend.common.validator.MapValidator;
@@ -35,6 +36,8 @@
 //    private GuildService guildService;
 //    @Autowired
 //    private MapService mapService;
+//    @Autowired
+//    private QuestService questService;
 //
 //    @Autowired
 //    private MapRepository mapRepository;
@@ -161,5 +164,15 @@
 //
 //        List<GuildMemberInfoResponse> list=guildRepository.findAllMemberByGuild(guild.getId());
 //        Assertions.assertNotEquals(list.size(), 0);
+//    }
+//
+//    @Test
+//    @DisplayName("길드용 퀘스트 검색하기")
+//    @Rollback(true)
+//    public void testSearchGuildQuest(){
+//        Assertions.assertEquals(questService.searchGuildQuest(null).size(), 9);
+//        Assertions.assertEquals(questService.searchGuildQuest("SLEEP").size(), 3);
+//        Assertions.assertEquals(questService.searchGuildQuest("WALK").size(), 3);
+//        Assertions.assertEquals(questService.searchGuildQuest("DIET").size(), 3);
 //    }
 //}
