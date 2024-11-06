@@ -4,6 +4,7 @@ import com.ssafy.fittapet.backend.common.util.EnteringCodeUtil;
 import com.ssafy.fittapet.backend.common.validator.GuildValidator;
 import com.ssafy.fittapet.backend.common.validator.QuestValidator;
 import com.ssafy.fittapet.backend.domain.dto.guild.GuildInfoResponse;
+import com.ssafy.fittapet.backend.domain.dto.guild.GuildMemberInfoResponse;
 import com.ssafy.fittapet.backend.domain.entity.Guild;
 import com.ssafy.fittapet.backend.domain.entity.GuildQuest;
 import com.ssafy.fittapet.backend.domain.entity.Quest;
@@ -11,6 +12,8 @@ import com.ssafy.fittapet.backend.domain.repository.guild.GuildRepository;
 import com.ssafy.fittapet.backend.domain.repository.guild_quest.GuildQuestRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+
+import java.util.List;
 
 @Service
 @RequiredArgsConstructor
@@ -112,7 +115,7 @@ public class GuildServiceImpl implements GuildService {
 
     @Override
     public GuildInfoResponse getGuildInfo(Long guildId) {
-        if(guildValidator.isExist(guildId).equals(null)) return null;
+        if(guildValidator.isExist(guildId)==null) return null;
         return guildRepository.findInfoById(guildId);
     }
 
@@ -135,5 +138,12 @@ public class GuildServiceImpl implements GuildService {
             guildQuestRepository.save(guildQuest);
         }
         // todo : 유저 퀘스트 상태 테이블 실제 활동 정보로 초기화
+    }
+
+    @Override
+    public List<GuildMemberInfoResponse> getMemberInfo(Long guildId) {
+        Guild guild = guildValidator.isExist(guildId).orElseThrow();
+
+        return guildRepository.findAllMemberByGuild(guild.getId());
     }
 }

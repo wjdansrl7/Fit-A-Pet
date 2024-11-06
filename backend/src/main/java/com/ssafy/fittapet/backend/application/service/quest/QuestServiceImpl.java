@@ -1,5 +1,7 @@
 package com.ssafy.fittapet.backend.application.service.quest;
 
+import com.ssafy.fittapet.backend.common.constant.QuestCategory;
+import com.ssafy.fittapet.backend.common.constant.QuestType;
 import com.ssafy.fittapet.backend.domain.entity.Quest;
 import com.ssafy.fittapet.backend.domain.repository.quest.QuestRepository;
 import lombok.RequiredArgsConstructor;
@@ -14,7 +16,7 @@ public class QuestServiceImpl implements QuestService {
 
     @Override
     public List<Quest> searchGuildQuest(String category) {
-        if(category == null || category.isEmpty()) return questRepository.findAllByQuestType("GUILD");
-        else return questRepository.findAllByQuestTypeAndQuestCategory("GUILD", category);
+        if(category == null || category.isEmpty()) return questRepository.findAllByQuestType(QuestType.GROUP);
+        else return questRepository.findAllByQuestTypeAndQuestCategory(QuestType.GROUP, QuestCategory.valueOf(category.toUpperCase()));
     }
 }
