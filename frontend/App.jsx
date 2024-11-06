@@ -1,32 +1,56 @@
 import React, { useState } from 'react';
-import { SafeAreaView, StyleSheet, Text } from 'react-native';
+import { StyleSheet } from 'react-native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import { NavigationContainer } from '@react-navigation/native';
+
+import { QueryClientProvider } from '@tanstack/react-query';
+import queryClient from '@src/api/queryClient';
+import { authNavigations } from '@src/constants';
+import useAuth from '@src/hooks/queries/useAuth';
+
 import MainScreen from '@screens/main/MainScreen';
+import AuthHomeScreen from '@screens/auth/AuthHomeScreen';
+import KakaoLoginScreen from '@screens/auth/KakaoLoginScreen';
 import QuestScreen from '@screens/quest/QuestScreen';
 
 const Stack = createNativeStackNavigator();
 
 function App() {
-  const [isLoggedIn, setIsLoggedIn] = useState(true);
+  // const isLoggedIn = useAuth();
+  const isLoggedIn = true;
+
   return (
-    <NavigationContainer>
-      {isLoggedIn ? (
-        <Stack.Navigator screenOptions={{ headerShown: false }}>
-          {/* <Stack.Screen
+    <QueryClientProvider client={queryClient}>
+      <NavigationContainer>
+        {
+          isLoggedIn ? (
+            <Stack.Navigator screenOptions={{ headerShown: false }}>
+              {/* <Stack.Screen
             name="Main"
             component={MainScreen}
             options={{ title: '메인' }}
           /> */}
-          <Stack.Screen
-            name="Quest"
-            component={QuestScreen}
-            options={{ title: '퀘스트 모아보기' }}
-          />
-        </Stack.Navigator>
-      ) : null}
-      {/* 여기에 로그인페이지 넣으세여 */}
-    </NavigationContainer>
+              <Stack.Screen
+                name={authNavigations.AUTH_HOME}
+                component={AuthHomeScreen}
+                options={{ title: '로고와 로그인' }}
+              />
+              <Stack.Screen
+                name={authNavigations.KAKAO_LOGIN}
+                component={KakaoLoginScreen}
+                options={{ title: '카카오 로그인' }}
+              />
+              <Stack.Screen
+                name="Quest"
+                component={QuestScreen}
+                options={{ title: '퀘스트 모아보기' }}
+              />
+            </Stack.Navigator>
+          ) : null
+          // <LoginScreen />
+        }
+      </NavigationContainer>
+    </QueryClientProvider>
   );
 }
 
