@@ -1,7 +1,7 @@
 package com.ssafy.fittapet.backend.domain.entity;
 
-import com.ssafy.fittapet.backend.common.constant.Role;
-import com.ssafy.fittapet.backend.common.constant.UserTier;
+import com.ssafy.fittapet.backend.common.constant.entity_field.Role;
+import com.ssafy.fittapet.backend.common.constant.entity_field.UserTier;
 import jakarta.persistence.*;
 import lombok.*;
 

@@ -1,3 +1,4 @@
+version: "3"
 services:
   mysql:
     image: mysql:latest
@@ -10,12 +11,16 @@ services:
       - "3306:3306"
     networks:
       - app-network
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "localhost"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
 
   backend:
-    image: backend
     build:
-      context: ./backend # Jenkins가 GitLab에서 가져온 backend 폴더를 빌드할 수 있도록 설정
-      dockerfile: Dockerfile # Dockerfile 경로 설정
+      context: ./backend
+      dockerfile: Dockerfile
     container_name: backend
     environment:
       TZ: Asia/Seoul
@@ -23,9 +28,33 @@ services:
       SPRING_DATASOURCE_USERNAME: root
       SPRING_DATASOURCE_PASSWORD: root
     depends_on:
-      - mysql
+      mysql:
+        condition: service_healthy # MySQL이 healthcheck 통과할 때까지 대기
     ports:
-      - "80:8080"
+      - "8082:8080" # backend가 실제 사용할 포트
+    networks:
+      - app-network
+
+  nginx:
+    image: nginx:latest
+    container_name: nginx
+    volumes:
+      - ./nginx/nginx.conf:/etc/nginx/nginx.conf
+      - ./nginx/conf.d:/etc/nginx/conf.d
+      - /var/www/certbot:/var/www/certbot # Certbot 인증 경로
+    ports:
+      - "80:80"
+      - "443:443"
+    networks:
+      - app-network
+
+  certbot:
+    image: certbot/certbot
+    container_name: certbot
+    volumes:
+      - /etc/letsencrypt:/etc/letsencrypt
+      - /var/www/certbot:/var/www/certbot
+    entrypoint: "/bin/sh -c 'trap exit TERM; while :; do certbot renew; sleep 12h; done;'"
     networks:
       - app-network
 

@@ -1,9 +1,10 @@
 package com.ssafy.fittapet.backend.common.config;
 
-import com.ssafy.fittapet.backend.common.constant.Role;
-import com.ssafy.fittapet.backend.common.constant.UserTier;
+import com.ssafy.fittapet.backend.common.constant.entity_field.*;
+import com.ssafy.fittapet.backend.domain.entity.Quest;
 import com.ssafy.fittapet.backend.domain.entity.User;
 import com.ssafy.fittapet.backend.domain.repository.auth.UserRepository;
+import com.ssafy.fittapet.backend.domain.repository.quest.QuestRepository;
 import jakarta.annotation.PostConstruct;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
@@ -16,10 +17,12 @@ import java.util.List;
 public class DbInit {
 
     private final UserRepository userRepository;
+    private final QuestRepository questRepository;
 
     @PostConstruct
     void init() {
 
+        /* 유저 더미데이터 생성 */
         List<User> users = new ArrayList<>();
 
         var user1 = createUser("kim", "김철수", "kim", "kakao", "EASY", "USER");
@@ -35,6 +38,23 @@ public class DbInit {
         users.add(user5);
 
         userRepository.saveAll(users);
+
+        /* 퀘스트 더미데이터 생성 */
+        List<Quest> quests = new ArrayList<>();
+        long reward = 100L;
+
+        for(QuestTier questTier : QuestTier.values()) {
+            for(QuestType questType : QuestType.values()) {
+                for(QuestCategory questCategory : QuestCategory.values()) {
+                    String questName = questTier.getValue() + "_" + questType.getValue() + "_" + questCategory.getName();
+                    String questContent = questName + "에 대한 설명입니다.";
+
+                    Quest quest = createQuest(questName, questContent, questTier, questType, questCategory, reward);
+                    quests.add(quest);
+                }
+            }
+        }
+        questRepository.saveAll(quests);
     }
 
     private User createUser(String userNickname, String userName, String providerId, String provider, String
@@ -46,6 +66,17 @@ public class DbInit {
                 .provider(provider)
                 .userTier(UserTier.valueOf(userTier))
                 .role(Role.valueOf(role))
+                .build();
+    }
+
+    private Quest createQuest(String questName, String questContent, QuestTier questTier, QuestType questType, QuestCategory questCategory, long questReward) {
+        return Quest.builder()
+                .questName(questName)
+                .questContent(questContent)
+                .questTier(questTier)
+                .questType(questType)
+                .questCategory(questCategory)
+                .questReward(questReward)
                 .build();
     }
 }
