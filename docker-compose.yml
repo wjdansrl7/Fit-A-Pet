@@ -1,3 +1,4 @@
+version: "3"
 services:
   mysql:
     image: mysql:latest
@@ -28,24 +29,34 @@ services:
       SPRING_DATASOURCE_PASSWORD: root
     depends_on:
       mysql:
-        condition: service_healthy # mysql이 healthcheck를 통과할 때까지 대기
+        condition: service_healthy # MySQL이 healthcheck 통과할 때까지 대기
     ports:
-      - "8082:8082"
+      - "8082:8080" # backend가 실제 사용할 포트
     networks:
       - app-network
 
   nginx:
-    image: nginx:latest
-    container_name: nginx
-    volumes:
-      - ./nginx/nginx.conf:/etc/nginx/nginx.conf
-      - ./nginx/conf.d:/etc/nginx/conf.d
-    ports:
-      - "80:80"
-    depends_on:
-      - backend
-    networks:
-      - app-network
+      image: nginx:latest
+      container_name: nginx
+      volumes:
+        - ./nginx/nginx.conf:/etc/nginx/nginx.conf
+        - ./nginx/conf.d:/etc/nginx/conf.d
+        - /var/www/certbot:/var/www/certbot  # Certbot 인증 경로
+      ports:
+        - "80:80"
+        - "443:443"
+      networks:
+        - app-network
+
+    certbot:
+      image: certbot/certbot
+      container_name: certbot
+      volumes:
+        - /etc/letsencrypt:/etc/letsencrypt
+        - /var/www/certbot:/var/www/certbot
+      entrypoint: "/bin/sh -c 'trap exit TERM; while :; do certbot renew; sleep 12h; done;'"
+      networks:
+        - app-network
 
 networks:
   app-network:
