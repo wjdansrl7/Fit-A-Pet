@@ -3,81 +3,105 @@ package com.ssafy.fittapet.backend.common.filter;
 import com.ssafy.fittapet.backend.common.util.JWTUtil;
 import com.ssafy.fittapet.backend.domain.dto.auth.CustomOAuth2User;
 import com.ssafy.fittapet.backend.domain.dto.auth.UserDTO;
+import io.jsonwebtoken.ExpiredJwtException;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.filter.OncePerRequestFilter;
 
 import java.io.IOException;
+import java.io.PrintWriter;
 
+/**
+ * JWT accessToken 검증하는 필터
+ * 처음 OAuth2 인증 이후 JWT 필터로만 검사한다.
+ */
 @RequiredArgsConstructor
+@Slf4j
 public class JWTFilter extends OncePerRequestFilter {
 
     private final JWTUtil jwtUtil;
 
     @Override
-    protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
+    protected void doFilterInternal(HttpServletRequest request,
+                                    @NonNull HttpServletResponse response,
+                                    @NonNull FilterChain filterChain) throws ServletException, IOException {
 
-        System.out.println("pass JWTFilter");
+        log.info("pass JWTFilter");
 
-        //cookie들을 불러온 뒤 Authorization Key에 담긴 쿠키를 찾음
-        String authorization = null;
+        //cookie 불러온 뒤 accessToken Key 담긴 쿠키를 찾음
+        String accessToken = null;
         Cookie[] cookies = request.getCookies();
         for (Cookie cookie : cookies) {
-
-            System.out.println(cookie.getName());
-            if (cookie.getName().equals("Authorization")) {
-
-                authorization = cookie.getValue();
+            if (cookie.getName().equals("accessToken")) {
+                log.info("cookie name: {}", cookie.getName());
+                accessToken = cookie.getValue();
             }
         }
 
-        //Authorization 헤더 검증
-        if (authorization == null) {
+        //accessToken 유무
+        if (accessToken == null) {
+            log.info("access token is null");
 
-            System.out.println("token null");
-            filterChain.doFilter(request, response);
-
-            //조건이 해당되면 메소드 종료 (필수)
+            // 권한이 필요없는 기능을 위해 다음 필터로 넘김
+            filterChain.doFilter(request, response);    
             return;
         }
 
-        //토큰q
-        String token = authorization;
+        // 토큰 만료 여부 확인, 만료시 다음 필터로 넘기지 않음
+        try {
+            jwtUtil.isExpired(accessToken);
+        } catch (ExpiredJwtException e) {
+            log.info("access token expired");
 
-        //토큰 소멸 시간 검증
-        if (jwtUtil.isExpired(token)) {
+            //response body
+            PrintWriter writer = response.getWriter();
+            writer.print("access token expired");
 
-            System.out.println("token expired");
-            filterChain.doFilter(request, response);
+            //response status code
+            response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
+            return;
+        }
 
-            //조건이 해당되면 메소드 종료 (필수)
+        // access 확인 (발급시 페이로드에 명시)
+        String category = jwtUtil.getCategory(accessToken);
+        if (!category.equals("access")) {
+            log.info("invalid access token");
+
+            //response body
+            PrintWriter writer = response.getWriter();
+            writer.print("invalid access token");
+
+            //response status code
+            response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
             return;
         }
 
         //토큰에서 userId, username, role 획득
-        Long userId = jwtUtil.getUserId(token);
-        String username = jwtUtil.getUsername(token);
-        String role = jwtUtil.getRole(token);
+        Long userId = jwtUtil.getUserId(accessToken);
+        String username = jwtUtil.getUsername(accessToken);
+        String role = jwtUtil.getRole(accessToken);
 
-        //userDTO를 생성하여 값 set
         UserDTO userDTO = UserDTO.builder()
                 .userId(userId)
                 .userNickname(username)
                 .role(role)
                 .build();
 
-        //UserDetails에 회원 정보 객체 담기
+        //UserDetails 회원 정보 객체 담기
         CustomOAuth2User customOAuth2User = new CustomOAuth2User(userDTO);
 
         //스프링 시큐리티 인증 토큰 생성
         Authentication authToken = new UsernamePasswordAuthenticationToken(customOAuth2User, null, customOAuth2User.getAuthorities());
+
         //세션에 사용자 등록
         SecurityContextHolder.getContext().setAuthentication(authToken);
 
