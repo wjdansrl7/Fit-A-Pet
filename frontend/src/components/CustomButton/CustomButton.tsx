@@ -1,15 +1,17 @@
 import React from 'react';
 import { TouchableOpacity, StyleSheet } from 'react-native';
 import CustomText from '@components/CustomText/CustomText';
-
-const CustomButton = ({ title, onPress, style }) => {
+import { colors } from '@src/constants';
+const CustomButton = ({ title, onPress, style, textStyle }) => {
   return (
     <TouchableOpacity
       activeOpacity={0.8}
       style={[styles.button, style]}
       onPress={onPress}
     >
-      <CustomText style={styles.customFontText}>{title}</CustomText>
+      <CustomText style={[styles.customFontText, textStyle]}>
+        {title}
+      </CustomText>
     </TouchableOpacity>
   );
 };
@@ -19,15 +21,14 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
     borderRadius: 20,
-    borderWidth: 2,
-    borderColor: 'transparent',
-    backgroundColor: 'green',
-    padding: 15,
+    backgroundColor: colors.MAIN_GREEN,
+    paddingHorizontal: 15,
+    paddingVertical: 8,
   },
   customFontText: {
     fontSize: 20,
     fontFamily: 'DungGeunMo',
-    color: 'white',
+    color: colors.WHITE,
   },
 });
 

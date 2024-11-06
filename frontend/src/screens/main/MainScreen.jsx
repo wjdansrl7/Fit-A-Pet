@@ -42,7 +42,9 @@ function MainScreen({ navigation }) {
       {/* 하단 메뉴 */}
       <View style={styles.bottomMenu}>
         {/* 나머지 페이지 만들어지면 연결 */}
-        <MenuButton title={'그룹'}></MenuButton>
+        <Pressable onPress={() => navigation.navigate('Map')}>
+          <MenuButton title={'지도'}></MenuButton>
+        </Pressable>
         <Pressable onPress={() => navigation.navigate('Album')}>
           <MenuButton title={'도감'}></MenuButton>
         </Pressable>
