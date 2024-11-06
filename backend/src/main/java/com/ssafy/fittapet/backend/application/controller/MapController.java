@@ -1,6 +1,8 @@
 package com.ssafy.fittapet.backend.application.controller;
 
 import com.ssafy.fittapet.backend.application.service.map.MapService;
+import com.ssafy.fittapet.backend.common.exception.CustomException;
+import com.ssafy.fittapet.backend.domain.dto.guild.GuildJoinRequest;
 import com.ssafy.fittapet.backend.domain.dto.guild.GuildRequest;
 import com.ssafy.fittapet.backend.domain.dto.map.MapResponse;
 import lombok.RequiredArgsConstructor;
@@ -25,27 +27,24 @@ public class MapController {
 
     @PostMapping(path = "/create-guild")
     public ResponseEntity<?> createGuild(
-            // todo : request dto로 받을지 그냥 requestParam으로 받을지 (1)
             @RequestBody GuildRequest guildRequest
-    ){
+    ) throws CustomException {
         mapService.createGuild(guildRequest);
         return new ResponseEntity<>(HttpStatus.OK);
     }
 
     @PostMapping(path = "/join-guild")
     public ResponseEntity<?> joinGuild(
-            // todo : request dto로 받을지 그냥 requestParam으로 받을지 (2)
-            @RequestParam String enteringCode,
-            @RequestParam Long guildPosition
-    ){
-        mapService.joinGuild(enteringCode, guildPosition);
-        return new ResponseEntity<>(HttpStatus.OK);
+            @RequestBody GuildJoinRequest guildJoinRequest
+    ) throws Exception {
+        boolean joined = mapService.joinGuild(guildJoinRequest);
+        return new ResponseEntity<>(joined, HttpStatus.OK);
     }
 
     @DeleteMapping(path = "/{guildId}")
     public ResponseEntity<?> leaveGuild(
             @PathVariable Long guildId
-    ){
+    ) throws CustomException {
         mapService.leaveGuild(guildId);
         return new ResponseEntity<>(HttpStatus.OK);
     }

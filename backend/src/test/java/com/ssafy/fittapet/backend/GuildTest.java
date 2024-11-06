@@ -3,20 +3,19 @@
 //import com.ssafy.fittapet.backend.application.service.guild.GuildService;
 //import com.ssafy.fittapet.backend.application.service.map.MapService;
 //import com.ssafy.fittapet.backend.application.service.quest.QuestService;
+//import com.ssafy.fittapet.backend.common.exception.CustomException;
 //import com.ssafy.fittapet.backend.common.util.EnteringCodeUtil;
 //import com.ssafy.fittapet.backend.common.validator.GuildValidator;
 //import com.ssafy.fittapet.backend.common.validator.MapValidator;
 //import com.ssafy.fittapet.backend.domain.dto.guild.GuildMemberInfoResponse;
 //import com.ssafy.fittapet.backend.domain.dto.guild.GuildRequest;
 //import com.ssafy.fittapet.backend.domain.dto.map.MapResponse;
-//import com.ssafy.fittapet.backend.domain.entity.Guild;
-//import com.ssafy.fittapet.backend.domain.entity.GuildQuest;
-//import com.ssafy.fittapet.backend.domain.entity.Map;
-//import com.ssafy.fittapet.backend.domain.entity.User;
+//import com.ssafy.fittapet.backend.domain.entity.*;
 //import com.ssafy.fittapet.backend.domain.repository.Map.MapRepository;
 //import com.ssafy.fittapet.backend.domain.repository.UserRepository;
 //import com.ssafy.fittapet.backend.domain.repository.guild.GuildRepository;
 //import com.ssafy.fittapet.backend.domain.repository.guild_quest.GuildQuestRepository;
+//import com.ssafy.fittapet.backend.domain.repository.quest.QuestRepository;
 //import com.ssafy.fittapet.backend.domain.repository.user_quest.UserQuestStatusRepository;
 //import org.junit.jupiter.api.Assertions;
 //import org.junit.jupiter.api.DisplayName;
@@ -27,6 +26,8 @@
 //import org.springframework.transaction.annotation.Transactional;
 //
 //import java.util.List;
+//
+//import static com.ssafy.fittapet.backend.common.constant.error_code.GuildErrorCode.ALREADY_SET_QUEST;
 //
 //@SpringBootTest
 //@Transactional
@@ -54,10 +55,12 @@
 //    private MapValidator mapValidator;
 //    @Autowired
 //    private GuildValidator guildValidator;
+//    @Autowired
+//    private QuestRepository questRepository;
 //
 //    @Test
 //    @DisplayName("길드 생성")
-//    @Rollback(value = false)
+//    @Rollback(true)
 //    public void testCreateGuild() {
 //        // Given
 //        Long userId = 1L;
@@ -92,7 +95,7 @@
 //
 //    @Test
 //    @DisplayName("길드 가입")
-//    @Rollback(false)
+//    @Rollback(true)
 //    public void testJoinGuild() throws Exception {
 //        String enteringCode = guildService.getEnteringCode(1L);
 //        User user = userRepository.findById(2L).orElseThrow();
@@ -120,7 +123,7 @@
 //
 //    @Test
 //    @DisplayName("맵 정보 갖고오기")
-//    @Rollback(false)
+//    @Rollback(true)
 //    public void testGetAll(){
 //        List<MapResponse> map = mapService.getAll();
 //
@@ -129,7 +132,7 @@
 //
 //    @Test
 //    @DisplayName("길드 정보 갖고오기")
-//    @Rollback(false)
+//    @Rollback(true)
 //    public void testGetGuildInfo(){
 //        Long guildId = 1L;
 //        Assertions.assertNotNull(guildValidator.isExist(guildId));
@@ -138,7 +141,7 @@
 //
 //    @Test
 //    @DisplayName("길드 나가기")
-//    @Rollback(false)
+//    @Rollback(true)
 //    public void testLeaveGuild(){
 //        User user = userRepository.findById(2L).orElseThrow();
 //        Long guildId = 1L;
@@ -169,10 +172,35 @@
 //    @Test
 //    @DisplayName("길드용 퀘스트 검색하기")
 //    @Rollback(true)
-//    public void testSearchGuildQuest(){
+//    public void testSearchGuildQuest() throws CustomException {
 //        Assertions.assertEquals(questService.searchGuildQuest(null).size(), 9);
 //        Assertions.assertEquals(questService.searchGuildQuest("SLEEP").size(), 3);
 //        Assertions.assertEquals(questService.searchGuildQuest("WALK").size(), 3);
 //        Assertions.assertEquals(questService.searchGuildQuest("DIET").size(), 3);
+//    }
+//
+//    @Test
+//    @DisplayName("길드 퀘스트 설정하기")
+//    @Rollback(true)
+//    public void testUpdateGuildQuest() throws CustomException {
+//        Long guildId = 1L;
+//        Guild guild = guildRepository.findById(1L).orElse(null);
+//        Long questId = 1L;
+//        Quest quest = questRepository.findById(1L).orElse(null);
+//
+//        GuildQuest guildQuest = guildQuestRepository.findByGuildId(guildId);
+//        if(guildQuest == null){
+//            guildQuest = guildQuestRepository.save(GuildQuest.builder().
+//                    guild(guild).
+//                    quest(quest).
+//                    build());
+//        }
+//        else{
+//            if(guildQuest.getQuest().getId().equals(questId)) throw new CustomException(ALREADY_SET_QUEST);
+//            guildQuest.setQuest(quest);
+//            guildQuestRepository.save(guildQuest);
+//        }
+//
+//        Assertions.assertEquals(guildQuest.getQuest().getId(), questId);
 //    }
 //}

@@ -32,9 +32,9 @@ public class QPet extends EntityPathBase<Pet> {
     //inherited
     public final DateTimePath<java.time.LocalDateTime> modifiedAt = _super.modifiedAt;
 
-    public final EnumPath<com.ssafy.fittapet.backend.common.constant.PetStatus> petStatus = createEnum("petStatus", com.ssafy.fittapet.backend.common.constant.PetStatus.class);
+    public final EnumPath<com.ssafy.fittapet.backend.common.constant.entity_field.PetStatus> petStatus = createEnum("petStatus", com.ssafy.fittapet.backend.common.constant.entity_field.PetStatus.class);
 
-    public final EnumPath<com.ssafy.fittapet.backend.common.constant.PetType> petType = createEnum("petType", com.ssafy.fittapet.backend.common.constant.PetType.class);
+    public final EnumPath<com.ssafy.fittapet.backend.common.constant.entity_field.PetType> petType = createEnum("petType", com.ssafy.fittapet.backend.common.constant.entity_field.PetType.class);
 
     public QPet(String variable) {
         super(Pet.class, forVariable(variable));

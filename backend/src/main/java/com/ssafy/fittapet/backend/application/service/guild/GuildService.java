@@ -1,24 +1,18 @@
 package com.ssafy.fittapet.backend.application.service.guild;
 
+import com.ssafy.fittapet.backend.common.exception.CustomException;
 import com.ssafy.fittapet.backend.domain.dto.guild.GuildInfoResponse;
 import com.ssafy.fittapet.backend.domain.dto.guild.GuildMemberInfoResponse;
 
 import java.util.List;
 
 public interface GuildService {
-//    List<MapResponse> getAll();
-
-//    void createGuild(GuildRequest guildRequest);
 
     String getEnteringCode(Long guildId);
 
-//    Boolean joinGuild(String enteringCode, Long guildPosition);
+    GuildInfoResponse getGuildInfo(Long guildId) throws CustomException;
 
-//    void leaveGuild(Long guildId);
+    void updateGuildQuest(Long guildId, Long questId) throws CustomException;
 
-    GuildInfoResponse getGuildInfo(Long guildId);
-
-    void updateGuildQuest(Long guildId, Long questId);
-
-    List<GuildMemberInfoResponse> getMemberInfo(Long guildId);
+    List<GuildMemberInfoResponse> getMemberInfo(Long guildId) throws CustomException;
 }

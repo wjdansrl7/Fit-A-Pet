@@ -1,11 +1,11 @@
-package com.ssafy.fittapet.backend.common.constant;
+package com.ssafy.fittapet.backend.common.constant.entity_field;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 
 @AllArgsConstructor
 @Getter
-public enum QuestTier {
+public enum UserTier {
     EASY("EASY"),
     NORMAL("NORMAL"),
     HARD("HARD");
