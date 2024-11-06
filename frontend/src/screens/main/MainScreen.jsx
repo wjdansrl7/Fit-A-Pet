@@ -46,7 +46,9 @@ function MainScreen({ navigation }) {
         <Pressable onPress={() => navigation.navigate('Album')}>
           <MenuButton title={'도감'}></MenuButton>
         </Pressable>
-        <MenuButton title={'나의기록'}></MenuButton>
+        <Pressable onPress={() => navigation.navigate('MyInfo')}>
+          <MenuButton title={'나의기록'}></MenuButton>
+        </Pressable>
       </View>
     </View>
   );

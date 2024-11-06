@@ -15,6 +15,8 @@ import QuestScreen from '@screens/quest/QuestScreen';
 import AlbumScreen from '@screens/album/AlbumScreen';
 import CustomText from '@components/CustomText/CustomText';
 import MapScreen from '@screens/map/MapScreen';
+import MyInfoScreen from '@screens/myInfo/MyInfoScreen';
+import Logout from '@screens/auth/Logout';
 
 const Stack = createNativeStackNavigator();
 
@@ -25,69 +27,77 @@ function App() {
   return (
     <QueryClientProvider client={queryClient}>
       <NavigationContainer>
-        {
-          isLoggedIn ? 
-          (
-            <Stack.Navigator
-              initialRouteName="Home"
-              // 헤더 부분 커스텀
-              screenOptions={({ navigation }) => ({
-                headerStyle: {},
-                // 타이틀 텍스트 스타일
-                headerTitleStyle: {
-                  fontFamily: 'DungGeunMo',
-                  fontSize: 20,
-                  color: 'black',
-                },
-                headerTitleAlign: 'center',
-                headerLeft: () => (
-                  <Pressable onPress={navigation.goBack}>
-                    <CustomText
-                      style={{
-                        fontSize: 30,
-                      }}
-                    >
-                      {'<'}
-                    </CustomText>
-                  </Pressable>
-                ),
-              })}
-            >
-              <Stack.Screen
-                name="Main"
-                component={MainScreen}
-                options={{ headerShown: false }}
-              />
-              <Stack.Screen
-                name="Album"
-                component={AlbumScreen}
-                options={{ title: '도감' }}
-              />
-              <Stack.Screen
-                name="Map"
-                component={MapScreen}
-                options={{ title: '지도' }}
-              />
-              <Stack.Screen
-                name={authNavigations.AUTH_HOME}
-                component={AuthHomeScreen}
-                options={{ title: '로고와 로그인' }}
-              />
-              <Stack.Screen
-                name={authNavigations.KAKAO_LOGIN}
-                component={KakaoLoginScreen}
-                options={{ title: '카카오 로그인' }}
-              />
-              <Stack.Screen
-                name="Quest"
-                component={QuestScreen}
-                options={{ title: '퀘스트 모아보기' }}
-              />
-            </Stack.Navigator>
-          ) : null}
+        {isLoggedIn ? (
+          <Stack.Navigator
+            initialRouteName="Home"
+            // 헤더 부분 커스텀
+            screenOptions={({ navigation }) => ({
+              headerStyle: {},
+              // 타이틀 텍스트 스타일
+              headerTitleStyle: {
+                fontFamily: 'DungGeunMo',
+                fontSize: 20,
+                color: 'black',
+              },
+              headerTitleAlign: 'center',
+              headerLeft: () => (
+                <Pressable onPress={navigation.goBack}>
+                  <CustomText
+                    style={{
+                      fontSize: 30,
+                    }}
+                  >
+                    {'<'}
+                  </CustomText>
+                </Pressable>
+              ),
+            })}
+          >
+            <Stack.Screen
+              name="Main"
+              component={MainScreen}
+              options={{ headerShown: false }}
+            />
+            <Stack.Screen
+              name="Album"
+              component={AlbumScreen}
+              options={{ title: '도감' }}
+            />
+            <Stack.Screen
+              name="Map"
+              component={MapScreen}
+              options={{ title: '지도' }}
+            />
+            <Stack.Screen
+              name={authNavigations.AUTH_HOME}
+              component={AuthHomeScreen}
+              options={{ title: '로고와 로그인' }}
+            />
+            <Stack.Screen
+              name={authNavigations.KAKAO_LOGIN}
+              component={KakaoLoginScreen}
+              options={{ title: '카카오 로그인' }}
+            />
+
+            <Stack.Screen
+              name="Quest"
+              component={QuestScreen}
+              options={{ title: '퀘스트 모아보기' }}
+            />
+            <Stack.Screen
+              name="MyInfo"
+              component={MyInfoScreen}
+              options={{ title: '나의 기록' }}
+            />
+            <Stack.Screen
+              name={authNavigations.LOGOUT}
+              component={Logout}
+              options={{ title: '로그아웃' }}
+            />
+          </Stack.Navigator>
+        ) : null}
       </NavigationContainer>
     </QueryClientProvider>
-
   );
 }
 
