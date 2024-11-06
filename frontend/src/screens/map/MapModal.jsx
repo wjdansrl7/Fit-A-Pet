@@ -204,6 +204,7 @@ const styles = StyleSheet.create({
   },
   alertText: {
     fontSize: 16,
+    color: 'gray',
   },
   errorText: {
     color: 'red', // 에러 메시지 스타일
