@@ -1,10 +1,8 @@
 import React from 'react';
-import { Text, StyleSheet, View, Image, Dimensions } from 'react-native';
+import { StyleSheet, View } from 'react-native';
 import { colors } from '@src/constants';
 import CustomText from '@components/CustomText/CustomText';
-// import EASY from '@assets/quest/EASY.png';
-// import NORMAL from '@assets/quest/NORMAL.png';
-// import HARD from '@assets/quest/HARD.png';
+import QuestFrame from './QuestFrame';
 
 function QuestScreen() {
   const quests = {
@@ -44,122 +42,50 @@ function QuestScreen() {
     ],
   };
   return (
-    <View style={styles.container}>
-      {/* 개인 퀘스트 */}
-      {/* 라벨 */}
-      <View>
-        <CustomText style={styles.questLabel}>개인 퀘스트</CustomText>
-      </View>
-      {/* 퀘스트 카드 */}
-      <View style={styles.questContainer}>
-        {/* 퀘스트 카드 Header */}
-        <View style={styles.questHeader}>
+    <View style={styles.backgroundColorWhite}>
+      <View style={styles.container}>
+        {/* 개인 퀘스트 */}
+        <View style={styles.quest}>
+          {/* 라벨 */}
           <View>
-            {quests.personal.questCategory == 'WALK' ? (
-              <CustomText style={styles.questCategory}>걸음</CustomText>
-            ) : quests.personal.questCategory == 'SLEEP' ? (
-              <CustomText style={styles.questCategory}>수면</CustomText>
-            ) : (
-              <CustomText style={styles.questCategory}>영양</CustomText>
-            )}
+            <CustomText style={styles.questLabel}>개인 퀘스트</CustomText>
           </View>
-          <View>
-            <View style={styles.imageContainer}>
-              {quests.personal.questTier == 'EASY' ? (
-                <Image
-                  resizeMode="contain"
-                  style={styles.image}
-                  source={require('@assets/quest/EASY.png')}
-                />
-              ) : quests.personal.questTier == 'NORMAL' ? (
-                <Image
-                  resizeMode="contain"
-                  style={styles.image}
-                  source={require('@assets/quest/NORMAL.png')}
-                />
-              ) : (
-                <Image
-                  resizeMode="contain"
-                  style={styles.image}
-                  source={require('@assets/quest/HARD.png')}
-                />
-              )}
-            </View>
-          </View>
+          {/* 퀘스트 카드 */}
+          <QuestFrame quest={quests.personal} />
         </View>
-        {/* 퀘스트 카드 Body */}
-        <View style={styles.questBody}>
+
+        {/* 그룹 퀘스트 */}
+        <View style={styles.quest}>
           <View>
-            <CustomText>
-              [{quests.personal.questName}] {quests.personal.questContent}
-            </CustomText>
+            <CustomText style={styles.questLabel}>그룹 퀘스트</CustomText>
           </View>
-          <View>
-            <CustomText style={styles.questReward}>
-              ※ * ° ⁙ ⁘ 보상: {quests.personal.questReward}
-            </CustomText>
-          </View>
+          {quests.group.map((quest, index) => (
+            <QuestFrame key={index} quest={quest} />
+          ))}
         </View>
       </View>
-      {/* 그룹 퀘스트 */}
-      <Text>퀘스트 스크린</Text>
     </View>
   );
 }
 
 const styles = StyleSheet.create({
+  backgroundColorWhite: {
+    flex: 1,
+    backgroundColor: colors.WHITE,
+  },
   container: {
     gap: 20,
     margin: 20,
   },
-  questContainer: {
-    backgroundColor: colors.TAG_BLUE,
-    // backgroundColor: colors.BACKGROUND_COLOR,
-    borderRadius: 5,
-    paddingHorizontal: 20,
-    gap: 14,
-    padding: 10,
-  },
-  questHeader: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    // margin: 10,
-  },
-  questBody: {
-    gap: 10,
+  quest: {
+    gap: 12,
   },
   questLabel: {
     backgroundColor: colors.MAIN_GREEN,
     borderRadius: 5,
     color: colors.WHITE,
-    // marginHorizontal: 20,
     paddingVertical: 10,
-    // justifyContent: 'center' ,
-    // alignItems: 'center',
     textAlign: 'center',
-  },
-  questCategory: {
-    backgroundColor: colors.TAG_RED,
-    paddingVertical: 2,
-    paddingHorizontal: 4,
-    borderRadius: 5,
-    color: colors.BLACK,
-    textAlign: 'center',
-    fontSize: 14,
-  },
-  imageContainer: {
-    width: Dimensions.get('screen').width / 8,
-    // backgroundColor: colors.TAG_RED,
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-  image: {
-    width: '100%',
-    // height: '100%',
-  },
-  questReward: {
-    fontSize: 12,
-    color: colors.MAIN_ORANGE,
   },
 });
 
