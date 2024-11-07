@@ -19,20 +19,20 @@ public class AuthController {
 
     private final AuthService authService;
 
-    @GetMapping("/login")
-    public ResponseEntity<?> getLoginUser(@AuthenticationPrincipal CustomOAuth2User customOAuth2User){
-        return authService.getLoginUser(customOAuth2User.getId());
-    }
+//    @GetMapping("/login")
+//    public ResponseEntity<?> getLoginUser(@AuthenticationPrincipal CustomOAuth2User customOAuth2User){
+//        return authService.getLoginUser(customOAuth2User.getId());
+//    }
 
     @PostMapping("/reissue")
     public ResponseEntity<?> reissueToken(HttpServletRequest request, HttpServletResponse response) {
         return authService.reissueToken(request, response);
     }
 
-    @GetMapping("/auth/{userId}")
-    public ResponseEntity<?> getUser(@PathVariable Long userId) {
-        return authService.getUser(userId);
-    }
+//    @GetMapping("/auth/{userId}")
+//    public ResponseEntity<?> getUser(@PathVariable Long userId) {
+//        return authService.getUser(userId);
+//    }
 
     @PutMapping("/tier")
     public ResponseEntity<?> updateTier(@RequestBody TierRequestDTO dto, @AuthenticationPrincipal CustomOAuth2User customOAuth2User) {

@@ -142,17 +142,17 @@ public class AuthService {
         return cookie;
     }
 
-    public ResponseEntity<?> getUser(Long userId) {
-        User user = userRepository.findById(userId)
-                .orElseThrow(() -> new EntityNotFoundException("User Entity not found"));
+//    public ResponseEntity<?> getUser(Long userId) {
+//        User user = userRepository.findById(userId)
+//                .orElseThrow(() -> new EntityNotFoundException("User Entity not found"));
+//
+//
+//    }
 
-
-    }
-
-    public ResponseEntity<?> getLoginUser(Long userId) {
-        User user = userRepository.findById(userId)
-                .orElseThrow(() -> new EntityNotFoundException("User Entity not found"));
-
-
-    }
+//    public ResponseEntity<?> getLoginUser(Long userId) {
+//        User user = userRepository.findById(userId)
+//                .orElseThrow(() -> new EntityNotFoundException("User Entity not found"));
+//
+//
+//    }
 }
