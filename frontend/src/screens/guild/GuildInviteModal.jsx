@@ -21,8 +21,8 @@ const GuildInviteModal = ({ inviteCode, isVisible, onClose }) => {
   return (
     <CustomModal title="친구 초대하기" isVisible={isVisible} onClose={onClose}>
       <View style={styles.guildModalBody}>
-        <CustomText>초대 코드예요.</CustomText>
-        <CustomText>클릭해서 복사해가세요!</CustomText>
+        <CustomText>초대 코드예요. {'\n'}클릭해서 복사해가세요!</CustomText>
+
         <TouchableOpacity activeOpacity={0.8} onPress={handleCopyInviteCode}>
           <CustomText style={styles.inviteCodeText}>{inviteCode}</CustomText>
         </TouchableOpacity>
