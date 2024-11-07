@@ -14,9 +14,10 @@ import ActiveHouse from '@assets/backgrounds/map/ActiveHouse.png';
 import InActiveHouse from '@assets/backgrounds/map/InActiveHouse.png';
 import MapModal from '@screens/map/MapModal';
 import { colors } from '@src/constants';
+
 function MapScreen({ navigation }) {
   const [isModalVisible, setModalVisible] = useState(false);
-  const [modalViewState, setModalViewState] = useState('init'); // init, create, join 중 하나로 상태 관리
+  const [modalViewState, setModalViewState] = useState('init');
   const [selectedHouse, setSelectedHouse] = useState(null);
 
   const houses = [
@@ -40,17 +41,16 @@ function MapScreen({ navigation }) {
     },
   ];
 
-  const openCreateGuildModal = () => {
-    setModalViewState('create');
+  const handleCreateGuild = () => {
+    console.log('create');
   };
 
-  const openJoinGuildModal = () => {
-    setModalViewState('join');
+  const handleJoinGuild = () => {
+    console.log('join');
   };
 
   const handleHouseClick = (house) => {
     if (house.isActive) {
-      // 적힌 코드롤 같이 전해줘야지 특정 Guild으로 이동
       navigation.navigate('Guild');
     } else {
       setSelectedHouse(house);
@@ -88,9 +88,10 @@ function MapScreen({ navigation }) {
         <MapModal
           isVisible={isModalVisible}
           viewState={modalViewState} // init, create, join 중 하나
+          setModalViewState={setModalViewState} // setModalViewState 함수 전달
           onClose={() => setModalVisible(false)}
-          onCreateGuild={openCreateGuildModal}
-          onJoinGuild={openJoinGuildModal}
+          onCreateGuild={handleCreateGuild}
+          onJoinGuild={handleJoinGuild}
         />
       </ImageBackground>
     </View>
@@ -116,7 +117,7 @@ const styles = StyleSheet.create({
   },
   houseName: {
     marginTop: 5,
-    color: 'white',
+    color: colors.WHITE,
     fontSize: 16,
   },
 });
