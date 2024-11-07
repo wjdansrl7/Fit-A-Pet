@@ -3,7 +3,7 @@ package com.ssafy.fittapet.backend.common.config;
 import com.ssafy.fittapet.backend.common.constant.entity_field.*;
 import com.ssafy.fittapet.backend.domain.entity.Quest;
 import com.ssafy.fittapet.backend.domain.entity.User;
-import com.ssafy.fittapet.backend.domain.repository.UserRepository;
+import com.ssafy.fittapet.backend.domain.repository.auth.UserRepository;
 import com.ssafy.fittapet.backend.domain.repository.quest.QuestRepository;
 import jakarta.annotation.PostConstruct;
 import lombok.RequiredArgsConstructor;
@@ -42,7 +42,7 @@ public class DbInit {
         /* 퀘스트 더미데이터 생성 */
         List<Quest> quests = new ArrayList<>();
         long reward = 100L;
-        
+
         for(QuestTier questTier : QuestTier.values()) {
             for(QuestType questType : QuestType.values()) {
                 for(QuestCategory questCategory : QuestCategory.values()) {
