@@ -1,18 +1,62 @@
-import React, { useCallback } from 'react';
-import { View, Text, StyleSheet, Image, Pressable } from 'react-native';
+import React, { useCallback, useState } from 'react';
+import {
+  View,
+  Text,
+  StyleSheet,
+  Image,
+  Pressable,
+  TouchableOpacity,
+  TextInput,
+} from 'react-native';
 import MenuButton from './MenuButton';
 import CustomText from '@components/CustomText/CustomText';
+import AlbumIcon from '@assets/icons/도감_icon.png';
+import CustomModal from '@components/CustomModal/CustomModal';
 
 function MainScreen({ navigation }) {
+  const [isModalVisible, setModalVisible] = useState(false);
+  const [petNickname, SetPetNickname] = useState('설정된 닉네임');
+
   return (
     <View style={styles.container}>
       {/* 상단 - 레벨 및 진행 상태 */}
       <View style={styles.header}>
         <View></View>
         <CustomText style={styles.petName}>동규니</CustomText>
-        <Pressable style={styles.petNameUpdate}>
-          <Text>수정</Text>
+
+        {/* 펫 닉네임 수정 */}
+        <Pressable
+          style={styles.petNameUpdate}
+          onPress={() => setModalVisible(true)}
+        >
+          <Image
+            source={require('@assets/icons/pencil_icon.png')}
+            style={{ width: 30, height: 30 }}
+          />
         </Pressable>
+
+        <CustomModal
+          isVisible={isModalVisible}
+          wantClose={true}
+          title="닉네임 수정"
+          onClose={() => setModalVisible(false)} // 모달을 닫는 함수
+        >
+          <TextInput
+            style={styles.input}
+            value={petNickname}
+            onChangeText={SetPetNickname}
+            keyboardType="default"
+          />
+
+          <TouchableOpacity
+            activeOpacity={0.8}
+            style={styles.button}
+            onPress={() => setModalVisible(false)}
+          >
+            <CustomText style={{ color: 'white' }}>변경하기</CustomText>
+          </TouchableOpacity>
+        </CustomModal>
+
         <View style={styles.levelContainer}>
           <CustomText style={styles.levelText}>1</CustomText>
           <View style={styles.progressBar}>
@@ -32,23 +76,25 @@ function MainScreen({ navigation }) {
       {/* 우측 메뉴 */}
       <View style={styles.rightMenu}>
         {/* 푸드렌즈 카메라 */}
-        <MenuButton title={'식단기록'}></MenuButton>
+        <MenuButton title={'식단기록'} icon={null}></MenuButton>
         {/* 퀘스트 모아보기 페이지로 이동 */}
+
         <Pressable onPress={() => navigation.navigate('Quest')}>
-          <MenuButton title={'퀘스트'}></MenuButton>
+          <MenuButton title={'퀘스트'} icon={null}></MenuButton>
         </Pressable>
       </View>
 
       {/* 하단 메뉴 */}
       <View style={styles.bottomMenu}>
         {/* 나머지 페이지 만들어지면 연결 */}
+
         <Pressable onPress={() => navigation.navigate('Map')}>
-          <MenuButton title={'지도'}></MenuButton>
+          <MenuButton title={'지도'} icon={null}></MenuButton>
         </Pressable>
         <Pressable onPress={() => navigation.navigate('Album')}>
-          <MenuButton title={'도감'}></MenuButton>
+          <MenuButton title={'도감'} icon={AlbumIcon}></MenuButton>
         </Pressable>
-        <MenuButton title={'나의기록'}></MenuButton>
+        <MenuButton title={'나의기록'} icon={null}></MenuButton>
       </View>
     </View>
   );
@@ -84,7 +130,7 @@ const styles = StyleSheet.create({
     backgroundColor: 'yellowgreen',
     position: 'absolute',
     right: 20,
-    top: 20,
+    top: 15,
   },
   levelContainer: {
     flexDirection: 'row',
@@ -136,8 +182,25 @@ const styles = StyleSheet.create({
     paddingHorizontal: 40,
     position: 'absolute',
     bottom: 10,
-    left: 10,
-    right: 10,
+    left: 20,
+    right: 20,
+  },
+
+  input: {
+    fontFamily: 'DungGeunMo',
+    fontSize: 25,
+    // backgroundColor: colors.BACKGROUND_COLOR,
+    paddingLeft: 15,
+    borderRadius: 20,
+  },
+
+  button: {
+    justifyContent: 'center',
+    alignItems: 'center',
+    borderRadius: 10,
+    backgroundColor: 'seagreen',
+    padding: 15,
+    marginTop: 20,
   },
 });
 
