@@ -24,11 +24,34 @@ function MyInfoScreen({ navigation }) {
     petExp: 1500,
   };
   const diets = {
-    calorie: 1700,
-    carbo: 30,
-    protein: 20,
-    fat: 40,
+    calorie: 1700, // 열량
+    nutritionFacts: [
+      { nameEn: 'sodium', nameKr: '나트륨', serving: '220mg', ratio: 11 }, // 나트륨
+      { nameEn: 'carbo', nameKr: '탄수화물', serving: '30g', ratio: 9 }, // 탄수화물
+      { nameEn: 'totalSugars', nameKr: '당류', serving: '5.8g', ratio: 6 }, // 당류
+      { nameEn: 'fat', nameKr: '지방', serving: '15g', ratio: 28 }, // 지방
+      {
+        nameEn: 'saturatedFattyAcid',
+        nameKr: '트랜스지방',
+        serving: '0g',
+        ratio: 0,
+      }, //  트랜스지방
+      {
+        nameEn: 'transFattyAcid',
+        nameKr: '포화지방',
+        serving: '2g',
+        ratio: 13,
+      }, //  포화지방
+      {
+        nameEn: 'cholesterol',
+        nameKr: '콜레스테롤',
+        serving: '4.9mg',
+        ratio: 2,
+      }, //  콜레스테롤
+      { nameEn: 'protein', nameKr: '단백질', serving: '5.1g', ratio: 9 }, // 단백질
+    ],
   };
+
   const sleeps = {
     sleepTime: 8,
   };
@@ -100,18 +123,46 @@ function MyInfoScreen({ navigation }) {
           title="섭취한 영양소 "
           onClose={() => setModalVisible(false)} // 모달을 닫는 함수
         >
-          <CustomText>
-            Lorem, ipsum dolor sit amet consectetur adipisicing elit.
-            Voluptatibus iusto laboriosam nostrum officia error provident esse
-            obcaecati molestias odit amet.
-          </CustomText>
-          {/* Custom 버튼 예시 */}
+          <View>
+            <View style={styles.row1}>
+              {/* <CustomText style={styles.c1}>영양정보</CustomText> */}
+              <CustomText style={styles.c2}>
+                총 섭취량: {diets.calorie}kcal
+              </CustomText>
+              {/* <CustomText style={styles.c3}>{diets.calorie}kcal</CustomText> */}
+            </View>
+
+            <View
+            //  style={styles.tableOut}
+            >
+              {diets.nutritionFacts.map((nutritionFact, index) => (
+                <View key={index} style={styles.tableIn}>
+                  <CustomText style={styles.tableC1}>
+                    {nutritionFact.nameKr}
+                  </CustomText>
+                  <CustomText style={styles.tableC2}>
+                    {nutritionFact.serving}
+                  </CustomText>
+                  <CustomText style={styles.tableC3}>
+                    {nutritionFact.ratio}%
+                  </CustomText>
+                </View>
+              ))}
+            </View>
+
+            <View>
+              <CustomText style={styles.noticeText}>
+                1일 영양성분 기준치에 대한 비율(%)은 2,000kcal 기준이므로 개인의
+                필요 열량에 따라 다를 수 있습니다.
+              </CustomText>
+            </View>
+          </View>
+          {/* 모달 하단 버튼 예시 */}
           <CustomButton
             title="닫기!"
             style={{ backgroundColor: 'red' }}
             onPress={() => setModalVisible(false)}
           />
-          {/*  */}
         </CustomModal>
         {/* 수면 */}
         <View style={styles.categoryContainer}>
@@ -144,15 +195,25 @@ function MyInfoScreen({ navigation }) {
           </View>
         </View>
       </View>
-
-      {/* 로그아웃 */}
-      <View style={styles.logoutButtonContainer}>
-        <TouchableOpacity
-          onPress={() => navigation.navigate(authNavigations.LOGOUT)}
-          activeOpacity={0.5}
-        >
-          <CustomText style={styles.logoutButton}>로그아웃</CustomText>
-        </TouchableOpacity>
+      <View style={styles.loginLogout}>
+        {/* 로그인 */}
+        <View style={styles.logoutButtonContainer}>
+          <TouchableOpacity
+            onPress={() => navigation.navigate(authNavigations.KAKAO_LOGIN)}
+            activeOpacity={0.5}
+          >
+            <CustomText style={styles.logoutButton}>로그인</CustomText>
+          </TouchableOpacity>
+        </View>
+        {/* 로그아웃 */}
+        <View style={styles.logoutButtonContainer}>
+          <TouchableOpacity
+            onPress={() => navigation.navigate(authNavigations.LOGOUT)}
+            activeOpacity={0.5}
+          >
+            <CustomText style={styles.logoutButton}>로그아웃</CustomText>
+          </TouchableOpacity>
+        </View>
       </View>
     </View>
   );
@@ -236,6 +297,85 @@ const styles = StyleSheet.create({
     textAlign: 'center',
     fontSize: 16,
     paddingTop: 40,
+  },
+  loginLogout: {
+    flexDirection: 'row',
+    gap: 40,
+    justifyContent: 'center',
+  },
+  textAlignRight: {
+    width: Dimensions.get('screen').width / 4,
+    textAlign: 'right',
+  },
+  textAlignLeft: {
+    textAlign: 'left',
+  },
+  textAlignCenter: {
+    textAlign: 'center',
+  },
+  borderRight: {
+    borderRightWidth: 2,
+    gap: 6,
+  },
+  row1: {
+    flexDirection: 'row',
+    borderBottomWidth: 2,
+    textAlign: 'center',
+    // justifyContent: 'center',
+    alignItems: 'center',
+  },
+  tableOut: {
+    // flexDirection: 'row',
+    // borderBottomWidth: 2,
+    textAlign: 'center',
+    // justifyContent: 'center',
+    alignItems: 'center',
+    // paddingVertical: 4,
+  },
+  tableIn: {
+    flexDirection: 'row',
+    borderBottomWidth: 2,
+    textAlign: 'center',
+    // justifyContent: 'center',
+    alignItems: 'center',
+  },
+  tableC1: {
+    width: (Dimensions.get('screen').width * 2.5) / 9,
+    textAlign: 'right',
+    borderRightWidth: 2,
+    paddingRight: 4,
+    paddingVertical: 4,
+  },
+  tableC2: {
+    width: Dimensions.get('screen').width / 4,
+    textAlign: 'right',
+    borderRightWidth: 2,
+    paddingRight: 4,
+    paddingVertical: 4,
+  },
+  tableC3: {
+    width: Dimensions.get('screen').width / 4,
+    textAlign: 'right',
+    paddingRight: 4,
+    paddingVertical: 4,
+  },
+  c1: {
+    width: Dimensions.get('screen').width / 4,
+    textAlign: 'right',
+    paddingRight: 4,
+    paddingVertical: 4,
+  },
+  c2: {
+    textAlign: 'center',
+    paddingVertical: 4,
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+
+  noticeText: {
+    fontSize: 12,
+    paddingVertical: 4,
+    borderBottomWidth: 2,
   },
 });
 
