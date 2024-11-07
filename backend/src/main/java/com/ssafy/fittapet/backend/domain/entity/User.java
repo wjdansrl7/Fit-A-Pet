@@ -20,13 +20,10 @@ public class User extends BaseEntity {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    private String userNickname;
-
     private String userName;
-
-    private String providerId;
-
+    private String userNickname;
     private String provider;
+    private String providerId;
 
     @Enumerated(EnumType.STRING)
     private UserTier userTier;
@@ -42,4 +39,7 @@ public class User extends BaseEntity {
     @Builder.Default
     private List<PersonalQuest> personalQuests = new ArrayList<>();
 
+    public void updateTier(UserTier newTier) {
+        this.userTier = newTier;
+    }
 }
