@@ -29,7 +29,10 @@ function MainScreen({ navigation }) {
           style={styles.petNameUpdate}
           onPress={() => setModalVisible(true)}
         >
-          <Text>수정</Text>
+          <Image
+            source={require('@assets/icons/pencil_icon.png')}
+            style={{ width: 30, height: 30 }}
+          />
         </Pressable>
 
         <CustomModal
@@ -42,7 +45,16 @@ function MainScreen({ navigation }) {
             style={styles.input}
             value={petNickname}
             onChangeText={SetPetNickname}
+            keyboardType="default"
           />
+
+          <TouchableOpacity
+            activeOpacity={0.8}
+            style={styles.button}
+            onPress={() => setModalVisible(false)}
+          >
+            <CustomText style={{ color: 'white' }}>변경하기</CustomText>
+          </TouchableOpacity>
         </CustomModal>
 
         <View style={styles.levelContainer}>
@@ -112,7 +124,7 @@ const styles = StyleSheet.create({
     backgroundColor: 'yellowgreen',
     position: 'absolute',
     right: 20,
-    top: 20,
+    top: 15,
   },
   levelContainer: {
     flexDirection: 'row',
@@ -166,15 +178,23 @@ const styles = StyleSheet.create({
     bottom: 10,
     left: 20,
     right: 20,
-    backgroundColor: 'red',
   },
 
   input: {
     fontFamily: 'DungGeunMo',
-    fontSize: 20,
+    fontSize: 25,
     // backgroundColor: colors.BACKGROUND_COLOR,
     paddingLeft: 15,
     borderRadius: 20,
+  },
+
+  button: {
+    justifyContent: 'center',
+    alignItems: 'center',
+    borderRadius: 10,
+    backgroundColor: 'seagreen',
+    padding: 15,
+    marginTop: 20,
   },
 });
 
