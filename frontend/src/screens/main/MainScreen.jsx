@@ -1,19 +1,50 @@
-import React, { useCallback } from 'react';
-import { View, Text, StyleSheet, Image, Pressable } from 'react-native';
+import React, { useCallback, useState } from 'react';
+import {
+  View,
+  Text,
+  StyleSheet,
+  Image,
+  Pressable,
+  TouchableOpacity,
+  TextInput,
+} from 'react-native';
 import MenuButton from './MenuButton';
 import CustomText from '@components/CustomText/CustomText';
 import AlbumIcon from '@assets/icons/도감_icon.png';
+import CustomModal from '@components/CustomModal/CustomModal';
 
 function MainScreen({ navigation }) {
+  const [isModalVisible, setModalVisible] = useState(false);
+  const [petNickname, SetPetNickname] = useState('설정된 닉네임');
+
   return (
     <View style={styles.container}>
       {/* 상단 - 레벨 및 진행 상태 */}
       <View style={styles.header}>
         <View></View>
         <CustomText style={styles.petName}>동규니</CustomText>
-        <Pressable style={styles.petNameUpdate}>
+
+        {/* 펫 닉네임 수정 */}
+        <Pressable
+          style={styles.petNameUpdate}
+          onPress={() => setModalVisible(true)}
+        >
           <Text>수정</Text>
         </Pressable>
+
+        <CustomModal
+          isVisible={isModalVisible}
+          wantClose={true}
+          title="닉네임 수정"
+          onClose={() => setModalVisible(false)} // 모달을 닫는 함수
+        >
+          <TextInput
+            style={styles.input}
+            value={petNickname}
+            onChangeText={SetPetNickname}
+          />
+        </CustomModal>
+
         <View style={styles.levelContainer}>
           <CustomText style={styles.levelText}>1</CustomText>
           <View style={styles.progressBar}>
@@ -131,10 +162,16 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     justifyContent: 'space-between',
     paddingHorizontal: 40,
-    position: 'absolute',
-    bottom: 10,
-    left: 10,
-    right: 10,
+    // position: 'absolute',
+    backgroundColor: 'red',
+  },
+
+  input: {
+    fontFamily: 'DungGeunMo',
+    fontSize: 20,
+    // backgroundColor: colors.BACKGROUND_COLOR,
+    paddingLeft: 15,
+    borderRadius: 20,
   },
 });
 
