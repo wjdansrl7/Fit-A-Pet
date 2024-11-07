@@ -1,8 +1,8 @@
 import axiosInstance from './axios';
 
 // 1. 카카오 로그인
-const postKakaoLogin = async () => {
-  const { data } = await axiosInstance.post('/auth/login');
+const postKakaoLogin = async (token) => {
+  const { data } = await axiosInstance.post('/auth/login/kakao', { token });
   return data;
 };
 

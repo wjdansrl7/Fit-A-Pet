@@ -10,7 +10,7 @@ function QuestScreen() {
       questId: 1,
       questCategory: 'WALK',
       questName: '동네 산책',
-      questContent: '8000보 걷기',
+      questContent: '5000보 /8000보 / 15000보 걷기',
       questTier: 'EASY',
       questReward: '경험치 100, 공적치 100',
     },
@@ -41,6 +41,7 @@ function QuestScreen() {
       },
     ],
   };
+
   return (
     <View style={styles.backgroundColorWhite}>
       <View style={styles.container}>
@@ -51,7 +52,9 @@ function QuestScreen() {
             <CustomText style={styles.questLabel}>개인 퀘스트</CustomText>
           </View>
           {/* 퀘스트 카드 */}
-          <QuestFrame quest={quests.personal} />
+          <View>
+            <CustomText>개인퀘스트_by.쏘라리피그마</CustomText>
+          </View>
         </View>
 
         {/* 그룹 퀘스트 */}

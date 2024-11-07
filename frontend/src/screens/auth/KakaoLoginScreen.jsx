@@ -8,7 +8,9 @@ import { colors } from '@src/constants';
 import useAuth from '@src/hooks/queries/useAuth';
 
 // const REDIRECT_URI = `http://localhost:3030/auth/login`;
-const REDIRECT_URI = `http://10.0.2.2:3030/auth/login`;
+// const REDIRECT_URI = `http://10.0.2.2:3030/auth/login`;
+const REDIRECT_URI = `https://k11a603.p.ssafy.io/login/oauth2`;
+// const REDIRECT_URI = `https://k11a603.p.ssafy.io/login/oauth2/code/kakao`;
 
 function KakaoLoginScreen() {
   const { kakaoLoginMutation } = useAuth();
@@ -17,8 +19,10 @@ function KakaoLoginScreen() {
 
   const handleOnMessage = (event) => {
     if (event.nativeEvent.url.includes(`${REDIRECT_URI}?code=`)) {
+      console.log(event);
       const code = event.nativeEvent.url.replace(`${REDIRECT_URI}?code=`, '');
-      requestToken(code);
+      console.log(code);
+      // requestToken(code);
     }
   };
 
@@ -33,7 +37,8 @@ function KakaoLoginScreen() {
         code,
       },
     });
-    kakaoLoginMutation.mutate(response.data.access_token);
+    console.log(response.data);
+    // kakaoLoginMutation.mutate(response.data.access_token);
   };
 
   const handleNavigationChangeState = (event) => {
@@ -52,8 +57,8 @@ function KakaoLoginScreen() {
       <WebView
         source={{
           // 하기의 쓰다만 코드는 임시용
-          uri: `https://kauth.kakao.com/oauth/authorize`,
-          // uri: `https://kauth.kakao.com/oauth/authorize?response_type=code&client_id${Config.KAKAO_REST_API_KEY}&redirect_uri=${REDIRECT_URI}`,
+          // uri: `https://kauth.kakao.com/oauth/authorize`,
+          uri: `https://kauth.kakao.com/oauth/authorize?response_type=code&client_id=${Config.KAKAO_REST_API_KEY}&redirect_uri=${REDIRECT_URI}`,
         }}
         onMessage={handleOnMessage}
         injectedJavaScript={"window.ReactNativeWebView.postMessage('')"}

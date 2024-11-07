@@ -15,7 +15,11 @@ import QuestScreen from '@screens/quest/QuestScreen';
 import AlbumScreen from '@screens/album/AlbumScreen';
 import CustomText from '@components/CustomText/CustomText';
 import MapScreen from '@screens/map/MapScreen';
+
+import MyInfoScreen from '@screens/myInfo/MyInfoScreen';
+import Logout from '@screens/auth/Logout';
 import GuildScreen from '@screens/guild/GuildScreen';
+
 const Stack = createNativeStackNavigator();
 
 function App() {
@@ -85,6 +89,16 @@ function App() {
               name="Quest"
               component={QuestScreen}
               options={{ title: '퀘스트 모아보기' }}
+            />
+            <Stack.Screen
+              name="MyInfo"
+              component={MyInfoScreen}
+              options={{ title: '나의 기록' }}
+            />
+            <Stack.Screen
+              name={authNavigations.LOGOUT}
+              component={Logout}
+              options={{ title: '로그아웃' }}
             />
           </Stack.Navigator>
         ) : null}
