@@ -1,4 +1,4 @@
-package com.ssafy.fittapet.backend.domain.repository.Map;
+package com.ssafy.fittapet.backend.domain.repository.map;
 
 import com.ssafy.fittapet.backend.domain.dto.map.MapResponse;
 
