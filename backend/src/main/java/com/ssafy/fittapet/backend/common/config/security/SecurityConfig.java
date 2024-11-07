@@ -70,11 +70,11 @@ public class SecurityConfig {
 
         //JWTFilter 추가
         http
-                .addFilterAfter(new JWTFilter(jwtUtil), OAuth2LoginAuthenticationFilter.class);
+                .addFilterBefore(new JWTFilter(jwtUtil), OAuth2LoginAuthenticationFilter.class);
 
         //LogoutFilter 등록
-        http
-                .addFilterBefore(new CustomLogoutFilter(jwtUtil, blacklistRepository, refreshRepository), LogoutFilter.class);
+//        http
+//                .addFilterBefore(new CustomLogoutFilter(jwtUtil, blacklistRepository, refreshRepository), LogoutFilter.class);
 
         //oauth2
         http
@@ -88,7 +88,7 @@ public class SecurityConfig {
         http
                 .authorizeHttpRequests((auth) -> auth
 //                        .requestMatchers("/", "/test").permitAll()
-                        .requestMatchers("/").permitAll()
+                        .requestMatchers("/", "/auth/tier").permitAll()
                         .anyRequest().authenticated());
 
         //세션 설정 : STATELESS

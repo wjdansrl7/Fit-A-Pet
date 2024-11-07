@@ -1,10 +1,16 @@
 package com.ssafy.fittapet.backend.application.service.auth;
 
+import com.ssafy.fittapet.backend.common.constant.entity_field.UserTier;
 import com.ssafy.fittapet.backend.common.util.JWTUtil;
+import com.ssafy.fittapet.backend.domain.dto.auth.CustomOAuth2User;
+import com.ssafy.fittapet.backend.domain.dto.auth.TierRequestDTO;
 import com.ssafy.fittapet.backend.domain.entity.RefreshToken;
+import com.ssafy.fittapet.backend.domain.entity.User;
 import com.ssafy.fittapet.backend.domain.repository.auth.BlacklistRepository;
 import com.ssafy.fittapet.backend.domain.repository.auth.RefreshRepository;
+import com.ssafy.fittapet.backend.domain.repository.auth.UserRepository;
 import io.jsonwebtoken.ExpiredJwtException;
+import jakarta.persistence.EntityNotFoundException;
 import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
@@ -14,17 +20,19 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
 @Slf4j
-public class ReissueService {
+public class AuthService {
 
     private final JWTUtil jwtUtil;
     private final RefreshRepository refreshRepository;
     private final BlacklistRepository blacklistRepository;
+    private final UserRepository userRepository;
 
     @Value("${refresh-token.milli-second}")
     private Long refreshExpiredMs;
@@ -99,7 +107,28 @@ public class ReissueService {
         response.addCookie(createCookie("accessToken", newAccess));
         response.addCookie(createCookie("refreshToken", newRefresh));
 
-        return new ResponseEntity<>("Token reissued successfully", HttpStatus.OK);
+        return ResponseEntity.ok("Token reissued successfully");
+    }
+
+    @Transactional
+    public ResponseEntity<?> updateTier(TierRequestDTO dto, Long userId) {
+        User user = userRepository.findById(userId)
+                .orElseThrow(() -> new EntityNotFoundException("User Entity not found"));
+
+        user.updateTier(UserTier.valueOf(dto.getTier()));
+
+        return ResponseEntity.ok(user.getUserTier().getValue());
+    }
+
+    private void addRefreshEntity(Long userId, String refresh, Long expiredMs) {
+
+        RefreshToken refreshToken = RefreshToken.builder()
+                .userId(userId)
+                .token(refresh)
+                .expiration(expiredMs)
+                .build();
+
+        refreshRepository.save(refreshToken);
     }
 
     private Cookie createCookie(String key, String value) {
@@ -113,14 +142,17 @@ public class ReissueService {
         return cookie;
     }
 
-    private void addRefreshEntity(Long userId, String refresh, Long expiredMs) {
+    public ResponseEntity<?> getUser(Long userId) {
+        User user = userRepository.findById(userId)
+                .orElseThrow(() -> new EntityNotFoundException("User Entity not found"));
 
-        RefreshToken refreshToken = RefreshToken.builder()
-                .userId(userId)
-                .token(refresh)
-                .expiration(expiredMs)
-                .build();
 
-        refreshRepository.save(refreshToken);
+    }
+
+    public ResponseEntity<?> getLoginUser(Long userId) {
+        User user = userRepository.findById(userId)
+                .orElseThrow(() -> new EntityNotFoundException("User Entity not found"));
+
+
     }
 }

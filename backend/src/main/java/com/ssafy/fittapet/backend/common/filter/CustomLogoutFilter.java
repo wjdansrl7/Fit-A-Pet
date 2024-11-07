@@ -47,7 +47,7 @@ public class CustomLogoutFilter extends GenericFilter {
 
         //path and method verify
         String requestUri = request.getRequestURI();
-        if (!requestUri.matches("^\\/logout$")) {
+        if (!requestUri.matches("^\\/auth\\/logout$")) {
             filterChain.doFilter(request, response);
             return;
         }

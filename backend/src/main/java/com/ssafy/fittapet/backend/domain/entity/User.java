@@ -39,4 +39,7 @@ public class User extends BaseEntity {
     @Builder.Default
     private List<PersonalQuest> personalQuests = new ArrayList<>();
 
+    public void updateTier(UserTier newTier) {
+        this.userTier = newTier;
+    }
 }

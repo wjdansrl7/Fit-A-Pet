@@ -1,6 +1,7 @@
 package com.ssafy.fittapet.backend.domain.dto.auth;
 
 import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.oauth2.core.user.OAuth2User;
 
 import java.util.ArrayList;
@@ -12,7 +13,7 @@ import java.util.Map;
  * 인증된 사용자 정보 저장용
  * SecurityContextHolder 등록한 후 접근
  */
-public class CustomOAuth2User implements OAuth2User {
+public class CustomOAuth2User implements OAuth2User, UserDetails {
 
     private final UserDTO userDTO;
 
@@ -38,6 +39,16 @@ public class CustomOAuth2User implements OAuth2User {
         collection.add((GrantedAuthority) userDTO::getRole);
 
         return collection;
+    }
+
+    @Override
+    public String getPassword() {
+        return "";
+    }
+
+    @Override
+    public String getUsername() {
+        return userDTO.getUserNickname();
     }
 
     public Long getId(){
