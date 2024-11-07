@@ -162,7 +162,10 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     justifyContent: 'space-between',
     paddingHorizontal: 40,
-    // position: 'absolute',
+    position: 'absolute',
+    bottom: 10,
+    left: 20,
+    right: 20,
     backgroundColor: 'red',
   },
 
