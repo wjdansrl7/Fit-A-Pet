@@ -4,6 +4,7 @@ import com.ssafy.fittapet.backend.application.service.guild.GuildService;
 import com.ssafy.fittapet.backend.common.exception.CustomException;
 import com.ssafy.fittapet.backend.domain.dto.guild.GuildInfoResponse;
 import com.ssafy.fittapet.backend.domain.dto.guild.GuildMemberInfoResponse;
+import com.ssafy.fittapet.backend.domain.dto.guild.GuildQuestInfoResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -29,8 +30,8 @@ public class GuildController {
     public ResponseEntity<?> getGuildInfo(
             @PathVariable Long guildId
     ) throws CustomException {
-        GuildInfoResponse guildInfoResponse = guildService.getGuildInfo(guildId);
-        return new ResponseEntity<>(guildInfoResponse, HttpStatus.OK);
+        GuildInfoResponse guildInfo = guildService.getGuildInfo(guildId);
+        return new ResponseEntity<>(guildInfo, HttpStatus.OK);
     }
 
     @GetMapping(path = "/{guildId}/member-info")
@@ -39,6 +40,14 @@ public class GuildController {
     ) throws CustomException {
         List<GuildMemberInfoResponse> members = guildService.getMemberInfo(guildId);
         return new ResponseEntity<>(members, HttpStatus.OK);
+    }
+
+    @GetMapping(path = "/{guildId}/quest-info")
+    public ResponseEntity<?> getQuestInfo(
+            @PathVariable Long guildId
+    ) throws CustomException {
+        GuildQuestInfoResponse guildQuest = guildService.getQuestInfo(guildId);
+        return new ResponseEntity<>(guildQuest, HttpStatus.OK);
     }
 
     @PutMapping(path = "/{guildId}/quests/{questId}")
