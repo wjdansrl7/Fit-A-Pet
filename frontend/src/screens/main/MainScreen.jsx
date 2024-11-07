@@ -78,13 +78,19 @@ function MainScreen({ navigation }) {
         {/* 푸드렌즈 카메라 */}
         <MenuButton title={'식단기록'} icon={null}></MenuButton>
         {/* 퀘스트 모아보기 페이지로 이동 */}
-        <MenuButton title={'퀘스트'} icon={null}></MenuButton>
+
+        <Pressable onPress={() => navigation.navigate('Quest')}>
+          <MenuButton title={'퀘스트'} icon={null}></MenuButton>
+        </Pressable>
       </View>
 
       {/* 하단 메뉴 */}
       <View style={styles.bottomMenu}>
         {/* 나머지 페이지 만들어지면 연결 */}
-        <MenuButton title={'그룹'} icon={null}></MenuButton>
+
+        <Pressable onPress={() => navigation.navigate('Map')}>
+          <MenuButton title={'지도'} icon={null}></MenuButton>
+        </Pressable>
         <Pressable onPress={() => navigation.navigate('Album')}>
           <MenuButton title={'도감'} icon={AlbumIcon}></MenuButton>
         </Pressable>

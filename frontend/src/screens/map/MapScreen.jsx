@@ -4,49 +4,98 @@ import {
   View,
   TouchableOpacity,
   ImageBackground,
+  Image,
 } from 'react-native';
-import mapImg from '@assets/backgrounds/group/mapImg.webp';
-import CustomModal from '@components/CustomModal/CustomModal';
+// import { useNavigation } from '@react-navigation/native';  페이지 이동 생기면
 import CustomText from '@components/CustomText/CustomText';
-import CustomButton from '@components/CustomButton/CustomButton';
 
-const MapScreen = () => {
+import map2x from '@assets/backgrounds/map/map2x.webp';
+import ActiveHouse from '@assets/backgrounds/map/ActiveHouse.png';
+import InActiveHouse from '@assets/backgrounds/map/InActiveHouse.png';
+import MapModal from '@screens/map/MapModal';
+import { colors } from '@src/constants';
+function MapScreen({ navigation }) {
   const [isModalVisible, setModalVisible] = useState(false);
+  const [modalViewState, setModalViewState] = useState('init'); // init, create, join 중 하나로 상태 관리
+  const [selectedHouse, setSelectedHouse] = useState(null);
+
+  const houses = [
+    {
+      id: 1,
+      name: 'House A',
+      isActive: true,
+      position: { top: 120, right: 20 },
+    },
+    {
+      id: 2,
+      name: 'House B',
+      isActive: false,
+      position: { top: 380, left: 40 },
+    },
+    {
+      id: 3,
+      name: 'House C',
+      isActive: true,
+      position: { bottom: 150, right: 20 },
+    },
+  ];
+
+  const openCreateGuildModal = () => {
+    setModalViewState('create');
+  };
+
+  const openJoinGuildModal = () => {
+    setModalViewState('join');
+  };
+
+  const handleHouseClick = (house) => {
+    if (house.isActive) {
+      // 적힌 코드롤 같이 전해줘야지 특정 Guild으로 이동
+      navigation.navigate('Guild');
+    } else {
+      setSelectedHouse(house);
+      setModalViewState('init');
+      setModalVisible(true);
+    }
+  };
 
   return (
     <View style={styles.container}>
-      <ImageBackground source={mapImg} style={styles.backgroundImage}>
-        {/* Custom 모달 예시 */}
-        <TouchableOpacity
-          onPress={() => setModalVisible(true)}
-          activeOpacity={1}
-        >
-          <CustomText>모달 열기</CustomText>
-        </TouchableOpacity>
-        <CustomModal
+      <ImageBackground
+        source={map2x}
+        style={styles.backgroundImage}
+        resizeMode="cover"
+      >
+        {houses.map((house) => (
+          <TouchableOpacity
+            key={house.id}
+            activeOpacity={0.9}
+            style={[styles.house, house.position]}
+            onPress={() => handleHouseClick(house)}
+          >
+            <Image
+              source={house.isActive ? ActiveHouse : InActiveHouse}
+              style={styles.overlayImage}
+              resizeMode="contain"
+            />
+            {house.isActive && (
+              <CustomText style={styles.houseName}>{house.name}</CustomText>
+            )}
+          </TouchableOpacity>
+        ))}
+
+        {/* 단일 모달 컴포넌트 */}
+        <MapModal
           isVisible={isModalVisible}
-          wantClose={true} // 불리언 값
-          title="알을 받을까나?"
-          onClose={() => setModalVisible(false)} // 모달을 닫는 함수
-        >
-          <CustomText>
-            Lorem, ipsum dolor sit amet consectetur adipisicing elit.
-            Voluptatibus iusto laboriosam nostrum officia error provident esse
-            obcaecati molestias odit amet.
-          </CustomText>
-          {/* Custom 버튼 예시 */}
-          <CustomButton
-            title="아,, 패스!"
-            style={{ backgroundColor: 'red' }}
-            onPress={() => setModalVisible(false)}
-          />
-          {/*  */}
-        </CustomModal>
-        {/*  */}
+          viewState={modalViewState} // init, create, join 중 하나
+          onClose={() => setModalVisible(false)}
+          onCreateGuild={openCreateGuildModal}
+          onJoinGuild={openJoinGuildModal}
+        />
       </ImageBackground>
     </View>
   );
-};
+}
 
 const styles = StyleSheet.create({
   container: {
@@ -56,6 +105,19 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: 'center',
     alignItems: 'center',
+  },
+  overlayImage: {
+    width: 100,
+    height: 100,
+  },
+  house: {
+    position: 'absolute',
+    alignItems: 'center',
+  },
+  houseName: {
+    marginTop: 5,
+    color: 'white',
+    fontSize: 16,
   },
 });
 
