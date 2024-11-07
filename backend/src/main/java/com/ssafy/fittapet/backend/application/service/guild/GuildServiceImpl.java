@@ -6,6 +6,7 @@ import com.ssafy.fittapet.backend.common.validator.GuildValidator;
 import com.ssafy.fittapet.backend.common.validator.QuestValidator;
 import com.ssafy.fittapet.backend.domain.dto.guild.GuildInfoResponse;
 import com.ssafy.fittapet.backend.domain.dto.guild.GuildMemberInfoResponse;
+import com.ssafy.fittapet.backend.domain.dto.guild.GuildQuestInfoResponse;
 import com.ssafy.fittapet.backend.domain.entity.Guild;
 import com.ssafy.fittapet.backend.domain.entity.GuildQuest;
 import com.ssafy.fittapet.backend.domain.entity.Quest;
@@ -76,5 +77,12 @@ public class GuildServiceImpl implements GuildService {
         Guild guild = guildValidator.isExist(guildId).orElseThrow(() -> new CustomException(NO_GUILD));
 
         return guildRepository.findAllMemberByGuild(guild.getId());
+    }
+
+    @Override
+    public GuildQuestInfoResponse getQuestInfo(Long guildId) throws CustomException {
+        Guild guild = guildValidator.isExist(guildId).orElseThrow(() -> new CustomException(NO_GUILD));
+
+        return guildQuestRepository.findQuestInfoByGuildId(guildId);
     }
 }
