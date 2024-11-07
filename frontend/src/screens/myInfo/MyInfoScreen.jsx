@@ -1,9 +1,20 @@
-import React from 'react';
-import { Pressable, StyleSheet, View, Image, Dimensions } from 'react-native';
+import React, { useState } from 'react';
+import {
+  Pressable,
+  TouchableOpacity,
+  StyleSheet,
+  View,
+  Image,
+  Dimensions,
+} from 'react-native';
 import CustomText from '@components/CustomText/CustomText';
+import CustomModal from '@components/CustomModal/CustomModal';
+import CustomButton from '@components/CustomButton/CustomButton';
 import { authNavigations } from '@src/constants';
 
 function MyInfoScreen({ navigation }) {
+  const [isModalVisible, setModalVisible] = useState(false);
+
   const userInfo = {
     userName: '장성일',
     userTier: 'EASY',
@@ -34,50 +45,74 @@ function MyInfoScreen({ navigation }) {
       {/* 일일기록 */}
       <View style={styles.screenContainer}>
         {/* 영양 */}
-        <View style={styles.categoryContainer}>
-          <CustomText style={styles.defaultInfoText}>
-            일일 섭취량: {diets.calorie}kcal
-          </CustomText>
-          <View style={styles.categoryContainerBody}>
-            <View style={styles.imageContainer}>
-              <Image
-                resizeMode="contain"
-                style={styles.image}
-                source={require('@assets/myInfo/diet.png')}
-              />
-            </View>
-            <View style={styles.dietsInfo}>
-              <View style={styles.dietsTextContainer}>
-                <CustomText style={styles.dietInfoText}>탄수화물</CustomText>
-                <CustomText style={styles.dietInfoText}>단백질</CustomText>
-                <CustomText style={styles.dietInfoText}>지방</CustomText>
+        <TouchableOpacity
+          onPress={() => setModalVisible(true)}
+          activeOpacity={0.8}
+        >
+          <View style={styles.categoryContainer}>
+            <CustomText style={styles.defaultInfoText}>
+              일일 섭취량: {diets.calorie}kcal
+            </CustomText>
+            <View style={styles.categoryContainerBody}>
+              <View style={styles.imageContainer}>
+                <Image
+                  resizeMode="contain"
+                  style={styles.image}
+                  source={require('@assets/myInfo/diet.png')}
+                />
               </View>
-              <View style={styles.dietsCheckImageContainer}>
-                <View style={styles.checkImageContainer}>
-                  <Image
-                    resizeMode="contain"
-                    style={styles.checkImage}
-                    source={require('@assets/myInfo/O.png')}
-                  />
+              <View style={styles.dietsInfo}>
+                <View style={styles.dietsTextContainer}>
+                  <CustomText style={styles.dietInfoText}>탄수화물</CustomText>
+                  <CustomText style={styles.dietInfoText}>단백질</CustomText>
+                  <CustomText style={styles.dietInfoText}>지방</CustomText>
                 </View>
-                <View style={styles.checkImageContainer}>
-                  <Image
-                    resizeMode="contain"
-                    style={styles.checkImage}
-                    source={require('@assets/myInfo/X.png')}
-                  />
-                </View>
-                <View style={styles.checkImageContainer}>
-                  <Image
-                    resizeMode="contain"
-                    style={styles.checkImage}
-                    source={require('@assets/myInfo/O.png')}
-                  />
+                <View style={styles.dietsCheckImageContainer}>
+                  <View style={styles.checkImageContainer}>
+                    <Image
+                      resizeMode="contain"
+                      style={styles.checkImage}
+                      source={require('@assets/myInfo/O.png')}
+                    />
+                  </View>
+                  <View style={styles.checkImageContainer}>
+                    <Image
+                      resizeMode="contain"
+                      style={styles.checkImage}
+                      source={require('@assets/myInfo/X.png')}
+                    />
+                  </View>
+                  <View style={styles.checkImageContainer}>
+                    <Image
+                      resizeMode="contain"
+                      style={styles.checkImage}
+                      source={require('@assets/myInfo/O.png')}
+                    />
+                  </View>
                 </View>
               </View>
             </View>
           </View>
-        </View>
+        </TouchableOpacity>
+        <CustomModal
+          isVisible={isModalVisible}
+          wantClose={true} // 불리언 값
+          title="섭취한 영양소 "
+          onClose={() => setModalVisible(false)} // 모달을 닫는 함수
+        >
+          <CustomText>
+            Lorem, ipsum dolor sit amet consectetur adipisicing elit.
+            Voluptatibus iusto laboriosam nostrum officia error provident esse
+            obcaecati molestias odit amet.
+          </CustomText>
+          {/* Custom 버튼 예시 */}
+          <CustomButton
+            title="닫기!"
+            style={{ backgroundColor: 'red' }}
+            onPress={() => setModalVisible(false)}
+          />
+          {/*  */}
+        </CustomModal>
         {/* 수면 */}
         <View style={styles.categoryContainer}>
           <View style={styles.categoryContainerBody}>
@@ -112,9 +147,12 @@ function MyInfoScreen({ navigation }) {
 
       {/* 로그아웃 */}
       <View style={styles.logoutButtonContainer}>
-        <Pressable onPress={() => navigation.navigate(authNavigations.LOGOUT)}>
+        <TouchableOpacity
+          onPress={() => navigation.navigate(authNavigations.LOGOUT)}
+          activeOpacity={0.5}
+        >
           <CustomText style={styles.logoutButton}>로그아웃</CustomText>
-        </Pressable>
+        </TouchableOpacity>
       </View>
     </View>
   );
