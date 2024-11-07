@@ -8,7 +8,11 @@ module.exports = {
           '@components': './src/components',
           '@screens': './src/screens',
           '@assets': './src/assets',
-          '@src': './src' // src 폴더를 @src로 매핑
+          '@api': './src/api',
+          '@constants': './src/constants',
+          '@hooks' : './src/hooks',
+          '@util': './src/utils',
+          '@src': './src' 
         },
       },
     ],

@@ -15,8 +15,10 @@ import QuestScreen from '@screens/quest/QuestScreen';
 import AlbumScreen from '@screens/album/AlbumScreen';
 import CustomText from '@components/CustomText/CustomText';
 import MapScreen from '@screens/map/MapScreen';
+
 import MyInfoScreen from '@screens/myInfo/MyInfoScreen';
 import Logout from '@screens/auth/Logout';
+import GuildScreen from '@screens/guild/GuildScreen';
 
 const Stack = createNativeStackNavigator();
 
@@ -46,9 +48,7 @@ function App() {
                     style={{
                       fontSize: 30,
                     }}
-                  >
-                    {'<'}
-                  </CustomText>
+                  ></CustomText>
                 </Pressable>
               ),
             })}
@@ -69,6 +69,11 @@ function App() {
               options={{ title: '지도' }}
             />
             <Stack.Screen
+              name="Guild"
+              component={GuildScreen}
+              options={{ title: '길드' }}
+            />
+            <Stack.Screen
               name={authNavigations.AUTH_HOME}
               component={AuthHomeScreen}
               options={{ title: '로고와 로그인' }}
@@ -78,7 +83,6 @@ function App() {
               component={KakaoLoginScreen}
               options={{ title: '카카오 로그인' }}
             />
-
             <Stack.Screen
               name="Quest"
               component={QuestScreen}
@@ -102,14 +106,8 @@ function App() {
 }
 
 const styles = StyleSheet.create({
-  backgroundStyle: {
-    backgroundColor: 'black', // 배경 색상을 검정색으로 설정
-    flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
-  },
-  textStyle: {
-    color: 'white', // 텍스트 색상을 흰색으로 설정
+  container: {
+    flex: 1, // SafeAreaView가 전체 화면을 차지하도록 설정
   },
 });
 
