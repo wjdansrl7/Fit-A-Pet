@@ -3,11 +3,15 @@ package com.ssafy.fittapet.backend.domain.dto.guild;
 
 import com.querydsl.core.annotations.QueryProjection;
 import lombok.Builder;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
 
+@NoArgsConstructor
+@Getter
 public class GuildQuestInfoResponse {
-    private final Long guildQuestId;
-    private final String guildQuestName;
-    private final String guildQuestContent;
+    private Long guildQuestId;
+    private String guildQuestName;
+    private String guildQuestContent;
 
     @Builder
     @QueryProjection
