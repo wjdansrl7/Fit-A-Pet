@@ -91,11 +91,11 @@ function MainScreen({ navigation }) {
         <Pressable onPress={() => navigation.navigate('Map')}>
           <MenuButton title={'지도'} icon={null}></MenuButton>
         </Pressable>
-        <Pressable onPress={() => navigation.navigate('MyInfo')}>
-          <MenuButton title={'나의기록'}></MenuButton>
-        </Pressable>
         <Pressable onPress={() => navigation.navigate('Album')}>
           <MenuButton title={'도감'} icon={AlbumIcon}></MenuButton>
+        </Pressable>
+        <Pressable onPress={() => navigation.navigate('MyInfo')}>
+          <MenuButton title={'나의기록'}></MenuButton>
         </Pressable>
       </View>
     </View>

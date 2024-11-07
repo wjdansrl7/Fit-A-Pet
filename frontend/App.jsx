@@ -48,7 +48,9 @@ function App() {
                     style={{
                       fontSize: 30,
                     }}
-                  ></CustomText>
+                  >
+                    {'<'}
+                  </CustomText>
                 </Pressable>
               ),
             })}
