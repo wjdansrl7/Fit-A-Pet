@@ -1,4 +1,5 @@
-import { getAccessToken, postKakaoLogin, getProfile } from '@src/api/auth';
+// import { getAccessToken, postKakaoLogin, getProfile } from '@src/api/auth';
+import { getAccessToken, postKakaoLogin, postLogout } from '@src/api/auth';
 import { queryClient } from '@src/api/queryClient';
 import { removeEncryptStorage } from '@src/utils';
 import { setHeader, removeHeader } from '@src/utils/header';
@@ -8,14 +9,16 @@ import { useEffect } from 'react';
 function useKakaoLogin() {
   return useMutation({
     mutationFn: postKakaoLogin,
-    onSuccess: ({ accessToken, refreshToken }) => {
-      setEncryptStorage('refreshToken', refreshToken);
-      setHeader('Authorization', `Bearer${accessToken}`);
-    },
-    onSettled: () => {
-      queryClient.refetchQueries({ queryKey: ['auth', 'getAccessToken'] });
-      queryClient.invalidateQueries({ queryKey: ['auth', 'getProfile'] });
-    },
+    // onSuccess: ({ data }) => {
+    //   // onSuccess: ({ accessToken, refreshToken }) => {
+    //   setEncryptStorage('refreshToken', data.refreshToken);
+    //   setHeader('Authorization', `Bearer${data.accessToken}`);
+    //   navigation.navigate('Main');
+    // },
+    // onSettled: () => {
+    //   queryClient.refetchQueries({ queryKey: ['auth', 'getAccessToken'] });
+    //   // queryClient.invalidateQueries({ queryKey: ['auth', 'getProfile'] });
+    // },
     // ...mutationOptions,
   });
 }
@@ -32,7 +35,7 @@ function useGetRefreshToken() {
 
   useEffect(() => {
     if (isSuccess) {
-      setHeader('Authorization', `Bearer${data.accessToken}`);
+      setHeader('Authorization', `Bearer ${data.accessToken}`);
       setEncryptStorage('refreshToken', data.refreshToken);
     }
   }, [isSuccess]);
@@ -46,24 +49,28 @@ function useGetRefreshToken() {
   return { isSuccess, isError };
 }
 
-function useGetProfile() {
-  return useQuery({
-    queryKey: ['auth', 'getProfile'],
-    queryFn: getProfile,
-    // ...queryOptions,
+function usePostLogout({ navigation }) {
+  return useMutation({
+    mutationFn: postLogout,
+    onSuccess: () => {
+      removeHeader('Authorization');
+      removeEncryptStorage('refreshToken');
+      navigation.navigate('AuthHomeScreen');
+    },
   });
 }
 
 function useAuth() {
   // const kakaoLoginMutation = useKakaoLogin();
   const refreshTokenQuery = useGetRefreshToken();
-  const getProfileQuery = useGetProfile({
-    enabled: refreshTokenQuery.isSuccess,
-  });
-  const isLogin = getProfileQuery.isSuccess;
+  // const getProfileQuery = useGetProfile({
+  //   enabled: refreshTokenQuery.isSuccess,
+  // });
+  const isLogin = refreshTokenQuery.isSuccess;
   const kakaoLoginMutation = useKakaoLogin();
 
-  return { kakaoLoginMutation, isLogin, getProfileQuery };
+  return { kakaoLoginMutation, isLogin };
+  // return { kakaoLoginMutation, isLogin, getProfileQuery };
 }
 
 export default useAuth;

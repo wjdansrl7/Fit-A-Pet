@@ -199,7 +199,7 @@ function MyInfoScreen({ navigation }) {
         {/* 로그인 */}
         <View style={styles.logoutButtonContainer}>
           <TouchableOpacity
-            onPress={() => navigation.navigate(authNavigations.KAKAO_LOGIN)}
+            onPress={() => navigation.navigate(authNavigations.AUTH_HOME)}
             activeOpacity={0.5}
           >
             <CustomText style={styles.logoutButton}>로그인</CustomText>
