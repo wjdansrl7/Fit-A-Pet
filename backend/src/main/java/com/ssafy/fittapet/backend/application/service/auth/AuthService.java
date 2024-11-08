@@ -37,6 +37,10 @@ public class AuthService {
     @Value("${refresh-token.milli-second}")
     private Long refreshExpiredMs;
 
+    public User getLoggedInUser() {
+        return userRepository.findById(1L).orElseThrow(() -> new IllegalArgumentException("임시 유저"));
+    }
+
     public ResponseEntity<?> reissueToken(HttpServletRequest request, HttpServletResponse response) {
 
         //get refresh token

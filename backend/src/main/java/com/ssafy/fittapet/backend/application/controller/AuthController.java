@@ -19,6 +19,7 @@ public class AuthController {
 
     private final AuthService authService;
 
+
 //    @GetMapping("/login")
 //    public ResponseEntity<?> getLoginUser(@AuthenticationPrincipal CustomOAuth2User customOAuth2User){
 //        return authService.getLoginUser(customOAuth2User.getId());
