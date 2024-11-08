@@ -18,6 +18,7 @@ public class MapValidator {
     }
 
     public boolean isAblePosition(Long userId, Long guildPosition){
-        return mapRepository.findByUserIdAndGuildPosition(userId, guildPosition) == null;
+        if(guildPosition>3 || guildPosition<1) return false;
+        return mapRepository.findByUserIdAndGuildPosition(userId, guildPosition) == null ;
     }
 }
