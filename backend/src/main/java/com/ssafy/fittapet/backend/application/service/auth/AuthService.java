@@ -1,8 +1,8 @@
 package com.ssafy.fittapet.backend.application.service.auth;
 
+import com.ssafy.fittapet.backend.common.constant.entity_field.Role;
 import com.ssafy.fittapet.backend.common.constant.entity_field.UserTier;
 import com.ssafy.fittapet.backend.common.util.JWTUtil;
-import com.ssafy.fittapet.backend.domain.dto.auth.CustomOAuth2User;
 import com.ssafy.fittapet.backend.domain.dto.auth.TierRequestDTO;
 import com.ssafy.fittapet.backend.domain.entity.RefreshToken;
 import com.ssafy.fittapet.backend.domain.entity.User;
@@ -26,6 +26,7 @@ import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
+@Transactional
 @Slf4j
 public class AuthService {
 
@@ -37,7 +38,17 @@ public class AuthService {
     @Value("${refresh-token.milli-second}")
     private Long refreshExpiredMs;
 
-    public User getLoggedInUser() {
+    public User getLoginUser() {
+//        User user = User.builder()
+//                .id(1L)
+//                .userName("kim")
+//                .provider("kakao")
+//                .providerId("123")
+//                .role(Role.USER).build();
+//        userRepository.save(user);
+//
+//        return user;
+
         return userRepository.findById(1L).orElseThrow(() -> new IllegalArgumentException("임시 유저"));
     }
 

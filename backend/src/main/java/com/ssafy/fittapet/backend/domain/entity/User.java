@@ -31,9 +31,11 @@ public class User extends BaseEntity {
     @Enumerated(EnumType.STRING)
     private Role role;
 
+    private Long petMainId;
+
     @OneToMany(
             mappedBy = "user",
-            cascade = CascadeType.ALL,
+//            cascade = CascadeType.ALL,
             orphanRemoval = true
     )
     @Builder.Default
@@ -42,4 +44,6 @@ public class User extends BaseEntity {
     public void updateTier(UserTier newTier) {
         this.userTier = newTier;
     }
+
+    public void updatePetMainId(Long petMainId) {this.petMainId = petMainId;}
 }
