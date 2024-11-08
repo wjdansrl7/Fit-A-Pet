@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { View, StyleSheet, ScrollView, TouchableOpacity } from 'react-native';
 import CustomModal from '@components/CustomModal/CustomModal';
 import CustomButton from '@components/CustomButton/CustomButton';
-import QuestFrame from '@screens/quest/QuestFrame';
+import QuestGroupFrame from '@screens/quest/QuestGroupFrame';
 import { colors } from '@src/constants';
 
 const GuildQuestModal = ({ isVisible, onClose, onSetQuest, quests }) => {
@@ -65,7 +65,7 @@ const GuildQuestModal = ({ isVisible, onClose, onSetQuest, quests }) => {
             ]}
             onPress={() => setSelectedQuest(quest)}
           >
-            <QuestFrame quest={quest} />
+            <QuestGroupFrame quest={quest} />
           </TouchableOpacity>
         ))}
       </ScrollView>

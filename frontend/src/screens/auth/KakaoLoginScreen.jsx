@@ -1,4 +1,4 @@
-import React, { useState,useEffect } from 'react';
+import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import { ActivityIndicator, Dimensions, StyleSheet, View } from 'react-native';
 import WebView from 'react-native-webview';
@@ -14,40 +14,37 @@ import { login } from '@react-native-seoul/kakao-login';
 // const REDIRECT_URI = `https://k11a603.p.ssafy.io/login/oauth2`;
 // const REDIRECT_URI = `https://k11a603.p.ssafy.io/login/oauth2/code/kakao`;
 
-
-
-function KakaoLoginScreen ({navigation}) {
-  const [result, setResult] = useState("");
-
+function KakaoLoginScreen({ navigation }) {
   const signInWithKakao = async () => {
     try {
       const token = await login();
-      console.log("login success ", token.accessToken);
+      console.log('login success ', token.accessToken);
 
-    // 2. accessToken을 포함하여 백엔드로 POST 요청 보내기
-    // const response = await axios.post('http://70.12.246.179:8080/auth/kakao', {
-    const response = await axios.post('https://k11a603.p.ssafy.io/auth/kakao', {
-      accessToken: token.accessToken,
-    });
+      // 2. accessToken을 포함하여 백엔드로 POST 요청 보내기
+      // const response = await axios.post('http://70.12.246.179:8080/auth/kakao', {
+      const response = await axios.post(
+        'https://k11a603.p.ssafy.io/auth/kakao',
+        {
+          accessToken: token.accessToken,
+        }
+      );
 
-    console.log("Response from backend: ", response.data);
+      console.log('Response from backend: ', response.data);
       setResult(response.data);
       // setResult(JSON.stringify(token));
-      navigation.navigate('Main')
+      navigation.navigate('Main');
     } catch (err) {
-      console.error("login err", err);
+      console.error('login err', err);
     }
   };
 
   useEffect(() => {
-    signInWithKakao()
-    }, []);
+    signInWithKakao();
+  }, []);
 
   return (
     <View style={styles.container}>
-
-
-        {/* <View style={styles.kakaoLoadingContainer}>
+      {/* <View style={styles.kakaoLoadingContainer}>
           <ActivityIndicator size={'small'} color={colors.BLACK} />
         </View> */}
       {/* <WebView
@@ -60,7 +57,6 @@ function KakaoLoginScreen ({navigation}) {
         injectedJavaScript={"window.ReactNativeWebView.postMessage('')"}
         onNavigationStateChange={handleNavigationChangeState}
       /> */}
-
     </View>
   );
 }
