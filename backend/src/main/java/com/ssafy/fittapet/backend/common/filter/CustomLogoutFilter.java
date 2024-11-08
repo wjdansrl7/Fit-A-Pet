@@ -47,14 +47,16 @@ public class CustomLogoutFilter extends GenericFilter {
 
     private void doFilter(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws IOException, ServletException {
 
+        log.info("pass CustomLogoutFilter");
+
         //path and method verify
         String requestUri = request.getRequestURI();
         if (!requestUri.matches("^\\/auth\\/logout$")) {
+            log.info("jump CustomLogoutFilter");
             filterChain.doFilter(request, response);
             return;
         }
 
-        log.info("pass CustomLogoutFilter");
         String requestMethod = request.getMethod();
         if (!requestMethod.equals("POST")) {
             log.info("not POST CustomLogoutFilter");
