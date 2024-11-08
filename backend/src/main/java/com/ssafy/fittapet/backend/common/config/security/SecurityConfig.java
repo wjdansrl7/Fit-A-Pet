@@ -1,9 +1,7 @@
 package com.ssafy.fittapet.backend.common.config.security;
 
-import com.ssafy.fittapet.backend.application.service.auth.CustomOAuth2UserService;
 import com.ssafy.fittapet.backend.common.filter.CustomLogoutFilter;
 import com.ssafy.fittapet.backend.common.filter.JWTFilter;
-import com.ssafy.fittapet.backend.common.handler.CustomSuccessHandler;
 import com.ssafy.fittapet.backend.common.util.JWTUtil;
 import com.ssafy.fittapet.backend.domain.repository.auth.BlacklistRepository;
 import com.ssafy.fittapet.backend.domain.repository.auth.RefreshRepository;
@@ -30,8 +28,8 @@ public class SecurityConfig {
     @Value("${frontend.server.url}")
     private String url;
 
-    private final CustomOAuth2UserService customOAuth2UserService;
-    private final CustomSuccessHandler customSuccessHandler;
+//    private final CustomOAuth2UserService customOAuth2UserService;
+//    private final CustomSuccessHandler customSuccessHandler;
     private final RefreshRepository refreshRepository;
     private final BlacklistRepository blacklistRepository;
     private final JWTUtil jwtUtil;
@@ -44,16 +42,14 @@ public class SecurityConfig {
 
                     CorsConfiguration configuration = new CorsConfiguration();
 
-//                    configuration.setAllowedOrigins(Collections.singletonList("http://localhost:3000"));
 //                    configuration.setAllowedOrigins(Collections.singletonList(url));
-//                    configuration.setAllowedOrigins(Collections.singletonList("*"));
                     configuration.setAllowedOriginPatterns(Collections.singletonList("*"));
                     configuration.setAllowedMethods(Collections.singletonList("*"));
                     configuration.setAllowCredentials(true);
                     configuration.setAllowedHeaders(Collections.singletonList("*"));
                     configuration.setMaxAge(3600L);
 
-                    configuration.setExposedHeaders(Collections.singletonList("Set-Cookie"));
+                    configuration.setExposedHeaders(Collections.singletonList("Authorization"));
 
                     return configuration;
                 }));
@@ -71,12 +67,12 @@ public class SecurityConfig {
                 .httpBasic(AbstractHttpConfigurer::disable);
 
         //JWTFilter 추가
-//        http
-//                .addFilterBefore(new JWTFilter(jwtUtil), OAuth2LoginAuthenticationFilter.class);
+        http
+                .addFilterBefore(new JWTFilter(jwtUtil), OAuth2LoginAuthenticationFilter.class);
 
         //LogoutFilter 등록
-//        http
-//                .addFilterBefore(new CustomLogoutFilter(jwtUtil, blacklistRepository, refreshRepository), LogoutFilter.class);
+        http
+                .addFilterBefore(new CustomLogoutFilter(jwtUtil, blacklistRepository, refreshRepository), LogoutFilter.class);
 
         //oauth2
 //        http
@@ -88,9 +84,9 @@ public class SecurityConfig {
 
         //경로별 인가 작업
         http
-                .authorizeHttpRequests((auth) -> auth.anyRequest().permitAll());
-//                        .requestMatchers("/", "/test").permitAll()
-//                        .requestMatchers("/", "/auth/tier").permitAll()
+                .authorizeHttpRequests((auth) -> auth
+                        .anyRequest().permitAll());
+//                        .requestMatchers("/auth/kakao","/auth/reissue").permitAll()
 //                        .anyRequest().authenticated());
 
         //세션 설정 : STATELESS

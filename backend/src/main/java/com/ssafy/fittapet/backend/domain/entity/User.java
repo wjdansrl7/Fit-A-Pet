@@ -21,7 +21,7 @@ public class User extends BaseEntity {
     private Long id;
 
     private String userName;
-    private String userNickname;
+    private String userUniqueName;
     private String provider;
     private String providerId;
 
