@@ -1,5 +1,5 @@
-import React, { useState } from 'react';
-
+import React, { useState,useEffect } from 'react';
+import axios from 'axios';
 import { ActivityIndicator, Dimensions, StyleSheet, View } from 'react-native';
 import WebView from 'react-native-webview';
 import Config from 'react-native-config';
@@ -7,54 +7,50 @@ import Config from 'react-native-config';
 import { colors } from '@src/constants';
 import useAuth from '@src/hooks/queries/useAuth';
 
+import { login } from '@react-native-seoul/kakao-login';
+
 // const REDIRECT_URI = `http://localhost:3030/auth/login`;
 // const REDIRECT_URI = `http://10.0.2.2:3030/auth/login`;
-const REDIRECT_URI = `https://k11a603.p.ssafy.io/login/oauth2`;
+// const REDIRECT_URI = `https://k11a603.p.ssafy.io/login/oauth2`;
 // const REDIRECT_URI = `https://k11a603.p.ssafy.io/login/oauth2/code/kakao`;
 
-function KakaoLoginScreen() {
-  const { kakaoLoginMutation } = useAuth();
-  const [isLoading, setIsLoading] = useState(false);
-  const [isChangeNavigate, setIsChangeNavigate] = useState(true);
 
-  const handleOnMessage = (event) => {
-    if (event.nativeEvent.url.includes(`${REDIRECT_URI}?code=`)) {
-      console.log(event);
-      const code = event.nativeEvent.url.replace(`${REDIRECT_URI}?code=`, '');
-      console.log(code);
-      // requestToken(code);
+
+function KakaoLoginScreen ({navigation}) {
+  const [result, setResult] = useState("");
+
+  const signInWithKakao = async () => {
+    try {
+      const token = await login();
+      console.log("login success ", token.accessToken);
+
+    // 2. accessToken을 포함하여 백엔드로 POST 요청 보내기
+    // const response = await axios.post('http://70.12.246.179:8080/auth/kakao', {
+    const response = await axios.post('https://k11a603.p.ssafy.io/auth/kakao', {
+      accessToken: token.accessToken,
+    });
+
+    console.log("Response from backend: ", response.data);
+      setResult(response.data);
+      // setResult(JSON.stringify(token));
+      navigation.navigate('Main')
+    } catch (err) {
+      console.error("login err", err);
     }
   };
 
-  const requestToken = async (code) => {
-    const response = await axios({
-      method: 'post',
-      url: 'https://kauth.kakao.com/oauth/token',
-      params: {
-        grant_type: 'authorization_code',
-        client_id: Config.KAKAO_REST_API_KEY,
-        redirect_uri: REDIRECT_URI,
-        code,
-      },
-    });
-    console.log(response.data);
-    // kakaoLoginMutation.mutate(response.data.access_token);
-  };
-
-  const handleNavigationChangeState = (event) => {
-    const isMatched = event.url.includes(`${REDIRECT_URI}?code=`);
-    setIsLoading(isMatched);
-    setIsChangeNavigate(event.loading);
-  };
+  useEffect(() => {
+    signInWithKakao()
+    }, []);
 
   return (
     <View style={styles.container}>
-      {(isLoading || isChangeNavigate) && (
-        <View style={styles.kakaoLoadingContainer}>
+
+
+        {/* <View style={styles.kakaoLoadingContainer}>
           <ActivityIndicator size={'small'} color={colors.BLACK} />
-        </View>
-      )}
-      <WebView
+        </View> */}
+      {/* <WebView
         source={{
           // 하기의 쓰다만 코드는 임시용
           // uri: `https://kauth.kakao.com/oauth/authorize`,
@@ -63,7 +59,8 @@ function KakaoLoginScreen() {
         onMessage={handleOnMessage}
         injectedJavaScript={"window.ReactNativeWebView.postMessage('')"}
         onNavigationStateChange={handleNavigationChangeState}
-      />
+      /> */}
+
     </View>
   );
 }
