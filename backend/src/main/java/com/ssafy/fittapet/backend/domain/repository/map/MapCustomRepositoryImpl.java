@@ -7,12 +7,10 @@ import com.ssafy.fittapet.backend.domain.entity.QGuild;
 import com.ssafy.fittapet.backend.domain.entity.QMap;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Repository;
-import org.springframework.web.bind.annotation.RequestMapping;
 
 import java.util.List;
 
 @Repository
-@RequestMapping
 @RequiredArgsConstructor
 public class MapCustomRepositoryImpl implements MapCustomRepository {
     private final JPAQueryFactory queryFactory;
