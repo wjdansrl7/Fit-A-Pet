@@ -12,10 +12,16 @@ import Modal from 'react-native-modal';
 import CustomText from '@components/CustomText/CustomText';
 import DetailEvolutionStage from './DetailEvolutionStage';
 
+import { petImages } from '@constants/petImage';
+
 // 일단 도감 전체에서 받아온 데이터 사용
 // 실제로는 도감 상세 API 호출
 const AlbumDetailModal = ({ isVisible, onClose, pet }) => {
-  if (!pet) return null;
+  if (!pet) {
+    return null;
+  }
+
+  const petImage = petImages[pet.petType]?.[pet.petStatus] || null;
 
   return (
     <Modal
@@ -27,7 +33,7 @@ const AlbumDetailModal = ({ isVisible, onClose, pet }) => {
     >
       <View style={styles.modalContainer}>
         <View style={styles.doubleContainer}>
-          <CustomText style={styles.title}>{pet.name}</CustomText>
+          <CustomText style={styles.title}>{pet.petNickname}</CustomText>
           {/* 닫기 버튼 */}
           <TouchableOpacity
             style={{ position: 'absolute', top: 20, right: 20 }}
@@ -36,15 +42,17 @@ const AlbumDetailModal = ({ isVisible, onClose, pet }) => {
             <CustomText style={{ fontSize: 30 }}>⨉</CustomText>
           </TouchableOpacity>
 
-          <Image source={pet.image} style={styles.image} />
+          <Image source={petImage} style={styles.image} />
 
           {/* 진화 과정 */}
-          <DetailEvolutionStage species={pet.type} status={pet.status} />
+          <DetailEvolutionStage species={pet.petType} status={pet.petStatus} />
 
           <View style={styles.infoContainer}>
             {/* 알(레벨1) 상태에서는 ?표로 보여줌 */}
-            <CustomText>개체: {pet.level == 1 ? '?' : pet.type}</CustomText>
-            <CustomText>레벨: {pet.level}</CustomText>
+            <CustomText>
+              개체: {pet.petStatus == '알' ? '?' : pet.petType}
+            </CustomText>
+            <CustomText>레벨: 40</CustomText>
             <CustomText>만난 날: {pet.dateMet}</CustomText>
           </View>
 

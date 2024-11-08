@@ -68,7 +68,7 @@ function MainScreen({ navigation }) {
       {/* 중앙 - 펫(알 모양) */}
       <View style={styles.petContainer}>
         <Image
-          source={require('../../assets/pets/egg_gray_1.png')} // 알 이미지 경로
+          source={require('../../assets/pets/32_beluga_2.png')} // 알 이미지 경로
           style={styles.petImage}
         />
       </View>
