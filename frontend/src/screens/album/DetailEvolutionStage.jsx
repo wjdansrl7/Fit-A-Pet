@@ -6,7 +6,7 @@ import CustomText from '@components/CustomText/CustomText';
 // 상수로 저장해 놓은거 갖다 쓰셈
 const petImages = {
   벨루가: {
-    stage1: require('@assets/pets/32_beluga_2.png'),
+    stage1: require('@assets/pets/beluga_egg.png'),
     stage2: require('@assets/pets/beluga_2.png'),
     stage3: require('@assets/pets/beluga_3.png'),
   },
