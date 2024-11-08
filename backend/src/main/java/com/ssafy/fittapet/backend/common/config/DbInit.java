@@ -25,11 +25,11 @@ public class DbInit {
         /* 유저 더미데이터 생성 */
         List<User> users = new ArrayList<>();
 
-        var user1 = createUser("kim", "김철수", "kim", "kakao", "EASY", "USER");
-        var user2 = createUser("lee", "이영희", "lee", "kakao", "NORMAL", "ADMIN");
-        var user3 = createUser("park", "박민수", "park", "kakao", "HARD", "USER");
-        var user4 = createUser("choi", "최영호", "choi", "kakao", "EASY", "USER");
-        var user5 = createUser("jang", "장미희", "jang", "kakao", "NORMAL", "USER");
+        var user1 = createUser("kakao 111", "김철수", "111", "kakao", "EASY", "USER");
+        var user2 = createUser("kakao 222", "이영희", "222", "kakao", "NORMAL", "USER");
+        var user3 = createUser("kakao 333", "박민수", "333", "kakao", "HARD", "USER");
+        var user4 = createUser("kakao 444", "최영호", "444", "kakao", "EASY", "USER");
+        var user5 = createUser("kakao 555", "장미희", "555", "kakao", "NORMAL", "USER");
 
         users.add(user1);
         users.add(user2);
@@ -57,10 +57,10 @@ public class DbInit {
         questRepository.saveAll(quests);
     }
 
-    private User createUser(String userNickname, String userName, String providerId, String provider, String
+    private User createUser(String userUniqueName, String userName, String providerId, String provider, String
             userTier, String role) {
         return User.builder()
-                .userNickname(userNickname)
+                .userUniqueName(userUniqueName)
                 .userName(userName)
                 .providerId(providerId)
                 .provider(provider)
