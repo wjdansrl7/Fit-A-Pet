@@ -11,9 +11,10 @@ import com.ssafy.fittapet.backend.domain.entity.Guild;
 import com.ssafy.fittapet.backend.domain.entity.GuildQuest;
 import com.ssafy.fittapet.backend.domain.entity.Map;
 import com.ssafy.fittapet.backend.domain.entity.User;
-import com.ssafy.fittapet.backend.domain.repository.Map.MapRepository;
+import com.ssafy.fittapet.backend.domain.repository.auth.UserRepository;
 import com.ssafy.fittapet.backend.domain.repository.guild.GuildRepository;
 import com.ssafy.fittapet.backend.domain.repository.guild_quest.GuildQuestRepository;
+import com.ssafy.fittapet.backend.domain.repository.map.MapRepository;
 import com.ssafy.fittapet.backend.domain.repository.user_quest.UserQuestStatusRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -34,6 +35,7 @@ public class MapServiceImpl implements MapService {
 
     private final MapValidator mapValidator;
     private final GuildValidator guildValidator;
+    private final UserRepository userRepository;
 
     @Override
     public List<MapResponse> getAll() {
@@ -46,8 +48,10 @@ public class MapServiceImpl implements MapService {
     @Override
     public void createGuild(GuildRequest guildRequest) throws CustomException {
         // 1. todo : 로그인한 유저 id
-        Long userId = 1L;
-        User user = User.builder().id(userId).build();
+//        Long userId = 1L;
+//        User user = User.builder().id(userId).build();
+        User user = userRepository.findById(1L).orElse(null);
+        Long userId = user.getId();
         // 2. position 유효 검사
         if(!mapValidator.isAblePosition(userId, guildRequest.getGuildPosition())) throw new CustomException(NOT_AVAILABLE_POSITION);
         // 3. 그룹 이름 유효 검사?

@@ -2,9 +2,11 @@ package com.ssafy.fittapet.backend.domain.dto.map;
 
 import com.querydsl.core.annotations.QueryProjection;
 import lombok.Builder;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 @NoArgsConstructor
+@Getter
 public class MapResponse {
     private Long guildId;
     private String guildName;

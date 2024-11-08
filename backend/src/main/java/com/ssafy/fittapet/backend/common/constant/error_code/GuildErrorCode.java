@@ -11,7 +11,7 @@ public enum GuildErrorCode implements ErrorCode {
     NOT_GUILD_LEADER(HttpStatus.FORBIDDEN, "길드 리더가 아닙니다."),
     NOT_GUILD_MEMBER(HttpStatus.BAD_REQUEST, "길드 멤버가 아닙니다."),
     ALREADY_SET_QUEST(HttpStatus.CONFLICT, "이미 진행 중인 퀘스트입니다."),
-    DUPLICATED_NAME(HttpStatus.NOT_ACCEPTABLE, "이미 존재하는 길듬명입니다."),
+    DUPLICATED_NAME(HttpStatus.NOT_ACCEPTABLE, "이미 존재하는 길드명입니다."),
 
     NOT_IN_TIME(HttpStatus.BAD_REQUEST, "유효 기간이 지난 입장 코드입니다."),
     ALREADY_JOIN(HttpStatus.BAD_REQUEST, "이미 가입된 길드입니다."),

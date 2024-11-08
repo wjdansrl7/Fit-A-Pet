@@ -34,7 +34,7 @@ public class GuildServiceImpl implements GuildService {
     public String getEnteringCode(Long guildId) {
         // 생성날짜 + 그룹 id로 인코딩된 코드 받아오기
         try {
-            // todo : 요청자가 그룹장인지 validation check
+            // todo : 길드 validation
             if(!guildValidator.isGuildLeader(guildId, 1L)) throw new CustomException(NOT_GUILD_LEADER);
             return EnteringCodeUtil.encrypt(guildId);
         } catch (Exception e) {
@@ -44,6 +44,7 @@ public class GuildServiceImpl implements GuildService {
 
     @Override
     public GuildInfoResponse getGuildInfo(Long guildId) throws CustomException {
+        // todo : 길드원 validation
         if(guildValidator.isExist(guildId)==null) throw new CustomException(NO_GUILD);
         return guildRepository.findInfoById(guildId);
     }
@@ -51,6 +52,7 @@ public class GuildServiceImpl implements GuildService {
     @Override
     public void updateGuildQuest(Long guildId, Long questId) throws CustomException {
         // validation
+        // todo : 길드장 validation
         // 길드 존재하는지
         Guild guild = guildValidator.isExist(guildId).orElseThrow(()-> new CustomException(NO_GUILD));
         // 퀘스트 존재하는지
@@ -74,6 +76,7 @@ public class GuildServiceImpl implements GuildService {
 
     @Override
     public List<GuildMemberInfoResponse> getMemberInfo(Long guildId) throws CustomException {
+        // todo : 길드원 validation
         Guild guild = guildValidator.isExist(guildId).orElseThrow(() -> new CustomException(NO_GUILD));
 
         return guildRepository.findAllMemberByGuild(guild.getId());
@@ -81,6 +84,7 @@ public class GuildServiceImpl implements GuildService {
 
     @Override
     public GuildQuestInfoResponse getQuestInfo(Long guildId) throws CustomException {
+        // todo : 길드원 validation
         Guild guild = guildValidator.isExist(guildId).orElseThrow(() -> new CustomException(NO_GUILD));
 
         return guildQuestRepository.findQuestInfoByGuildId(guildId);

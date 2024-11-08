@@ -1,6 +1,6 @@
 package com.ssafy.fittapet.backend.common.validator;
 
-import com.ssafy.fittapet.backend.domain.repository.Map.MapRepository;
+import com.ssafy.fittapet.backend.domain.repository.map.MapRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 

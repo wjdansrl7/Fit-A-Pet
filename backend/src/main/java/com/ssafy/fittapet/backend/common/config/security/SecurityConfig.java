@@ -45,7 +45,9 @@ public class SecurityConfig {
                     CorsConfiguration configuration = new CorsConfiguration();
 
 //                    configuration.setAllowedOrigins(Collections.singletonList("http://localhost:3000"));
-                    configuration.setAllowedOrigins(Collections.singletonList(url));
+//                    configuration.setAllowedOrigins(Collections.singletonList(url));
+//                    configuration.setAllowedOrigins(Collections.singletonList("*"));
+                    configuration.setAllowedOriginPatterns(Collections.singletonList("*"));
                     configuration.setAllowedMethods(Collections.singletonList("*"));
                     configuration.setAllowCredentials(true);
                     configuration.setAllowedHeaders(Collections.singletonList("*"));
@@ -69,27 +71,27 @@ public class SecurityConfig {
                 .httpBasic(AbstractHttpConfigurer::disable);
 
         //JWTFilter 추가
-        http
-                .addFilterBefore(new JWTFilter(jwtUtil), OAuth2LoginAuthenticationFilter.class);
+//        http
+//                .addFilterBefore(new JWTFilter(jwtUtil), OAuth2LoginAuthenticationFilter.class);
 
         //LogoutFilter 등록
 //        http
 //                .addFilterBefore(new CustomLogoutFilter(jwtUtil, blacklistRepository, refreshRepository), LogoutFilter.class);
 
         //oauth2
-        http
-                .oauth2Login((oauth2) -> oauth2
-                        .userInfoEndpoint((userInfoEndpointConfig) -> userInfoEndpointConfig
-                                .userService(customOAuth2UserService))
-                        .successHandler(customSuccessHandler)
-                );
+//        http
+//                .oauth2Login((oauth2) -> oauth2
+//                        .userInfoEndpoint((userInfoEndpointConfig) -> userInfoEndpointConfig
+//                                .userService(customOAuth2UserService))
+//                        .successHandler(customSuccessHandler)
+//                );
 
         //경로별 인가 작업
         http
-                .authorizeHttpRequests((auth) -> auth
+                .authorizeHttpRequests((auth) -> auth.anyRequest().permitAll());
 //                        .requestMatchers("/", "/test").permitAll()
-                        .requestMatchers("/", "/auth/tier").permitAll()
-                        .anyRequest().authenticated());
+//                        .requestMatchers("/", "/auth/tier").permitAll()
+//                        .anyRequest().authenticated());
 
         //세션 설정 : STATELESS
         http
