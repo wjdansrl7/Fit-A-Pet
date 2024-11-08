@@ -21,7 +21,6 @@ public class MapController {
     @GetMapping
     public ResponseEntity<?>getMap(){
         List<MapResponse> map = mapService.getAll();
-
         return new ResponseEntity<>(map, HttpStatus.OK);
     }
 
@@ -29,12 +28,8 @@ public class MapController {
     public ResponseEntity<?> createGuild(
             @RequestBody GuildRequest guildRequest
     ) throws CustomException {
-        try{
-            mapService.createGuild(guildRequest);
-            return new ResponseEntity<>(HttpStatus.OK);
-        } catch (CustomException e) {
-            return new ResponseEntity<>(e.getMessage(), e.getErrorCode().getHttpStatus());
-        }
+        mapService.createGuild(guildRequest);
+        return new ResponseEntity<>(HttpStatus.OK);
     }
 
     @PostMapping(path = "/join-guild")

@@ -16,6 +16,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Optional;
 
 import static com.ssafy.fittapet.backend.common.constant.error_code.GuildErrorCode.*;
 import static com.ssafy.fittapet.backend.common.constant.error_code.QuestErrorCode.NO_QUEST;
@@ -34,7 +35,8 @@ public class GuildServiceImpl implements GuildService {
     public String getEnteringCode(Long guildId) {
         // 생성날짜 + 그룹 id로 인코딩된 코드 받아오기
         try {
-            // todo : 길드 validation
+            Optional<Guild> guild = guildRepository.findById(guildId);
+            if(guild.isEmpty() || guild == null) throw new CustomException(NO_GUILD);
             if(!guildValidator.isGuildLeader(guildId, 1L)) throw new CustomException(NOT_GUILD_LEADER);
             return EnteringCodeUtil.encrypt(guildId);
         } catch (Exception e) {

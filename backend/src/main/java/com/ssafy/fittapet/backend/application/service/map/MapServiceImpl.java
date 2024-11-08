@@ -75,10 +75,9 @@ public class MapServiceImpl implements MapService {
     public Boolean joinGuild(GuildJoinRequest guildJoinRequest) throws Exception {
 
             // todo : 요청자 정보 받아오기
-            User user = User.builder().id(1L).build();
+            User user = userRepository.findById(2L).orElse(null);
 
             String enteringCode = guildJoinRequest.getEnteringCode();
-        System.out.println(enteringCode);
             Long guildPosition = guildJoinRequest.getGuildPosition();
 
             // 초대 코드 기간이 유효하면 guildId, 유효하지 않으면 -1 반환
@@ -101,7 +100,6 @@ public class MapServiceImpl implements MapService {
                     build());
 
             return true;
-
     }
 
     @Override
