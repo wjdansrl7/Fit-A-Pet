@@ -2,6 +2,7 @@ package com.ssafy.fittapet.backend.application.controller;
 
 import com.ssafy.fittapet.backend.application.service.quest.QuestService;
 import com.ssafy.fittapet.backend.common.exception.CustomException;
+import com.ssafy.fittapet.backend.domain.dto.quest.QuestResponse;
 import com.ssafy.fittapet.backend.domain.entity.Quest;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -12,6 +13,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
+import java.util.Map;
 
 @RestController
 @RequiredArgsConstructor
@@ -25,5 +27,11 @@ public class QuestController {
     ) throws CustomException {
         List<Quest> guildQuests = questService.searchGuildQuest(category);
         return new ResponseEntity<>(guildQuests, HttpStatus.OK);
+    }
+
+    @GetMapping
+    public ResponseEntity<?> getMyQuestList(){
+        Map<String, List<QuestResponse>> myQuestResponse = questService.getMyQuestList();
+        return new ResponseEntity<>(myQuestResponse, HttpStatus.OK);
     }
 }
