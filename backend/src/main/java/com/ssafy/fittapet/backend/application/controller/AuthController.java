@@ -38,4 +38,16 @@ public class AuthController {
     public ResponseEntity<?> updateTier(@RequestBody TierRequestDTO dto, @AuthenticationPrincipal CustomOAuth2User customOAuth2User) {
         return authService.updateTier(dto, customOAuth2User.getId());
     }
+
+    @GetMapping("/test")
+    public String testGet() {
+        log.info("test");
+        return "test";
+    }
+
+    @PostMapping("/test")
+    public String testPost() {
+        log.info("test");
+        return "test";
+    }
 }
