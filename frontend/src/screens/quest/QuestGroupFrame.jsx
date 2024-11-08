@@ -3,7 +3,7 @@ import { StyleSheet, View, Image, Dimensions } from 'react-native';
 import { colors } from '@src/constants';
 import CustomText from '@components/CustomText/CustomText';
 
-function QuestFrame({ quest }) {
+function QuestGroupFrame({ quest }) {
   return (
     <View style={styles.questContainer}>
       {/* 퀘스트 카드 Header */}
@@ -120,4 +120,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default QuestFrame;
+export default QuestGroupFrame;
