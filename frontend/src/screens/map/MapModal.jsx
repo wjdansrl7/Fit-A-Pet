@@ -19,10 +19,11 @@ const MapModal = ({
 
   const handleCreateGuild = () => {
     onCreateGuild();
-    const guildExists = true;
+    const guildExists = false;
     if (guildExists) {
       setErrorState('duplicate');
     } else {
+      onClose();
       setErrorState(null);
     }
     setNewGuildValue('');
@@ -31,12 +32,13 @@ const MapModal = ({
   const handleJoinGuild = () => {
     onJoinGuild();
     const isCodeValid = true;
-    const isGuildFull = true;
+    const isGuildFull = false;
     if (!isCodeValid) {
       setErrorState('invalidCode');
     } else if (isGuildFull) {
       setErrorState('full');
     } else {
+      onClose();
       setErrorState(null);
     }
     setInviteCodeValue('');
@@ -62,7 +64,7 @@ const MapModal = ({
       }
       onClose={() => {
         onClose();
-        setErrorState(null); // 모달 닫을 때 에러 상태 초기화
+        setErrorState(null);
       }}
     >
       {viewState === 'init' && (
