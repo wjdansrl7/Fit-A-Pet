@@ -29,8 +29,12 @@ public class MapController {
     public ResponseEntity<?> createGuild(
             @RequestBody GuildRequest guildRequest
     ) throws CustomException {
-        mapService.createGuild(guildRequest);
-        return new ResponseEntity<>(HttpStatus.OK);
+        try{
+            mapService.createGuild(guildRequest);
+            return new ResponseEntity<>(HttpStatus.OK);
+        } catch (CustomException e) {
+            return new ResponseEntity<>(e.getMessage(), e.getErrorCode().getHttpStatus());
+        }
     }
 
     @PostMapping(path = "/join-guild")
@@ -41,7 +45,7 @@ public class MapController {
         return new ResponseEntity<>(joined, HttpStatus.OK);
     }
 
-    @DeleteMapping(path = "/{guildId}")
+    @DeleteMapping(path = "/guilds/{guildId}")
     public ResponseEntity<?> leaveGuild(
             @PathVariable Long guildId
     ) throws CustomException {

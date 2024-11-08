@@ -45,7 +45,7 @@ public class GuildServiceImpl implements GuildService {
     @Override
     public GuildInfoResponse getGuildInfo(Long guildId) throws CustomException {
         // todo : 길드원 validation
-        if(guildValidator.isExist(guildId)==null) throw new CustomException(NO_GUILD);
+        if(guildValidator.isExist(guildId).isEmpty()) throw new CustomException(NO_GUILD);
         return guildRepository.findInfoById(guildId);
     }
 

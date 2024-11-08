@@ -18,6 +18,7 @@ import com.ssafy.fittapet.backend.domain.repository.map.MapRepository;
 import com.ssafy.fittapet.backend.domain.repository.user_quest.UserQuestStatusRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
@@ -77,6 +78,7 @@ public class MapServiceImpl implements MapService {
             User user = User.builder().id(1L).build();
 
             String enteringCode = guildJoinRequest.getEnteringCode();
+        System.out.println(enteringCode);
             Long guildPosition = guildJoinRequest.getGuildPosition();
 
             // 초대 코드 기간이 유효하면 guildId, 유효하지 않으면 -1 반환
@@ -103,12 +105,14 @@ public class MapServiceImpl implements MapService {
     }
 
     @Override
+    @Transactional
     public void leaveGuild(Long guildId) throws CustomException {
         // map에서 삭제
         // todo : 요청자 정보 가져오기
         User user = User.builder().id(1L).build();
+        if(guildValidator.isExist(guildId).isEmpty()) throw new CustomException(NO_GUILD);
         if(!mapValidator.isAlreadyJoined(user.getId(), guildId)) throw new CustomException(NOT_GUILD_MEMBER);
-        if(!guildValidator.isExist(guildId).equals(null)) throw new CustomException(NO_GUILD);
+        if(guildValidator.isGuildLeader(guildId, 1L)) throw new CustomException(LEADER_CANNOT_EXIT);
 
         mapRepository.deleteByGuildIdAndUserId(guildId, user.getId());
 
