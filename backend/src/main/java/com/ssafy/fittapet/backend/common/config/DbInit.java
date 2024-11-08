@@ -1,9 +1,11 @@
 package com.ssafy.fittapet.backend.common.config;
 
 import com.ssafy.fittapet.backend.common.constant.entity_field.*;
+import com.ssafy.fittapet.backend.domain.entity.PersonalQuest;
 import com.ssafy.fittapet.backend.domain.entity.Quest;
 import com.ssafy.fittapet.backend.domain.entity.User;
 import com.ssafy.fittapet.backend.domain.repository.auth.UserRepository;
+import com.ssafy.fittapet.backend.domain.repository.personal_quest.PersonalQuestRepository;
 import com.ssafy.fittapet.backend.domain.repository.quest.QuestRepository;
 import jakarta.annotation.PostConstruct;
 import lombok.RequiredArgsConstructor;
@@ -18,6 +20,7 @@ public class DbInit {
 
     private final UserRepository userRepository;
     private final QuestRepository questRepository;
+    private final PersonalQuestRepository personalQuestRepository;
 
     @PostConstruct
     void init() {
@@ -55,6 +58,19 @@ public class DbInit {
             }
         }
         questRepository.saveAll(quests);
+
+        /* 개인 퀘스트 더미데이터 생성 */
+        List<Quest> personalQuests = questRepository.findAllByQuestType(QuestType.PERSONAL);
+        User user = userRepository.findById(1L).orElse(null);
+
+        for(Quest quest : personalQuests) {
+            PersonalQuest personalQuest = PersonalQuest.builder()
+                    .quest(quest)
+                    .user(user)
+                    .questStatus(false)
+                    .build();
+            personalQuestRepository.save(personalQuest);
+        }
     }
 
     private User createUser(String userNickname, String userName, String providerId, String provider, String
