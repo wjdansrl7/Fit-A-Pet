@@ -55,7 +55,7 @@ public class AuthService {
 
         //refresh null check
         if (refresh == null) {
-            return new ResponseEntity<>("refreshToken null", HttpStatus.BAD_REQUEST);
+            return new ResponseEntity<>("refreshToken is null", HttpStatus.BAD_REQUEST);
         }
 
         //blacklist check
