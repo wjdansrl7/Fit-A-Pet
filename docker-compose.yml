@@ -24,11 +24,11 @@ services:
     networks:
       - app-network
 
-  backend:
+  backend-blue:
     build:
       context: ./backend
       dockerfile: Dockerfile
-    container_name: backend
+    container_name: backend-blue
     environment:
       TZ: Asia/Seoul
       SPRING_DATASOURCE_URL: jdbc:mysql://mysql:3306/fitapet
@@ -38,9 +38,29 @@ services:
       REDIS_PORT: 6379
     depends_on:
       mysql:
-        condition: service_healthy # MySQL이 healthcheck 통과할 때까지 대기
+        condition: service_healthy
     ports:
-      - "8082:8080" # backend가 실제 사용할 포트
+      - "8082:8080"
+    networks:
+      - app-network
+
+  backend-green:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+    container_name: backend-green
+    environment:
+      TZ: Asia/Seoul
+      SPRING_DATASOURCE_URL: jdbc:mysql://mysql:3306/fitapet
+      SPRING_DATASOURCE_USERNAME: root
+      SPRING_DATASOURCE_PASSWORD: root
+      REDIS_HOST: redis
+      REDIS_PORT: 6379
+    depends_on:
+      mysql:
+        condition: service_healthy
+    ports:
+      - "8083:8080" # Green 버전은 다른 포트 사용
     networks:
       - app-network
 
