@@ -17,7 +17,7 @@ pipeline {
                 script {
                     retry(3) {
                         sleep 10
-                        sh 'curl -f http://backend-blue:8082/health'
+                        sh 'curl -f http://backend-blue:8082/actuator/health'
                     }
                 }
             }
@@ -38,7 +38,7 @@ pipeline {
                 script {
                     retry(3) {
                         sleep 10
-                        sh 'curl -f http://backend-green:8083/health'
+                        sh 'curl -f http://backend-green:8083/actuator/health'
                     }
                 }
             }
