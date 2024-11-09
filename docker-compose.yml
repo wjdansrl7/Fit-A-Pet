@@ -28,7 +28,7 @@ services:
     build:
       context: ./backend
       dockerfile: Dockerfile
-    container_name: backend-blue
+    container_name: backend
     environment:
       TZ: Asia/Seoul
       SPRING_DATASOURCE_URL: jdbc:mysql://mysql:3306/fitapet
@@ -41,26 +41,6 @@ services:
         condition: service_healthy
     ports:
       - "8082:8080"
-    networks:
-      - app-network
-
-  backend-green:
-    build:
-      context: ./backend
-      dockerfile: Dockerfile
-    container_name: backend-green
-    environment:
-      TZ: Asia/Seoul
-      SPRING_DATASOURCE_URL: jdbc:mysql://mysql:3306/fitapet
-      SPRING_DATASOURCE_USERNAME: root
-      SPRING_DATASOURCE_PASSWORD: root
-      REDIS_HOST: redis
-      REDIS_PORT: 6379
-    depends_on:
-      mysql:
-        condition: service_healthy
-    ports:
-      - "8083:8080" # Green 버전은 다른 포트 사용
     networks:
       - app-network
 
