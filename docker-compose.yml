@@ -24,7 +24,7 @@ services:
     networks:
       - app-network
 
-  backend-blue:
+  backend:
     build:
       context: ./backend
       dockerfile: Dockerfile
