@@ -33,17 +33,13 @@ public class User extends BaseEntity {
 
     private Long petMainId;
 
-    @OneToMany(
-            mappedBy = "user",
+//    @OneToMany(
+//            mappedBy = "user",
 //            cascade = CascadeType.ALL,
-            orphanRemoval = true
-    )
-    @Builder.Default
-    private List<PersonalQuest> personalQuests = new ArrayList<>();
-
-    public void updateTier(UserTier newTier) {
-        this.userTier = newTier;
-    }
+//            orphanRemoval = true
+//    )
+//    @Builder.Default
+//    private List<PersonalQuest> personalQuests = new ArrayList<>();
 
     public void updatePetMainId(Long petMainId) {this.petMainId = petMainId;}
 }

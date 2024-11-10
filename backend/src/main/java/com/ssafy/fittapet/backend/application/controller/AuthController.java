@@ -1,10 +1,9 @@
 package com.ssafy.fittapet.backend.application.controller;
 
-import com.ssafy.fittapet.backend.application.service.auth.AuthService;
+import com.ssafy.fittapet.backend.application.service.auth.AuthServiceImpl;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -16,7 +15,7 @@ import java.util.Map;
 @Slf4j
 public class AuthController {
 
-    private final AuthService authService;
+    private final AuthServiceImpl authService;
 
     @PostMapping("/reissue")
     public ResponseEntity<?> reissueToken(HttpServletRequest request) {
@@ -31,25 +30,17 @@ public class AuthController {
         log.info("AuthController loginWithKakao");
         String kakaoAccessToken = request.get("accessToken");
 
-        Map<String, String> tokens = authService.loginWithKakao(kakaoAccessToken);
-
-        if (tokens == null) {
-            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("return token is null");
-        }
-
         log.info("AuthController loginWithKakao OK");
-        return ResponseEntity.ok(tokens);
+        return ResponseEntity.ok(authService.loginWithKakao(kakaoAccessToken));
     }
 
+    /**
+     * 테스트 용 메소드
+     * todo 나중에 삭제
+     */
     @GetMapping("/test")
     public String testGet() {
         log.info("test");
         return "test";
     }
-
-//    @PutMapping("/tier")
-//    public ResponseEntity<?> updateTier(@RequestBody TierRequestDTO dto, @AuthenticationPrincipal CustomOAuth2User customOAuth2User) {
-//        log.info("AuthController updateTier");
-//        return authService.updateTier(dto, customOAuth2User.getId());
-//    }
 }
