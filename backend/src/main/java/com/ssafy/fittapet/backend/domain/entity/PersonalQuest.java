@@ -25,4 +25,10 @@ public class PersonalQuest {
 
     private boolean questStatus;
 
+    /**
+     * 상태 업데이트
+     */
+    public void updateStatus(boolean check){
+        this.questStatus = check;
+    }
 }

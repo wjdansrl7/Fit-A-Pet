@@ -5,9 +5,6 @@ import com.ssafy.fittapet.backend.common.constant.entity_field.UserTier;
 import jakarta.persistence.*;
 import lombok.*;
 
-import java.util.ArrayList;
-import java.util.List;
-
 @Entity
 @Getter
 @Builder
@@ -31,15 +28,7 @@ public class User extends BaseEntity {
     @Enumerated(EnumType.STRING)
     private Role role;
 
-    @OneToMany(
-            mappedBy = "user",
-            cascade = CascadeType.ALL,
-            orphanRemoval = true
-    )
-    @Builder.Default
-    private List<PersonalQuest> personalQuests = new ArrayList<>();
+    private Long petMainId;
 
-    public void updateTier(UserTier newTier) {
-        this.userTier = newTier;
-    }
+    public void updatePetMainId(Long petMainId) {this.petMainId = petMainId;}
 }

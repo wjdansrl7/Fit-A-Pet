@@ -7,7 +7,6 @@ import com.ssafy.fittapet.backend.domain.repository.auth.BlacklistRepository;
 import com.ssafy.fittapet.backend.domain.repository.auth.RefreshRepository;
 import io.jsonwebtoken.ExpiredJwtException;
 import jakarta.servlet.*;
-import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
@@ -30,14 +29,14 @@ public class CustomLogoutFilter extends GenericFilter {
     private final RefreshRepository refreshRepository;
     private final BlacklistRepository blacklistRepository;
 
+    @Value("${refresh-token.milli-second}")
+    private Long refreshExpiredMs;
+
     public CustomLogoutFilter(JWTUtil jwtUtil, BlacklistRepository blacklistRepository, RefreshRepository refreshRepository) {
         this.jwtUtil = jwtUtil;
         this.refreshRepository = refreshRepository;
         this.blacklistRepository = blacklistRepository;
     }
-
-    @Value("${refresh-token.milli-second}")
-    private Long refreshExpiredMs;
 
     @Override
     public void doFilter(ServletRequest request, ServletResponse response, FilterChain chain) throws IOException, ServletException {
