@@ -119,6 +119,7 @@ public class AuthServiceImpl implements AuthService {
     /**
      * 카카오 로그인 메소드
      * AccessToken -> 사용자 정보 GET
+     * todo 신규 유저 퀘스트 연관 추가
      */
     public TokenDTO loginWithKakao(String kakaoAccessToken) {
 
