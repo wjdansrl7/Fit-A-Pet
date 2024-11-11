@@ -123,6 +123,8 @@ public class AuthServiceImpl implements AuthService {
      */
     public ResponseEntity<?> loginWithKakao(String kakaoAccessToken) {
 
+        log.info("loginWithKakao");
+
         //사용자 정보 가져오기
         CustomOAuth2User customUserDetails = getUserInfoFromKakao(kakaoAccessToken);
 
@@ -133,9 +135,13 @@ public class AuthServiceImpl implements AuthService {
         String username = customUserDetails.getUsername();
         Long userId = customUserDetails.getId();
 
+        log.info("redis start");
+
         //Access 및 Refresh 토큰 생성
         String access = jwtUtil.createJwt("access", userId, username, String.valueOf(Role.USER), accessExpiredMs);
         String refresh = jwtUtil.createJwt("refresh", userId, username, String.valueOf(Role.USER), refreshExpiredMs);
+
+        log.info("redis end");
 
         //refresh update
         addRefreshEntity(userId, refresh, refreshExpiredMs);
@@ -205,6 +211,8 @@ public class AuthServiceImpl implements AuthService {
             String username = oAuth2Response.getProvider() + " " + oAuth2Response.getProviderId();
             User existData = userRepository.findByUserUniqueName(username);
 
+            log.info("existData: {}", existData);
+
             if (existData == null) {
                 User user = User.builder()
                         .userUniqueName(username)
@@ -216,9 +224,10 @@ public class AuthServiceImpl implements AuthService {
                         .build();
 
                 userRepository.save(user);
-
+                log.info("user saved");
                 return new CustomOAuth2User(toUserDTO(user));
             } else {
+                log.info("user exist");
                 return new CustomOAuth2User(toUserDTO(existData));
             }
         } catch (Exception e) {
