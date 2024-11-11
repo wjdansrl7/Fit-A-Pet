@@ -83,7 +83,6 @@ public class QuestServiceImpl implements QuestService {
         PetBook petBook = petBookService.selectPetBook(user.getPetMainId(), user);
         petBookService.updateExpAndEvolveCheck(petBook, reward);
 
-        // ???... 진화 여부 리턴??
         return personalQuest.getQuest().getQuestReward();
     }
 
@@ -95,7 +94,7 @@ public class QuestServiceImpl implements QuestService {
     public Long completeGuildQuest(QuestCompleteRequestDTO dto) {
 
         UserQuestStatus userQuestStatus = userQuestStatusRepository.findByUserQuestStatusWithQuest(dto.getCompleteQuestId())
-                .orElseThrow(() -> new EntityNotFoundException("personalQuest not found"));
+                .orElseThrow(() -> new EntityNotFoundException("userQuestStatus not found"));
 
         // 퀘스트 상태 변경
         userQuestStatus.updateStatus(true);
@@ -109,7 +108,6 @@ public class QuestServiceImpl implements QuestService {
         PetBook petBook = petBookService.selectPetBook(user.getPetMainId(), user);
         petBookService.updateExpAndEvolveCheck(petBook, reward);
 
-        // ???... 진화 여부 리턴??
         return userQuestStatus.getGuildQuest().getQuest().getQuestReward();
     }
 
