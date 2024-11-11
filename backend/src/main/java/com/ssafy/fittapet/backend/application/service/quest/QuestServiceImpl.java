@@ -80,7 +80,7 @@ public class QuestServiceImpl implements QuestService {
 
         // 경험치 상승
         User user = authService.getLoginUser(1L);
-        PetBook petBook = petBookService.selectPetBook(user.getPetMainId());
+        PetBook petBook = petBookService.selectPetBook(user.getPetMainId(), user);
         petBookService.updateExpAndEvolveCheck(petBook, reward);
 
         // ???... 진화 여부 리턴??
@@ -106,7 +106,7 @@ public class QuestServiceImpl implements QuestService {
 
         // 경험치 상승
         User user = authService.getLoginUser(1L);
-        PetBook petBook = petBookService.selectPetBook(user.getPetMainId());
+        PetBook petBook = petBookService.selectPetBook(user.getPetMainId(), user);
         petBookService.updateExpAndEvolveCheck(petBook, reward);
 
         // ???... 진화 여부 리턴??

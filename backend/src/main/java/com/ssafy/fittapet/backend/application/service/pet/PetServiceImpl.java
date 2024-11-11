@@ -13,18 +13,4 @@ import org.springframework.stereotype.Service;
 @Service
 @RequiredArgsConstructor
 public class PetServiceImpl implements PetService {
-    private final PetRepository petRepository;
-    private final Random rand = new Random();
-
-    @Override
-    public Pet getRandomEggPet() {
-        List<Pet> eggPets = petRepository.findByPetStatus(EGG);
-
-        // TOOD:예외처리 필요
-        if (eggPets.isEmpty()) {
-            return null;
-        }
-
-        return eggPets.get(rand.nextInt(eggPets.size()));
-    }
 }

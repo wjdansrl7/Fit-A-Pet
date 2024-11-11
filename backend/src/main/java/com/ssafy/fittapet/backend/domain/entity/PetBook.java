@@ -40,7 +40,7 @@ public class PetBook extends BaseEntity{
     @JoinColumn(name = "user_id", nullable = false)
     private User user;
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "pet_id", nullable = false)
     private Pet pet;
 
