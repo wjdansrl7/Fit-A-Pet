@@ -1,14 +1,19 @@
 package com.ssafy.fittapet.backend.application.service.auth;
 
+import com.ssafy.fittapet.backend.application.service.quest.QuestService;
 import com.ssafy.fittapet.backend.common.constant.entity_field.Role;
 import com.ssafy.fittapet.backend.common.constant.entity_field.UserTier;
 import com.ssafy.fittapet.backend.common.util.JWTUtil;
 import com.ssafy.fittapet.backend.domain.dto.auth.*;
+import com.ssafy.fittapet.backend.domain.entity.PersonalQuest;
+import com.ssafy.fittapet.backend.domain.entity.Quest;
 import com.ssafy.fittapet.backend.domain.entity.RefreshToken;
 import com.ssafy.fittapet.backend.domain.entity.User;
 import com.ssafy.fittapet.backend.domain.repository.auth.BlacklistRepository;
 import com.ssafy.fittapet.backend.domain.repository.auth.RefreshRepository;
 import com.ssafy.fittapet.backend.domain.repository.auth.UserRepository;
+import com.ssafy.fittapet.backend.domain.repository.personal_quest.PersonalQuestRepository;
+import com.ssafy.fittapet.backend.domain.repository.quest.QuestRepository;
 import io.jsonwebtoken.ExpiredJwtException;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
@@ -20,6 +25,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.client.RestTemplate;
 
+import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 
@@ -33,6 +39,8 @@ public class AuthServiceImpl implements AuthService {
     private final RefreshRepository refreshRepository;
     private final BlacklistRepository blacklistRepository;
     private final UserRepository userRepository;
+    private final QuestRepository questRepository;
+    private final PersonalQuestRepository personalQuestRepository;
 
     @Value("${access-token.milli-second}")
     private Long accessExpiredMs;
@@ -225,6 +233,9 @@ public class AuthServiceImpl implements AuthService {
                         .build();
 
                 userRepository.save(user);
+
+                addPersonalQuests(user);
+
                 log.info("user saved");
                 return new CustomOAuth2User(toUserDTO(user));
             } else {
@@ -248,5 +259,21 @@ public class AuthServiceImpl implements AuthService {
     public void updateMainPet(Long petBookId, User loginUser) {
         loginUser.updatePetMainId(petBookId);
         userRepository.save(loginUser);
+    }
+
+    private void addPersonalQuests(User user) {
+
+        List<Quest> quests = questRepository.findAll();
+        List<PersonalQuest> personalQuests = quests.stream()
+                .map(quest ->
+                        PersonalQuest.builder()
+                                .user(user)
+                                .quest(quest)
+                                .questStatus(false)
+                                .build()
+                )
+                .toList();
+
+        personalQuestRepository.saveAll(personalQuests);
     }
 }
