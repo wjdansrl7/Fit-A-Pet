@@ -29,7 +29,7 @@ public class PetDataInitializer {
                         Pet.builder().petType(PetType.WEASEL).petStatus(PetStatus.SUBADULT).evolutionLevel(20).build(),
                         Pet.builder().petType(PetType.WEASEL).petStatus(PetStatus.ADULT).evolutionLevel(30).build(),
                         Pet.builder().petType(PetType.WHALE).petStatus(PetStatus.EGG).evolutionLevel(10).build(),
-                        Pet.builder().petType(PetType.WEASEL).petStatus(PetStatus.SUBADULT).evolutionLevel(20).build(),
+                        Pet.builder().petType(PetType.WHALE).petStatus(PetStatus.SUBADULT).evolutionLevel(20).build(),
                         Pet.builder().petType(PetType.WHALE).petStatus(PetStatus.ADULT).evolutionLevel(30).build()
                 );
                 petRepository.saveAll(pets);

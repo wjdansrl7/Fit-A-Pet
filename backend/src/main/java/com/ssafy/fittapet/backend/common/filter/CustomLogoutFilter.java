@@ -7,9 +7,9 @@ import com.ssafy.fittapet.backend.domain.repository.auth.BlacklistRepository;
 import com.ssafy.fittapet.backend.domain.repository.auth.RefreshRepository;
 import io.jsonwebtoken.ExpiredJwtException;
 import jakarta.servlet.*;
-import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import jakarta.servlet.http.HttpSession;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 
@@ -29,43 +29,47 @@ public class CustomLogoutFilter extends GenericFilter {
     private final RefreshRepository refreshRepository;
     private final BlacklistRepository blacklistRepository;
 
+    @Value("${refresh-token.milli-second}")
+    private Long refreshExpiredMs;
+
     public CustomLogoutFilter(JWTUtil jwtUtil, BlacklistRepository blacklistRepository, RefreshRepository refreshRepository) {
         this.jwtUtil = jwtUtil;
         this.refreshRepository = refreshRepository;
         this.blacklistRepository = blacklistRepository;
     }
 
-    @Value("${refresh-token.milli-second}")
-    private Long refreshExpiredMs;
-
     @Override
     public void doFilter(ServletRequest request, ServletResponse response, FilterChain chain) throws IOException, ServletException {
+
         doFilter((HttpServletRequest) request, (HttpServletResponse) response, chain);
     }
 
     private void doFilter(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws IOException, ServletException {
 
+        log.info("pass CustomLogoutFilter");
+
         //path and method verify
         String requestUri = request.getRequestURI();
         if (!requestUri.matches("^\\/auth\\/logout$")) {
+            log.info("jump CustomLogoutFilter");
             filterChain.doFilter(request, response);
             return;
         }
 
         String requestMethod = request.getMethod();
         if (!requestMethod.equals("POST")) {
+            log.info("not POST CustomLogoutFilter");
             filterChain.doFilter(request, response);
             return;
         }
 
         //get refresh token
         String refresh = null;
-        Cookie[] cookies = request.getCookies();
-        for (Cookie cookie : cookies) {
-            if (cookie.getName().equals("refreshToken")) {
-                log.info("cookie name: {}", cookie.getName());
-                refresh = cookie.getValue();
-            }
+        String authorizationHeader = request.getHeader("Authorization");
+
+        if (authorizationHeader != null && authorizationHeader.startsWith("Bearer ")) {
+            refresh = authorizationHeader.substring(7);  // "Bearer " 제거하고 토큰 값만 추출
+            log.info("refreshToken from header: {}", refresh);
         }
 
         //refresh null check
@@ -145,18 +149,16 @@ public class CustomLogoutFilter extends GenericFilter {
         refreshRepository.deleteById(userId);
         blacklistRepository.save(blacklist);
 
-        //access 토큰 Cookie 값 0
-        Cookie cookie = new Cookie("accessToken", null);
-        cookie.setMaxAge(0);
-        cookie.setPath("/");
-        response.addCookie(cookie);
+        // 세션 무효화
+        HttpSession session = request.getSession(false);
+        if (session != null) {
+            session.invalidate();
+        }
 
-        //refresh 토큰 Cookie 값 0
-        Cookie cookie2 = new Cookie("refreshToken", null);
-        cookie2.setMaxAge(0);
-        cookie2.setPath("/");
-        response.addCookie(cookie2);
-
+        //response body
+        log.info("Logged out successfully");
+        PrintWriter writer = response.getWriter();
+        writer.print("Logged out successfully");
         response.setStatus(HttpServletResponse.SC_OK);
     }
 }

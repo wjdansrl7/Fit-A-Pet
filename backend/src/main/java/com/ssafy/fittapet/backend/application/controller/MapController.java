@@ -21,7 +21,6 @@ public class MapController {
     @GetMapping
     public ResponseEntity<?>getMap(){
         List<MapResponse> map = mapService.getAll();
-
         return new ResponseEntity<>(map, HttpStatus.OK);
     }
 
@@ -41,7 +40,7 @@ public class MapController {
         return new ResponseEntity<>(joined, HttpStatus.OK);
     }
 
-    @DeleteMapping(path = "/{guildId}")
+    @DeleteMapping(path = "/guilds/{guildId}")
     public ResponseEntity<?> leaveGuild(
             @PathVariable Long guildId
     ) throws CustomException {

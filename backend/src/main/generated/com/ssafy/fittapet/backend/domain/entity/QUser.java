@@ -7,7 +7,6 @@ import com.querydsl.core.types.dsl.*;
 import com.querydsl.core.types.PathMetadata;
 import javax.annotation.processing.Generated;
 import com.querydsl.core.types.Path;
-import com.querydsl.core.types.dsl.PathInits;
 
 
 /**
@@ -33,8 +32,6 @@ public class QUser extends EntityPathBase<User> {
     //inherited
     public final DateTimePath<java.time.LocalDateTime> modifiedAt = _super.modifiedAt;
 
-    public final ListPath<PersonalQuest, QPersonalQuest> personalQuests = this.<PersonalQuest, QPersonalQuest>createList("personalQuests", PersonalQuest.class, QPersonalQuest.class, PathInits.DIRECT2);
-
     public final NumberPath<Long> petMainId = createNumber("petMainId", Long.class);
 
     public final StringPath provider = createString("provider");
@@ -45,9 +42,9 @@ public class QUser extends EntityPathBase<User> {
 
     public final StringPath userName = createString("userName");
 
-    public final StringPath userNickname = createString("userNickname");
-
     public final EnumPath<com.ssafy.fittapet.backend.common.constant.entity_field.UserTier> userTier = createEnum("userTier", com.ssafy.fittapet.backend.common.constant.entity_field.UserTier.class);
+
+    public final StringPath userUniqueName = createString("userUniqueName");
 
     public QUser(String variable) {
         super(User.class, forVariable(variable));

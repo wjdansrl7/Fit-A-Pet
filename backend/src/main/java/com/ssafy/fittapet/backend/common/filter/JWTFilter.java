@@ -6,7 +6,6 @@ import com.ssafy.fittapet.backend.domain.dto.auth.UserDTO;
 import io.jsonwebtoken.ExpiredJwtException;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
-import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.NonNull;
@@ -36,23 +35,29 @@ public class JWTFilter extends OncePerRequestFilter {
                                     @NonNull FilterChain filterChain) throws ServletException, IOException {
 
         log.info("pass JWTFilter");
+        String path = request.getRequestURI();
 
-        //cookie 불러온 뒤 accessToken Key 담긴 쿠키를 찾음
+        // 재발급 경로는 필터를 건너뛴다
+        if (path.equals("/auth/reissue")) {
+            log.info("jump JWTFilter");
+            filterChain.doFilter(request, response);
+            return;
+        }
+
         String accessToken = null;
-        Cookie[] cookies = request.getCookies();
-        for (Cookie cookie : cookies) {
-            if (cookie.getName().equals("accessToken")) {
-                log.info("cookie name: {}", cookie.getName());
-                accessToken = cookie.getValue();
-            }
+        String authorizationHeader = request.getHeader("Authorization");
+
+        if (authorizationHeader != null && authorizationHeader.startsWith("Bearer ")) {
+            accessToken = authorizationHeader.substring(7);  // "Bearer " 제거하고 토큰 값만 추출
+            log.info("accessToken from header: {}", accessToken);
         }
 
         //accessToken 유무
         if (accessToken == null) {
-            log.info("access token is null");
+            log.info("accessToken is null");
 
             // 권한이 필요없는 기능을 위해 다음 필터로 넘김
-            filterChain.doFilter(request, response);    
+            filterChain.doFilter(request, response);
             return;
         }
 
@@ -60,11 +65,11 @@ public class JWTFilter extends OncePerRequestFilter {
         try {
             jwtUtil.isExpired(accessToken);
         } catch (ExpiredJwtException e) {
-            log.info("access token expired");
+            log.info("accessToken expired");
 
             //response body
             PrintWriter writer = response.getWriter();
-            writer.print("access token expired");
+            writer.print("accessToken expired");
 
             //response status code
             response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
@@ -74,11 +79,11 @@ public class JWTFilter extends OncePerRequestFilter {
         // access 확인 (발급시 페이로드에 명시)
         String category = jwtUtil.getCategory(accessToken);
         if (!category.equals("access")) {
-            log.info("invalid access token");
+            log.info("invalid accessToken");
 
             //response body
             PrintWriter writer = response.getWriter();
-            writer.print("invalid access token");
+            writer.print("invalid accessToken");
 
             //response status code
             response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
@@ -92,7 +97,7 @@ public class JWTFilter extends OncePerRequestFilter {
 
         UserDTO userDTO = UserDTO.builder()
                 .userId(userId)
-                .userNickname(username)
+                .userUniqueName(username)
                 .role(role)
                 .build();
 
@@ -102,7 +107,7 @@ public class JWTFilter extends OncePerRequestFilter {
         //스프링 시큐리티 인증 토큰 생성
         Authentication authToken = new UsernamePasswordAuthenticationToken(customOAuth2User, null, customOAuth2User.getAuthorities());
 
-        log.info("사용자 등록");
+        log.info("SecurityContextHolder setAuthentication");
 
         //세션에 사용자 등록
         SecurityContextHolder.getContext().setAuthentication(authToken);

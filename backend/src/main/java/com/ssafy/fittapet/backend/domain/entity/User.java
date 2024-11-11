@@ -5,9 +5,6 @@ import com.ssafy.fittapet.backend.common.constant.entity_field.UserTier;
 import jakarta.persistence.*;
 import lombok.*;
 
-import java.util.ArrayList;
-import java.util.List;
-
 @Entity
 @Getter
 @Builder
@@ -21,7 +18,7 @@ public class User extends BaseEntity {
     private Long id;
 
     private String userName;
-    private String userNickname;
+    private String userUniqueName;
     private String provider;
     private String providerId;
 
@@ -32,18 +29,6 @@ public class User extends BaseEntity {
     private Role role;
 
     private Long petMainId;
-
-    @OneToMany(
-            mappedBy = "user",
-//            cascade = CascadeType.ALL,
-            orphanRemoval = true
-    )
-    @Builder.Default
-    private List<PersonalQuest> personalQuests = new ArrayList<>();
-
-    public void updateTier(UserTier newTier) {
-        this.userTier = newTier;
-    }
 
     public void updatePetMainId(Long petMainId) {this.petMainId = petMainId;}
 }

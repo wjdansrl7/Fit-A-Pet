@@ -10,11 +10,9 @@ import com.ssafy.fittapet.backend.domain.dto.map.QMapResponse;
 import com.ssafy.fittapet.backend.domain.entity.*;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Repository;
-import org.springframework.web.bind.annotation.RequestMapping;
 
 import java.util.List;
 
-@RequestMapping
 @Repository
 @RequiredArgsConstructor
 public class GuildCustomRepositoryImpl implements GuildCustomRepository {

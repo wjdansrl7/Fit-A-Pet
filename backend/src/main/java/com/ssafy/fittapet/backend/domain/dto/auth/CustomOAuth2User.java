@@ -26,7 +26,7 @@ public class CustomOAuth2User implements OAuth2User, UserDetails {
 
         Map<String, Object> attributes = new HashMap<>();
         attributes.put("id", userDTO.getUserId());
-        attributes.put("username", userDTO.getUserNickname());
+        attributes.put("username", userDTO.getUserUniqueName());
         attributes.put("role", userDTO.getRole());
 
         return attributes;
@@ -48,7 +48,7 @@ public class CustomOAuth2User implements OAuth2User, UserDetails {
 
     @Override
     public String getUsername() {
-        return userDTO.getUserNickname();
+        return userDTO.getUserUniqueName();
     }
 
     public Long getId(){
@@ -57,7 +57,7 @@ public class CustomOAuth2User implements OAuth2User, UserDetails {
 
     @Override
     public String getName() {
-        return userDTO.getUserNickname();
+        return userDTO.getUserUniqueName();
     }
 
     public String getRole(){

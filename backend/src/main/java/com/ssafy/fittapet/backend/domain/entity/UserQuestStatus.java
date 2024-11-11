@@ -3,8 +3,10 @@ package com.ssafy.fittapet.backend.domain.entity;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
 import lombok.Builder;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
 
+@Getter
 @Entity
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class UserQuestStatus {
@@ -28,5 +30,12 @@ public class UserQuestStatus {
     public UserQuestStatus(Boolean questStatus, GuildQuest guildQuest, User user) {
         this.questStatus = questStatus;
         this.guildQuest = guildQuest;
+    }
+
+    /**
+     * 상태 업데이트
+     */
+    public void updateStatus(boolean check){
+        this.questStatus = check;
     }
 }
