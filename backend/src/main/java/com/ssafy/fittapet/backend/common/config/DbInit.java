@@ -50,7 +50,7 @@ public class DbInit {
             for(QuestType questType : QuestType.values()) {
                 for(QuestCategory questCategory : QuestCategory.values()) {
                     String questName = questTier.getValue() + "_" + questType.getValue() + "_" + questCategory.getName();
-                    String questContent = questName + "에 대한 설명입니다.";
+                    String questContent = questType.getValue()+questCategory.getName();
 
                     Quest quest = createQuest(questName, questContent, questTier, questType, questCategory, reward);
                     quests.add(quest);
