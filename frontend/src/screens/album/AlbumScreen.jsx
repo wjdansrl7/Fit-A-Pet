@@ -21,6 +21,7 @@ const pets = [
     petPercent: 0,
     petStatus: '알',
     petType: '사자',
+    // isMain 어디감????
   },
 ];
 

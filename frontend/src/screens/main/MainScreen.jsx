@@ -1,4 +1,4 @@
-import React, { useCallback, useState } from 'react';
+import React, { useCallback, useState, useEffect } from 'react';
 import {
   View,
   Text,
@@ -7,22 +7,81 @@ import {
   Pressable,
   TouchableOpacity,
   TextInput,
+  ActivityIndicator,
+  Alert,
 } from 'react-native';
+
 import MenuButton from './MenuButton';
-import CustomText from '@components/CustomText/CustomText';
 import AlbumIcon from '@assets/icons/도감_icon.png';
+import CustomText from '@components/CustomText/CustomText';
 import CustomModal from '@components/CustomModal/CustomModal';
+import { colors } from '@constants/colors';
+import { petImages } from '@constants/petImage';
+import { useMainPetInfo, useUpdateNickname } from '@hooks/queries/usePet';
+import { useQueryClient } from '@tanstack/react-query';
 
 function MainScreen({ navigation }) {
   const [isModalVisible, setModalVisible] = useState(false);
-  const [petNickname, SetPetNickname] = useState('설정된 닉네임');
+  const { data: mainPetInfo, isLoading, isError } = useMainPetInfo();
+  const queryClient = useQueryClient();
+
+  const [petNickname, setPetNickname] = useState('');
+  const [petBookId, setpetBookId] = useState('');
+
+  console.log('메인펫', mainPetInfo);
+  // 로딩이 끝나고 데이터가 존재할 때만 상태를 업데이트
+  useEffect(() => {
+    if (mainPetInfo) {
+      setPetNickname(mainPetInfo.petNickname);
+      setpetBookId(mainPetInfo.petBookId);
+    }
+  }, [mainPetInfo]);
+
+  // 닉네임 변경 mutation
+  const mutation = useUpdateNickname();
+
+  if (isLoading) {
+    return <ActivityIndicator size="large" color={colors.MAIN_GREEN} />;
+  }
+  if (isError) {
+    return <Text>Error occurred: {isError.message}</Text>;
+  }
+
+  const handleUpdateNickname = () => {
+    if (petNickname.trim()) {
+      mutation.mutate(
+        { petBookId, newNickname: petNickname.trim() },
+        {
+          onSuccess: () => {
+            // 닉네임 변경 후 mainPetInfo를 다시 불러옴
+            queryClient.invalidateQueries(['mainPetInfo']);
+            Alert.alert('Success', '닉네임이 성공적으로 변경되었습니다.');
+            setModalVisible(false);
+          },
+          onError: (error) => {
+            Alert.alert('Error', '닉네임 변경에 실패했습니다.');
+            console.error(error);
+          },
+        }
+      );
+      setModalVisible(false);
+    } else {
+      Alert.alert('Error', '닉네임을 입력해주세요');
+    }
+  };
+
+  const petImage =
+    // 대표 이미지 로딩
+    petImages[mainPetInfo.petType]?.[mainPetInfo.petStatus] || null;
 
   return (
     <View style={styles.container}>
       {/* 상단 - 레벨 및 진행 상태 */}
       <View style={styles.header}>
         <View></View>
-        <CustomText style={styles.petName}>동규니</CustomText>
+        <CustomText style={styles.petName}>
+          {mainPetInfo.petNickname}
+        </CustomText>
 
         {/* 펫 닉네임 수정 */}
         <Pressable
@@ -39,38 +98,47 @@ function MainScreen({ navigation }) {
           isVisible={isModalVisible}
           wantClose={true}
           title="닉네임 수정"
-          onClose={() => setModalVisible(false)} // 모달을 닫는 함수
+          onClose={
+            () => {
+              setPetNickname(mainPetInfo.petNickname);
+              setModalVisible(false);
+            } // 모달을 닫는 함수
+          }
         >
           <TextInput
             style={styles.input}
             value={petNickname}
-            onChangeText={SetPetNickname}
+            onChangeText={setPetNickname}
             keyboardType="default"
           />
 
           <TouchableOpacity
             activeOpacity={0.8}
             style={styles.button}
-            onPress={() => setModalVisible(false)}
+            onPress={handleUpdateNickname}
           >
             <CustomText style={{ color: 'white' }}>변경하기</CustomText>
           </TouchableOpacity>
         </CustomModal>
 
         <View style={styles.levelContainer}>
-          <CustomText style={styles.levelText}>1</CustomText>
+          <CustomText style={styles.levelText}>
+            {mainPetInfo.petLevel}
+          </CustomText>
           <View style={styles.progressBar}>
-            <View style={styles.progressFill} />
+            <View
+              style={[
+                styles.progressFill,
+                { width: `${mainPetInfo.petPercent}%` },
+              ]}
+            />
           </View>
         </View>
       </View>
 
       {/* 중앙 - 펫(알 모양) */}
       <View style={styles.petContainer}>
-        <Image
-          source={require('@assets/pets/beluga_3.png')} // 알 이미지 경로
-          style={styles.petImage}
-        />
+        <Image source={petImage} style={styles.petImage} />
       </View>
 
       {/* 우측 메뉴 */}
@@ -157,7 +225,6 @@ const styles = StyleSheet.create({
     borderRadius: 20,
   },
   progressFill: {
-    width: '30%', // 진행 상태 (예: 30%)
     height: '100%',
     backgroundColor: '#FFD700', // 노란색
     borderRadius: 20,
