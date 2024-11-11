@@ -8,7 +8,7 @@ public interface AuthService {
 
     ResponseEntity<?> reissueToken(HttpServletRequest request);
 
-    ResponseEntity<?>  loginWithKakao(String kakaoAccessToken);
+    ResponseEntity<?> loginWithKakao(String kakaoAccessToken);
 
     User getLoginUser(Long userId);
 

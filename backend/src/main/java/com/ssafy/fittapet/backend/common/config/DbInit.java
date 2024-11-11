@@ -29,74 +29,82 @@ public class DbInit {
     @PostConstruct
     void init() {
 
-        /* 유저 더미데이터 생성 */
-        List<User> users = new ArrayList<>();
+        if(userRepository.count() == 0) {
+            /* 유저 더미데이터 생성 */
+            List<User> users = new ArrayList<>();
 
-        var user1 = createUser("kakao 111", "김철수", "111", "kakao", "EASY", "USER");
-        var user2 = createUser("kakao 222", "이영희", "222", "kakao", "NORMAL", "USER");
-        var user3 = createUser("kakao 333", "박민수", "333", "kakao", "HARD", "USER");
-        var user4 = createUser("kakao 444", "최영호", "444", "kakao", "EASY", "USER");
-        var user5 = createUser("kakao 555", "장미희", "555", "kakao", "NORMAL", "USER");
+            var user1 = createUser("kakao 111", "김철수", "111", "kakao", "EASY", "USER");
+            var user2 = createUser("kakao 222", "이영희", "222", "kakao", "NORMAL", "USER");
+            var user3 = createUser("kakao 333", "박민수", "333", "kakao", "HARD", "USER");
+            var user4 = createUser("kakao 444", "최영호", "444", "kakao", "EASY", "USER");
+            var user5 = createUser("kakao 555", "장미희", "555", "kakao", "NORMAL", "USER");
 
-        users.add(user1);
-        users.add(user2);
-        users.add(user3);
-        users.add(user4);
-        users.add(user5);
+            users.add(user1);
+            users.add(user2);
+            users.add(user3);
+            users.add(user4);
+            users.add(user5);
 
-        userRepository.saveAll(users);
+            userRepository.saveAll(users);
+        }
 
-        /* 퀘스트 더미데이터 생성 */
-        List<Quest> quests = new ArrayList<>();
-        long reward = 100L;
+        if(questRepository.count() == 0) {
+            /* 퀘스트 더미데이터 생성 */
+            List<Quest> quests = new ArrayList<>();
+            long reward = 100L;
 
-        for(QuestTier questTier : QuestTier.values()) {
-            for(QuestType questType : QuestType.values()) {
-                for(QuestCategory questCategory : QuestCategory.values()) {
-                    String questName = questTier.getValue() + "_" + questType.getValue() + "_" + questCategory.getName();
-                    String questContent = questType.getValue()+questCategory.getName();
+            for(QuestTier questTier : QuestTier.values()) {
+                for(QuestType questType : QuestType.values()) {
+                    for(QuestCategory questCategory : QuestCategory.values()) {
+                        String questName = questTier.getValue() + "_" + questType.getValue() + "_" + questCategory.getName();
+                        String questContent = questType.getValue()+questCategory.getName();
 
-                    Quest quest = createQuest(questName, questContent, questTier, questType, questCategory, reward);
-                    quests.add(quest);
+                        Quest quest = createQuest(questName, questContent, questTier, questType, questCategory, reward);
+                        quests.add(quest);
+                    }
                 }
             }
-        }
-        questRepository.saveAll(quests);
-
-        /* 개인 퀘스트 더미데이터 생성 */
-        List<Quest> personalQuests = questRepository.findAllByQuestType(QuestType.PERSONAL);
-        User user = userRepository.findById(1L).orElse(null);
-
-        for(Quest quest : personalQuests) {
-            PersonalQuest personalQuest = PersonalQuest.builder()
-                    .quest(quest)
-                    .user(user)
-                    .questStatus(quest.getId() % 3 != 0)
-                    .build();
-            personalQuestRepository.save(personalQuest);
+            questRepository.saveAll(quests);
         }
 
-        guildRepository.save(
-                Guild.builder().guildLeader(userRepository.findById(3L).orElse(null))
-                        .guildName("Init Guild")
-                        .build()
-        );
+        if(personalQuestRepository.count() == 0) {
+            /* 개인 퀘스트 더미데이터 생성 */
+            List<Quest> personalQuests = questRepository.findAllByQuestType(QuestType.PERSONAL);
+            User user = userRepository.findById(1L).orElse(null);
 
-        mapRepository.save(
-                Map.builder()
-                        .guild(guildRepository.findByGuildName("Init Guild"))
-                        .guildPosition(1L)
-                        .user(userRepository.findById(3L).orElse(null))
-                        .build()
-        );
+            for(Quest quest : personalQuests) {
+                PersonalQuest personalQuest = PersonalQuest.builder()
+                        .quest(quest)
+                        .user(user)
+                        .questStatus(quest.getId() % 3 != 0)
+                        .build();
+                personalQuestRepository.save(personalQuest);
+            }
+        }
 
-        mapRepository.save(
-                Map.builder()
-                        .guild(guildRepository.findByGuildName("Init Guild"))
-                        .guildPosition(1L)
-                        .user(userRepository.findById(2L).orElse(null))
-                        .build()
-        );
+        if(guildRepository.count() == 0) {
+            guildRepository.save(
+                    Guild.builder().guildLeader(userRepository.findById(3L).orElse(null))
+                            .guildName("Init Guild")
+                            .build()
+            );
+
+            mapRepository.save(
+                    Map.builder()
+                            .guild(guildRepository.findByGuildName("Init Guild"))
+                            .guildPosition(1L)
+                            .user(userRepository.findById(3L).orElse(null))
+                            .build()
+            );
+
+            mapRepository.save(
+                    Map.builder()
+                            .guild(guildRepository.findByGuildName("Init Guild"))
+                            .guildPosition(1L)
+                            .user(userRepository.findById(2L).orElse(null))
+                            .build()
+            );
+        }
     }
 
     private User createUser(String userUniqueName, String userName, String providerId, String provider, String
