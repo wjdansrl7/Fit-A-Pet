@@ -20,5 +20,5 @@ public interface PetRepository extends JpaRepository<Pet, Long> {
 
     // 사용자가 소유하지 않은 '알' 상태의 펫 목록 조회
     @Query("SELECT p FROM Pet p WHERE p.id NOT IN :id AND p.petStatus = :petStatus")
-    List<Pet> findByIdNotIn(List<Long> id, PetStatus petStatus);
+    List<Pet> findByIdNotInAndPetStatus(List<Long> id, PetStatus petStatus);
 }

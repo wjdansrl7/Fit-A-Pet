@@ -5,6 +5,7 @@ import com.ssafy.fittapet.backend.common.constant.entity_field.PetStatus;
 import com.ssafy.fittapet.backend.domain.entity.Pet;
 import com.ssafy.fittapet.backend.domain.entity.PetBook;
 import com.ssafy.fittapet.backend.domain.entity.User;
+import com.ssafy.fittapet.backend.domain.repository.auth.UserRepository;
 import com.ssafy.fittapet.backend.domain.repository.pet.PetRepository;
 import com.ssafy.fittapet.backend.domain.repository.pet_book.PetBookRepository;
 import java.util.List;
@@ -26,6 +27,7 @@ public class PetBookServiceImpl implements PetBookService{
 
     private final PetBookRepository petBookRepository;
     private final PetRepository petRepository;
+    private final UserRepository userRepository;
     private final PetService petService;
     private final Random random = new Random();
 
@@ -34,17 +36,15 @@ public class PetBookServiceImpl implements PetBookService{
     public PetBook createPetBook(String petNickname, User loginUser) {
 
         // 사용자가 이미 소유한 펫 ID 목록 조회
-        List<Long> ownedPetIds = petBookRepository.findOwnedPetIdsByUser(loginUser, EGG);
-
+        List<Long> ownedPetIds = petBookRepository.findOwnedPetIdsByUser(loginUser);
         // 사용자가 소유하지 않은 펫 목록 조회
-        List<Pet> availablePets = petRepository.findByIdNotIn(ownedPetIds, EGG);
+        List<Pet> availablePets = petRepository.findByIdNotInAndPetStatus(ownedPetIds, EGG);
 
         // 소유하지 않은 펫이 없을 경우
         if (availablePets.isEmpty()) {
             // TODO: 예외처리 필요
             return null;
         }
-
 
         // 랜덤으로 하나의 펫 선택
         Pet randomEggPet = availablePets.get(random.nextInt(availablePets.size()));
@@ -54,7 +54,6 @@ public class PetBookServiceImpl implements PetBookService{
             petNickname = randomEggPet.getPetType().getValue();
         }
 
-
         PetBook petBook = PetBook.builder()
                 .user(loginUser)
                 .pet(randomEggPet)
@@ -62,12 +61,20 @@ public class PetBookServiceImpl implements PetBookService{
                 .petNickname(petNickname)
                 .build();
 
-        return petBookRepository.save(petBook);
+        petBookRepository.save(petBook);
+
+        // 처음 알이 등록되면 로그인한 유저의 대표 캐릭터 변경
+        loginUser.updatePetMainId(petBook.getId());
+
+        // TODO: 서비스단으로 빼야됨
+        userRepository.save(loginUser);
+
+        return petBook;
     }
 
     @Override
-    public PetBook selectPetBook(Long id) {
-        return petBookRepository.findById(id).orElseThrow(() -> new IllegalArgumentException("해당하는 펫이 없습니다."));
+    public PetBook selectPetBook(Long id, User loginUser) {
+        return petBookRepository.findByIdAndUser(id, loginUser);
     }
 
     public Integer[] calculateLevel(Integer petExp) {
@@ -98,5 +105,13 @@ public class PetBookServiceImpl implements PetBookService{
         }
 
         petBookRepository.save(petBook); // 변경 사항을 저장
+    }
+
+    public void updatePetNickname(String updatePetNickname, PetBook petBook) {
+        PetBook updatingPetBook = petBookRepository.findById(petBook.getId()).orElseThrow(() -> new IllegalArgumentException("해당하는 펫이 없습니다."));
+        log.info(updatingPetBook.getPetNickname());
+        updatingPetBook.updatePetNickname(updatePetNickname);
+
+        petBookRepository.save(updatingPetBook);
     }
 }

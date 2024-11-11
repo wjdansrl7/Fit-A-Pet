@@ -4,11 +4,13 @@ import com.ssafy.fittapet.backend.common.constant.entity_field.Role;
 import com.ssafy.fittapet.backend.common.constant.entity_field.UserTier;
 import com.ssafy.fittapet.backend.common.util.JWTUtil;
 import com.ssafy.fittapet.backend.domain.dto.auth.TierRequestDTO;
+import com.ssafy.fittapet.backend.domain.entity.PetBook;
 import com.ssafy.fittapet.backend.domain.entity.RefreshToken;
 import com.ssafy.fittapet.backend.domain.entity.User;
 import com.ssafy.fittapet.backend.domain.repository.auth.BlacklistRepository;
 import com.ssafy.fittapet.backend.domain.repository.auth.RefreshRepository;
 import com.ssafy.fittapet.backend.domain.repository.auth.UserRepository;
+import com.ssafy.fittapet.backend.domain.repository.pet_book.PetBookRepository;
 import io.jsonwebtoken.ExpiredJwtException;
 import jakarta.persistence.EntityNotFoundException;
 import jakarta.servlet.http.Cookie;
@@ -34,6 +36,7 @@ public class AuthService {
     private final RefreshRepository refreshRepository;
     private final BlacklistRepository blacklistRepository;
     private final UserRepository userRepository;
+    private final PetBookRepository petBookRepository;
 
     @Value("${refresh-token.milli-second}")
     private Long refreshExpiredMs;
@@ -155,6 +158,11 @@ public class AuthService {
         cookie.setHttpOnly(true);
 
         return cookie;
+    }
+
+    public void updateMainPet(Long petBookId, User loginUser) {
+        loginUser.updatePetMainId(petBookId);
+        userRepository.save(loginUser);
     }
 
 //    public ResponseEntity<?> getUser(Long userId) {

@@ -8,7 +8,12 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 
 public interface PetBookRepository extends JpaRepository<PetBook, Long> {
+    @Query("SELECT pb FROM PetBook pb JOIN FETCH pb.pet WHERE pb.user =:user")
     List<PetBook> findPetBookByUser(User user);
-    @Query("SELECT p.id FROM PetBook p WHERE p.user = :user AND p.pet.petStatus =: petStatus")
-    List<Long> findOwnedPetIdsByUser(User user, PetStatus petStatus);
+
+    @Query("SELECT pb.pet.id FROM PetBook pb WHERE pb.user = :user")
+    List<Long> findOwnedPetIdsByUser(User user);
+
+    PetBook findByIdAndUser(Long id, User user);
+
 }
