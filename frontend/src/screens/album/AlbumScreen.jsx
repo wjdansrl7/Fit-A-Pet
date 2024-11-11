@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import {
   View,
   Text,
@@ -7,7 +7,9 @@ import {
   Image,
   ScrollView,
   Button,
+  FlatList,
 } from 'react-native';
+import axios from 'axios';
 import AlbumFrame from './AlbumFrame';
 import AlbumDetailModal from './AlbumDetailModal';
 
@@ -34,13 +36,44 @@ const pets = [
   },
   null,
   null,
-  null,
-  null,
+];
+
+const realData = [
+  {
+    petId: 1,
+    petNickname: '뭉기',
+    petType: '벨루가',
+    petStatus: '성체',
+  },
+  {
+    petId: 4,
+    petNickname: '동규니',
+    petType: '사자',
+    petStatus: '알',
+  },
 ];
 
 function AlbumScreen() {
+  const [loading, setLoading] = useState(true);
+  const [petAlbumList, setPetAlbumList] = useState([]);
   const [selectedPet, setSelectedPet] = useState(null);
   const [isModalVisible, setModalVisible] = useState(false);
+
+  // const getPetAlbumList = async () => {
+  //   try {
+  //     const response = await axios.get(
+  //       'https://jsonplaceholder.typicode.com/posts'
+  //     );
+  //     setPetAlbumList(response.data);
+  //   } catch (error) {
+  //     console.log(error);
+  //   } finally {
+  //   }
+  // };
+
+  // useEffect(() => {
+  //   getPetAlbumList();
+  // }, []);
 
   const openModal = (pet) => {
     setSelectedPet(pet);
@@ -52,10 +85,15 @@ function AlbumScreen() {
     setModalVisible(false);
   };
 
+  const petGrid = Array.from({ length: 6 }).map((_, index) => {
+    const pet = realData.find((p) => p.petId === index + 1); // 해당 petId로 위치 확인
+    return pet ? pet : { petId: index + 1 }; // 데이터가 없으면 기본값
+  });
+
   return (
     <ScrollView contentContainerStyle={styles.container}>
       <View style={styles.grid}>
-        {pets.map((pet, index) => (
+        {petGrid.map((pet, index) => (
           <AlbumFrame
             key={index}
             pet={pet}
@@ -64,6 +102,15 @@ function AlbumScreen() {
           />
         ))}
       </View>
+
+      {/* <FlatList
+        data={petGrid}
+        numColumns={2}
+        keyExtractor={(item) => item.petId.toString()}
+        renderItem={({ item }) => (
+          <AlbumFrame pet={item} onPress={() => item && openModal(item)} />
+        )}
+      /> */}
 
       {/* 실제 모달: 컴포넌트로 따로 */}
       <AlbumDetailModal

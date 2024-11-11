@@ -1,74 +1,167 @@
 import React from 'react';
-import { StyleSheet, View } from 'react-native';
+import { StyleSheet, View, ScrollView } from 'react-native';
 import { colors } from '@src/constants';
 import CustomText from '@components/CustomText/CustomText';
-import QuestFrame from './QuestFrame';
+import QuestGroupFrame from './QuestGroupFrame';
+import QuestPersonalFrame from './QuestPersonalFrame';
 
 function QuestScreen() {
   const quests = {
-    personal: {
-      questId: 1,
-      questCategory: 'WALK',
-      questName: '동네 산책',
-      questContent: '8000보 걷기',
-      questTier: 'EASY',
-      questReward: '경험치 100, 공적치 100',
-    },
-    group: [
+    personalWalk: [
       {
-        questId: 3,
-        questCategory: 'DIET',
-        questName: '삼시세끼 탄단지 섭취',
-        questContent: '하루 세끼 모두 탄단지 섭취하기',
-        questTier: 'HARD',
-        questReward: '경험치 100, 공적치 100',
-      },
-      {
-        questId: 4,
-        questCategory: 'SLEEP',
-        questName: '내일은 주말!',
-        questContent: '수면시간 9시간 채우기',
-        questTier: 'NORMAL',
-        questReward: '경험치 200, 공적치 100',
-      },
-      {
-        questId: 5,
+        id: 1,
+        questName: '동네 산책',
         questCategory: 'WALK',
+        questContent: '5,000 걸음',
+        questTier: 'EASY',
+        questReward: 'EXP +100',
+        questStatus: true,
+      },
+      {
+        id: 2,
+        questName: '동네 산책',
+        questCategory: 'WALK',
+        questContent: '8,000 걸음',
+        questTier: 'NORMAL',
+        questReward: 'EXP +100',
+        questStatus: true,
+      },
+      {
+        id: 3,
+        questName: '동네 산책',
+        questCategory: 'WALK',
+        questContent: '12,000 걸음',
+        questTier: 'HARD',
+        questReward: 'EXP +100',
+        questStatus: false,
+      },
+    ],
+    personalSleep: [
+      {
+        id: 4,
+        questName: '수면시간 보충!!',
+        questCategory: 'SLEEP',
+        questContent: '6시간',
+        questTier: 'EASY',
+        questReward: 'EXP +100',
+        questStatus: true,
+      },
+      {
+        id: 5,
+        questName: '수면시간 보충!!',
+        questCategory: 'SLEEP',
+        questContent: '8시간',
+        questTier: 'NORMAL',
+        questReward: 'EXP +100',
+        questStatus: true,
+      },
+      {
+        id: 6,
+        questName: '수면시간 보충!!',
+        questCategory: 'SLEEP',
+        questContent: '10시간',
+        questTier: 'HARD',
+        questReward: 'EXP +100',
+        questStatus: false,
+      },
+    ],
+    personalDiet: [
+      {
+        id: 7,
+        questName: '탄단지 끼니 챙기기 ',
+        questCategory: 'DIET',
+        questContent: '한 끼',
+        questTier: 'EASY',
+        questReward: 'EXP +100',
+        questStatus: true,
+      },
+      {
+        id: 8,
+        questName: '탄단지 끼니 챙기기 ',
+        questCategory: 'DIET',
+        questContent: '두 끼',
+        questTier: 'NORMAL',
+        questReward: 'EXP +100',
+        questStatus: false,
+      },
+      {
+        id: 9,
+        questName: '탄단지 끼니 챙기기 ',
+        questCategory: 'DIET',
+        questContent: '세 끼',
+        questTier: 'NORMAL',
+        questReward: 'EXP +100',
+        questStatus: false,
+      },
+    ],
+
+    guildQuest: [
+      {
+        id: 10,
         questName: '지옥의 행군..?',
+        questCategory: 'WALK',
         questContent: '15,000보 걷기',
         questTier: 'EASY',
         questReward: '경험치 150, 공적치 100',
+        questStatus: false,
+      },
+      {
+        id: 11,
+        questName: '내일은 주말!',
+        questCategory: 'SLEEP',
+        questContent: '수면시간 9시간 채우기',
+        questTier: 'NORMAL',
+        questReward: '경험치 200, 공적치 100',
+        questStatus: false,
+      },
+      {
+        id: 12,
+        questName: '삼시세끼 탄단지 섭취',
+        questCategory: 'DIET',
+        questContent: '하루 세끼 모두 탄단지 섭취하기',
+        questTier: 'HARD',
+        questReward: '경험치 100, 공적치 100',
+        questStatus: false,
       },
     ],
   };
-  return (
-    <View style={styles.backgroundColorWhite}>
-      <View style={styles.container}>
-        {/* 개인 퀘스트 */}
-        <View style={styles.quest}>
-          {/* 라벨 */}
-          <View>
-            <CustomText style={styles.questLabel}>개인 퀘스트</CustomText>
-          </View>
-          {/* 퀘스트 카드 */}
-          <QuestFrame quest={quests.personal} />
-        </View>
 
-        {/* 그룹 퀘스트 */}
-        <View style={styles.quest}>
-          <View>
-            <CustomText style={styles.questLabel}>그룹 퀘스트</CustomText>
+  return (
+    <ScrollView contentContainerStyle={styles.scrollContainer}>
+      <View style={styles.backgroundColorWhite}>
+        <View style={styles.container}>
+          {/* 개인 퀘스트 */}
+          <View style={styles.quest}>
+            {/* 라벨 */}
+            <View>
+              <CustomText style={styles.questLabel}>개인 퀘스트</CustomText>
+            </View>
+            {/* {quests.personal.map((quest, index) => ( */}
+            <QuestPersonalFrame quests={quests.personalWalk} seg={'WALK'} />
+            <QuestPersonalFrame quests={quests.personalSleep} seg={'SLEEP'} />
+            <QuestPersonalFrame quests={quests.personalDiet} seg={'DIET'} />
+            {/* ))} */}
           </View>
-          {quests.group.map((quest, index) => (
-            <QuestFrame key={index} quest={quest} />
-          ))}
+
+          {/* 그룹 퀘스트 */}
+          <View style={styles.quest}>
+            <View>
+              <CustomText style={styles.questLabel}>그룹 퀘스트</CustomText>
+            </View>
+            {quests.guildQuest.map((quest, index) => (
+              <QuestGroupFrame key={index} quest={quest} />
+            ))}
+          </View>
         </View>
       </View>
-    </View>
+    </ScrollView>
   );
 }
 
 const styles = StyleSheet.create({
+  scrollContainer: {
+    flexGrow: 1,
+  },
   backgroundColorWhite: {
     flex: 1,
     backgroundColor: colors.WHITE,
@@ -77,6 +170,7 @@ const styles = StyleSheet.create({
     gap: 20,
     margin: 20,
   },
+
   quest: {
     gap: 12,
   },
@@ -86,6 +180,52 @@ const styles = StyleSheet.create({
     color: colors.WHITE,
     paddingVertical: 10,
     textAlign: 'center',
+  },
+  questContainer: {
+    backgroundColor: colors.BACKGROUND_COLOR,
+    // backgroundColor: colors.BACKGROUND_COLOR,
+    borderRadius: 5,
+    paddingHorizontal: 20,
+    gap: 14,
+    padding: 10,
+  },
+  questHeader: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    // margin: 10,
+  },
+  questBody: {
+    gap: 10,
+  },
+  questCategoryWalk: {
+    backgroundColor: colors.TAG_RED,
+    paddingVertical: 2,
+    paddingHorizontal: 4,
+    borderRadius: 5,
+    color: colors.BLACK,
+    textAlign: 'center',
+    fontSize: 14,
+  },
+  questCategorySleep: {
+    backgroundColor: colors.TAG_BLUE,
+    paddingVertical: 2,
+    paddingHorizontal: 4,
+    borderRadius: 5,
+    color: colors.BLACK,
+    textAlign: 'center',
+    fontSize: 14,
+  },
+  questCategoryDiet: {
+    backgroundColor: colors.TAG_GREEN,
+    paddingVertical: 2,
+    paddingHorizontal: 4,
+    borderRadius: 5,
+    color: colors.BLACK,
+    textAlign: 'center',
+    fontSize: 14,
+  },
+  questName: {
+    fontSize: 16,
   },
 });
 

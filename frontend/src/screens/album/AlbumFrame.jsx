@@ -1,18 +1,20 @@
 import React from 'react';
 import { View, StyleSheet, Text, Image, Pressable } from 'react-native';
 import CustomText from '@components/CustomText/CustomText';
+import { petImages } from '@constants/petImage';
 
 function AlbumFrame({ pet, onPress }) {
+  const petImage = petImages[pet.petType]?.[pet.petStatus] || null;
   return (
     <View style={styles.container}>
       <View style={styles.doubleContainer}>
         {/* <Pressable onPress={onPress}> */}
-        {pet ? (
+        {petImage ? (
           <Pressable style={{ alignItems: 'center' }} onPress={onPress}>
             <View style={styles.imageContainer}>
-              <Image source={pet.image} style={styles.image} />
+              <Image source={petImage} style={styles.image} />
             </View>
-            <CustomText style={styles.name}>{pet.name}</CustomText>
+            <CustomText style={styles.name}>{pet.petNickname}</CustomText>
           </Pressable>
         ) : (
           <CustomText style={styles.placeholder}>?</CustomText>

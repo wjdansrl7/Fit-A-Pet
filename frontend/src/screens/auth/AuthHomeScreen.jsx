@@ -4,9 +4,33 @@ import { Dimensions, Image, Pressable, StyleSheet, View } from 'react-native';
 import useAuth from '@src/hooks/queries/useAuth';
 import { authNavigations } from '@src/constants';
 import Config from 'react-native-config';
+import queryClient from '@api/queryClient';
 
 function AuthHomeScreen({ navigation }) {
-  const { loginMutation } = useAuth();
+  const { kakaoLoginMutation } = useAuth();
+
+  const onClickKakoLogin = () => {
+    kakaoLoginMutation.mutate(
+      {},
+      {
+        onSuccess: ({ data }) => {
+          // onSuccess: ({ accessToken, refreshToken }) => {
+          setEncryptStorage('refreshToken', data.refreshToken);
+          setHeader('Authorization', `Bearer ${data.accessToken}`);
+          navigation.navigate('Main');
+        },
+        onError: () => {
+          console.log('kakaoLoginMutation 에러');
+          navigation.navigate('Main');
+        },
+        onSettled: () => {
+          queryClient.refetchQueries({ queryKey: ['auth', 'getAccessToken'] });
+          // queryClient.invalidateQueries({ queryKey: ['auth', 'getProfile'] });
+        },
+      }
+    );
+  };
+
   return (
     <View style={styles.container}>
       <View style={styles.imageContainer}>
@@ -19,7 +43,8 @@ function AuthHomeScreen({ navigation }) {
       </View>
       <View style={styles.kakaoLoginContainer}>
         <Pressable
-          onPress={() => navigation.navigate(authNavigations.KAKAO_LOGIN)}
+          onPress={() => onClickKakoLogin()}
+          // onPress={() => navigation.navigate(authNavigations.KAKAO_LOGIN)}
         >
           <Image
             resizeMode="contain"

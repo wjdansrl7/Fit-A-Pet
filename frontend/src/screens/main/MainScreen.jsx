@@ -68,7 +68,7 @@ function MainScreen({ navigation }) {
       {/* 중앙 - 펫(알 모양) */}
       <View style={styles.petContainer}>
         <Image
-          source={require('../../assets/pets/egg_gray_1.png')} // 알 이미지 경로
+          source={require('@assets/pets/beluga_3.png')} // 알 이미지 경로
           style={styles.petImage}
         />
       </View>
@@ -94,7 +94,9 @@ function MainScreen({ navigation }) {
         <Pressable onPress={() => navigation.navigate('Album')}>
           <MenuButton title={'도감'} icon={AlbumIcon}></MenuButton>
         </Pressable>
-        <MenuButton title={'나의기록'} icon={null}></MenuButton>
+        <Pressable onPress={() => navigation.navigate('MyInfo')}>
+          <MenuButton title={'나의기록'}></MenuButton>
+        </Pressable>
       </View>
     </View>
   );
