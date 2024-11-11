@@ -121,7 +121,7 @@ public class AuthServiceImpl implements AuthService {
      * AccessToken -> 사용자 정보 GET
      * todo 신규 유저 퀘스트 연관 추가
      */
-    public TokenDTO loginWithKakao(String kakaoAccessToken) {
+    public ResponseEntity<?> loginWithKakao(String kakaoAccessToken) {
 
         //사용자 정보 가져오기
         CustomOAuth2User customUserDetails = getUserInfoFromKakao(kakaoAccessToken);
@@ -142,10 +142,12 @@ public class AuthServiceImpl implements AuthService {
 
         //token return
         log.info("tokens 발급");
-        return TokenDTO.builder()
+        TokenDTO tokens = TokenDTO.builder()
                 .accessToken(access)
                 .refreshToken(refresh)
                 .build();
+
+        return ResponseEntity.ok(tokens);
     }
 
     /**
