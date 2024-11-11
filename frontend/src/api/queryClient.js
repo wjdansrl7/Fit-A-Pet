@@ -10,5 +10,5 @@ const queryClient = new QueryClient({
     },
   },
 });
-
+console.log('queryClient: ', queryClient);
 export default queryClient;

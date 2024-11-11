@@ -1,22 +1,34 @@
 import React from 'react';
 import { Dimensions, Image, Pressable, StyleSheet, View } from 'react-native';
 
-import useAuth from '@src/hooks/queries/useAuth';
+import { useKakaoLogin, useGetRefreshToken } from '@hooks/queries/useAuth';
 import { authNavigations } from '@src/constants';
 import Config from 'react-native-config';
 import queryClient from '@api/queryClient';
+import { setHeader } from '@src/utils/header';
+import {
+  setEncryptStorage,
+  getEncryptStorage,
+} from '@src/utils/encryptStorage';
 
 function AuthHomeScreen({ navigation }) {
-  const { kakaoLoginMutation } = useAuth();
+  // const { kakaoLoginMutation } = useAuth();
+  const { mutate: kakaoLoginMutate } = useKakaoLogin();
 
   const onClickKakoLogin = () => {
-    kakaoLoginMutation.mutate(
+    kakaoLoginMutate(
       {},
       {
-        onSuccess: ({ data }) => {
+        onSuccess: async (data) => {
           // onSuccess: ({ accessToken, refreshToken }) => {
+          // console.log('data: ', data);
           setEncryptStorage('refreshToken', data.refreshToken);
           setHeader('Authorization', `Bearer ${data.accessToken}`);
+          // const refreshToken = await getEncryptStorage('refreshToken');
+          // console.log('저장된 refreshToken: ', refreshToken);
+          // console.log('저장된 accessToken: ', data.accessToken);
+          // console.log('로그인 완료 후 refreshToken,accessToken 저장 완료');
+
           navigation.navigate('Main');
         },
         onError: () => {

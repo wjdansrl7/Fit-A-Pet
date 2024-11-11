@@ -5,7 +5,7 @@ import { login } from '@react-native-seoul/kakao-login';
 const postKakaoLogin = async () => {
   try {
     const token = await login();
-    console.log('login success ', token.accessToken);
+    // console.log('login success ', token.accessToken);
 
     // 2. accessToken을 포함하여 백엔드로 POST 요청 보내기
     // const response = await axios.post('http://70.12.246.179:8080/auth/kakao', {
@@ -18,11 +18,11 @@ const postKakaoLogin = async () => {
       }
     );
 
-    console.log('Response from backend: ', response.data);
+    // console.log('Response from backend: ', response.data.body);
     // setResult(response.data);
     // setResult(JSON.stringify(token));
     // navigation.navigate('Main');
-    return response.data;
+    return response.data.body;
   } catch (err) {
     console.error('login err', err);
   }
