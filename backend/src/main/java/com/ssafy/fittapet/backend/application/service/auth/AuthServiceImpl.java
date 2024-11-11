@@ -1,14 +1,19 @@
 package com.ssafy.fittapet.backend.application.service.auth;
 
+import com.ssafy.fittapet.backend.application.service.quest.QuestService;
 import com.ssafy.fittapet.backend.common.constant.entity_field.Role;
 import com.ssafy.fittapet.backend.common.constant.entity_field.UserTier;
 import com.ssafy.fittapet.backend.common.util.JWTUtil;
 import com.ssafy.fittapet.backend.domain.dto.auth.*;
+import com.ssafy.fittapet.backend.domain.entity.PersonalQuest;
+import com.ssafy.fittapet.backend.domain.entity.Quest;
 import com.ssafy.fittapet.backend.domain.entity.RefreshToken;
 import com.ssafy.fittapet.backend.domain.entity.User;
 import com.ssafy.fittapet.backend.domain.repository.auth.BlacklistRepository;
 import com.ssafy.fittapet.backend.domain.repository.auth.RefreshRepository;
 import com.ssafy.fittapet.backend.domain.repository.auth.UserRepository;
+import com.ssafy.fittapet.backend.domain.repository.personal_quest.PersonalQuestRepository;
+import com.ssafy.fittapet.backend.domain.repository.quest.QuestRepository;
 import io.jsonwebtoken.ExpiredJwtException;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
@@ -20,6 +25,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.client.RestTemplate;
 
+import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 
@@ -33,6 +39,8 @@ public class AuthServiceImpl implements AuthService {
     private final RefreshRepository refreshRepository;
     private final BlacklistRepository blacklistRepository;
     private final UserRepository userRepository;
+    private final QuestRepository questRepository;
+    private final PersonalQuestRepository personalQuestRepository;
 
     @Value("${access-token.milli-second}")
     private Long accessExpiredMs;
@@ -46,7 +54,6 @@ public class AuthServiceImpl implements AuthService {
     /**
      * 토큰 재발급 메소드
      */
-    @Transactional
     public ResponseEntity<?> reissueToken(HttpServletRequest request) {
 
         String refresh = null;
@@ -122,7 +129,6 @@ public class AuthServiceImpl implements AuthService {
      * AccessToken -> 사용자 정보 GET
      * todo 신규 유저 퀘스트 연관 추가
      */
-    @Transactional
     public ResponseEntity<?> loginWithKakao(String kakaoAccessToken) {
 
         log.info("loginWithKakao");
@@ -170,8 +176,7 @@ public class AuthServiceImpl implements AuthService {
     /**
      * 가장 마지막 RefreshToken 등록
      */
-    @Transactional
-    protected void addRefreshEntity(Long userId, String refresh, Long expiredMs) {
+    private void addRefreshEntity(Long userId, String refresh, Long expiredMs) {
 
         RefreshToken refreshToken = RefreshToken.builder()
                 .userId(userId)
@@ -185,8 +190,7 @@ public class AuthServiceImpl implements AuthService {
     /**
      * 카카오 유저 정보 읽어오기
      */
-    @Transactional
-    protected CustomOAuth2User getUserInfoFromKakao(String accessToken) {
+    private CustomOAuth2User getUserInfoFromKakao(String accessToken) {
 
         log.info("AuthService getUserInfoFromKakao");
 
@@ -229,6 +233,9 @@ public class AuthServiceImpl implements AuthService {
                         .build();
 
                 userRepository.save(user);
+
+                addPersonalQuests(user);
+
                 log.info("user saved");
                 return new CustomOAuth2User(toUserDTO(user));
             } else {
@@ -252,5 +259,21 @@ public class AuthServiceImpl implements AuthService {
     public void updateMainPet(Long petBookId, User loginUser) {
         loginUser.updatePetMainId(petBookId);
         userRepository.save(loginUser);
+    }
+
+    private void addPersonalQuests(User user) {
+
+        List<Quest> quests = questRepository.findAll();
+        List<PersonalQuest> personalQuests = quests.stream()
+                .map(quest ->
+                        PersonalQuest.builder()
+                                .user(user)
+                                .quest(quest)
+                                .questStatus(false)
+                                .build()
+                )
+                .toList();
+
+        personalQuestRepository.saveAll(personalQuests);
     }
 }

@@ -46,9 +46,8 @@ public class UserQuestStatusCustomRepositoryImpl implements UserQuestStatusCusto
 
         return Optional.ofNullable(queryFactory
                 .selectFrom(userQuestStatus)
-                .join(userQuestStatus.guildQuest,guildQuest)
-                .join(guildQuest.quest,quest)
-                .fetchJoin()
+                .join(userQuestStatus.guildQuest, guildQuest).fetchJoin()
+                .join(guildQuest.quest, quest).fetchJoin()
                 .where(userQuestStatus.id.eq(completeQuestId))
                 .fetchOne());
     }

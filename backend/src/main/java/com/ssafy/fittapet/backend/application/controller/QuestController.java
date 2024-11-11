@@ -48,7 +48,7 @@ public class QuestController {
         return ResponseEntity.ok(questService.completePersonalQuest(dto));
     }
 
-    @PostMapping("/group/complete")
+    @PostMapping("/guild/complete")
     public ResponseEntity<?> completeGuildQuest(@RequestBody QuestCompleteRequestDTO dto) {
 
         log.info("QuestController completeGuildQuest");
