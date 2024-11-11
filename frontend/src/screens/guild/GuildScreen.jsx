@@ -1,12 +1,5 @@
 import React, { useState } from 'react';
-import {
-  StyleSheet,
-  View,
-  TouchableOpacity,
-  Image,
-  Modal,
-  Text,
-} from 'react-native';
+import { StyleSheet, View, TouchableOpacity, Image } from 'react-native';
 import TreasureBox from '@assets/backgrounds/guild/TreasureBox.png';
 import GuildQuestModal from './GuildQuestModal';
 import GuildInviteModal from './GuildInviteModal';
@@ -15,164 +8,122 @@ import GuildByeModal from './GuildByeModal';
 import CustomText from '@components/CustomText/CustomText';
 import CustomButton from '@components/CustomButton/CustomButton';
 
-function GuildScreen({ navigation }) {
-  const [quest, setQuest] = useState(''); // quest로 변수명 통일
-  const [isQuestModalVisible, setQuestModalVisible] = useState(false); // goal을 quest로 변경
-  const [isInviteModalVisible, setInviteModalVisible] = useState(false);
-  const [isLeaveModalVisible, setLeaveModalVisible] = useState(false);
-  const members = Array(6).fill(null);
-  const guildName = '문기의 보금자리';
-  const inviteCode = '12312123';
+import {
+  useGuildInfo,
+  useMemberInfo,
+  useQuestInfo,
+  useQuests,
+  useByeGuild,
+  useChooseQuest,
+} from '@hooks/queries/useGuild';
 
-  const quests = [
-    {
-      questId: 3,
-      questCategory: 'DIET',
-      questName: '삼시세끼 탄단지 섭취',
-      questContent: '하루 세끼 모두 탄단지 섭취하기',
-      questTier: 'HARD',
-      questReward: '경험치 100, 공적치 100',
-    },
-    {
-      questId: 4,
-      questCategory: 'SLEEP',
-      questName: '내일은 주말!',
-      questContent: '수면시간 9시간 채우기',
-      questTier: 'NORMAL',
-      questReward: '경험치 200, 공적치 100',
-    },
-    {
-      questId: 5,
-      questCategory: 'WALK',
-      questName: '지옥의 행군..?',
-      questContent: '15,000보 걷기',
-      questTier: 'EASY',
-      questReward: '경험치 150, 공적치 100',
-    },
-    {
-      questId: 6,
-      questCategory: 'WALK',
-      questName: '지옥의 행군..?',
-      questContent: '15,000보 걷기',
-      questTier: 'EASY',
-      questReward: '경험치 150, 공적치 100',
-    },
-    {
-      questId: 7,
-      questCategory: 'WALK',
-      questName: '지옥의 행군..?',
-      questContent: '15,000보 걷기',
-      questTier: 'EASY',
-      questReward: '경험치 150, 공적치 100',
-    },
-    {
-      questId: 8,
-      questCategory: 'WALK',
-      questName: '지옥의 행군..?',
-      questContent: '15,000보 걷기',
-      questTier: 'EASY',
-      questReward: '경험치 150, 공적치 100',
-    },
-    {
-      questId: 9,
-      questCategory: 'WALK',
-      questName: '지옥의 행군..?',
-      questContent: '15,000보 걷기',
-      questTier: 'EASY',
-      questReward: '경험치 150, 공적치 100',
-    },
-    {
-      questId: 10,
-      questCategory: 'WALK',
-      questName: '지옥의 행군..?',
-      questContent: '15,000보 걷기',
-      questTier: 'EASY',
-      questReward: '경험치 150, 공적치 100',
-    },
-  ];
+function GuildScreen({ navigation, route }) {
+  const { guildId } = route.params;
+  const [activeModal, setActiveModal] = useState(null);
+
+  const { data: guildInfo } = useGuildInfo(guildId);
+  const { data: memberInfo } = useMemberInfo(guildId);
+  const { data: questInfo } = useQuestInfo(guildId);
+  const { mutate: byeGuild } = useByeGuild(guildId);
+  console.log('길드정보', guildInfo); // 리더 아이디로 조건 달아야해
+  console.log('멤버', memberInfo);
+  const [quest, setQuest] = useState(questInfo);
+
+  const guildName = guildInfo?.guildName;
+  const { mutate: chooseQuest } = useChooseQuest();
+  const members = Array(6)
+    .fill(null)
+    .map((_, index) => (memberInfo && memberInfo[index]) || null);
+
+  const { data: quests } = useQuests();
+  const openModal = (modal) => setActiveModal(modal);
+  const closeModal = () => setActiveModal(null);
+
+  const refetchQuest = (newQuest) => {
+    setQuest(newQuest);
+    chooseQuest({ guildId, questId: newQuest.id });
+  };
+
+  const leaveGuild = (guildId) => {
+    byeGuild(guildId);
+    navigation.navigate('Map');
+  };
   return (
     <View style={styles.container}>
-      {/* 진행 상태 바 */}
-      <View style={styles.progressContainer}>
+      {/* 추가 기능 */}
+      {/* <View style={styles.progressContainer}>
         <View style={styles.progressBar}>
           <View style={styles.progressFill} />
         </View>
         <Image source={TreasureBox} style={styles.treasureBox} />
+      </View> */}
+      <View style={styles.nameContainer}>
+        <CustomText>{guildName}</CustomText>
       </View>
 
-      {/* 퀘스트 설정 영역 */}
       <TouchableOpacity
         activeOpacity={0.8}
         style={styles.questContainer}
-        onPress={() => setQuestModalVisible(true)}
+        onPress={() => openModal('quest')}
       >
-        <CustomText>{quest ? quest : '일일 퀘스트를 설정해주세요'}</CustomText>
+        <CustomText>
+          {quest?.questContent || '일일 퀘스트를 설정해주세요'}
+        </CustomText>
       </TouchableOpacity>
 
-      {/* 멤버 리스트 */}
       <View style={styles.memberContainer}>
         {members.map((member, index) => (
           <View key={index} style={styles.memberSlot}>
-            {member ? (
-              <>
-                <TouchableOpacity
-                  activeOpacity={0.8}
-                  style={styles.imageContainer}
-                  onPress={() => !member && setInviteModalVisible(true)}
-                >
-                  <Image
-                    source={{ uri: member.image }}
-                    style={styles.memberImage}
-                  />
-                </TouchableOpacity>
-                <CustomText style={styles.memberName}>{member.name}</CustomText>
-              </>
-            ) : (
-              <>
-                <TouchableOpacity
-                  activeOpacity={0.8}
-                  style={styles.imageContainer}
-                  onPress={() => !member && setInviteModalVisible(true)}
-                >
-                  <CustomText style={styles.placeholderImageText}>+</CustomText>
-                </TouchableOpacity>
-                <CustomText style={styles.placeholderText}>???</CustomText>
-              </>
-            )}
+            <TouchableOpacity
+              activeOpacity={0.8}
+              style={styles.imageContainer}
+              onPress={() => !member && openModal('invite')}
+            >
+              {member ? (
+                <Image
+                  source={{ uri: member.image }}
+                  style={styles.memberImage}
+                />
+              ) : (
+                <CustomText style={styles.placeholderImageText}>+</CustomText>
+              )}
+            </TouchableOpacity>
+            <CustomText style={styles.memberName}>
+              {member ? member.userName : '???'}
+            </CustomText>
           </View>
         ))}
       </View>
 
-      {/* 그룹 탈퇴 버튼 */}
       <CustomButton
         activeOpacity={0.8}
         style={styles.byeContainer}
-        onPress={() => setLeaveModalVisible(true)}
+        onPress={() => openModal('leave')}
         title="그룹 탈퇴하기"
       />
 
-      {/* 모달 컴포넌트 */}
       <GuildQuestModal
-        isVisible={isQuestModalVisible}
-        onClose={() => setQuestModalVisible(false)}
+        isVisible={activeModal === 'quest'}
+        onClose={closeModal}
         onSetQuest={(newQuest) => {
-          setQuest(newQuest);
-          setQuestModalVisible(false);
+          console.log(newQuest);
+          refetchQuest(newQuest);
+          closeModal();
         }}
         quests={quests}
       />
       <GuildInviteModal
-        inviteCode={inviteCode}
-        isVisible={isInviteModalVisible}
-        onClose={() => setInviteModalVisible(false)}
+        guildId={guildId}
+        isVisible={activeModal === 'invite'}
+        onClose={closeModal}
       />
       <GuildByeModal
         guildName={guildName}
-        isVisible={isLeaveModalVisible}
-        onClose={() => setLeaveModalVisible(false)}
+        isVisible={activeModal === 'leave'}
+        onClose={closeModal}
         onLeave={() => {
           // 탈퇴 로직 실행
-          setLeaveModalVisible(false);
+          leaveGuild(guildId);
         }}
       />
     </View>
@@ -185,6 +136,8 @@ const styles = StyleSheet.create({
     padding: 20,
     backgroundColor: 'white',
   },
+  nameContainer: { alignSelf: 'center', marginTop: 10 },
+
   progressContainer: {
     marginTop: 30,
     flexDirection: 'row',
@@ -210,7 +163,7 @@ const styles = StyleSheet.create({
     height: 100,
   },
   questContainer: {
-    marginTop: 50,
+    marginTop: 30,
     marginHorizontal: 10,
     alignItems: 'center',
     padding: 10,

@@ -8,43 +8,40 @@ import { colors } from '@src/constants';
 const MapModal = ({
   isVisible,
   viewState,
+  errorState,
+  setViewState,
+  setErrorState,
+  selectedHouse,
   onClose,
-  onCreateGuild, // 그룹 생성 함수 (길드 생성 함수로 변경 필요)
-  onJoinGuild, // 그룹 참여 함수 (길드 참여 함수로 변경 필요)
+  onCreateGuild,
+  onJoinGuild,
 }) => {
-  const [errorState, setErrorState] = useState(null); // 에러 상태: 'duplicate', 'invalidCode', 'full'
   const [newGuildValue, setNewGuildValue] = useState('');
   const [inviteCodeValue, setInviteCodeValue] = useState('');
 
-  const handleCreateGuild = () => {
-    // 그룹 생성 핸들러 (길드 생성 핸들러로 변경 필요)
-    const guildExists = true; // 예시 로직
-    if (guildExists) {
-      setErrorState('duplicate');
-    } else {
-      onCreateGuild();
-      setErrorState(null); // 성공 시 에러 상태 초기화
+  const handleCreateGuild = async () => {
+    if (!newGuildValue.trim()) {
+      return;
     }
-    setNewGuildValue(''); // 입력 값 초기화
+    const guildCreateInfo = {
+      guildPosition: selectedHouse?.position,
+      guildName: newGuildValue,
+    };
+    onCreateGuild(guildCreateInfo);
+    setNewGuildValue('');
   };
 
   const handleJoinGuild = () => {
-    // 그룹 참여 핸들러 (길드 참여 핸들러로 변경 필요)
-    const isCodeValid = true; // 예시 로직
-    const isGuildFull = true; // 예시 로직
-    if (!isCodeValid) {
-      setErrorState('invalidCode');
-    } else if (isGuildFull) {
-      setErrorState('full');
-    } else {
-      onJoinGuild();
-      setErrorState(null); // 성공 시 에러 상태 초기화
+    if (!inviteCodeValue.trim()) {
+      return;
     }
-    setInviteCodeValue(''); // 입력 값 초기화
-  };
+    const guildJoinInfo = {
+      guildPosition: selectedHouse?.position,
+      enteringCode: inviteCodeValue,
+    };
+    onJoinGuild(guildJoinInfo);
 
-  const goBack = () => {
-    setErrorState(null);
+    setInviteCodeValue('');
   };
 
   return (
@@ -76,7 +73,7 @@ const MapModal = ({
             <TouchableOpacity
               activeOpacity={0.8}
               style={styles.mapTwoBtn}
-              onPress={() => setErrorState(null) || onCreateGuild()}
+              onPress={() => setErrorState(null) || setViewState('create')}
             >
               <CustomText>길드</CustomText>
               <CustomText>생성하기</CustomText>
@@ -85,7 +82,7 @@ const MapModal = ({
             <TouchableOpacity
               activeOpacity={0.8}
               style={styles.mapTwoBtn}
-              onPress={() => setErrorState(null) || onJoinGuild()}
+              onPress={() => setErrorState(null) || setViewState('join')}
             >
               <CustomText>초대코드</CustomText>
               <CustomText>입력</CustomText>
@@ -135,7 +132,7 @@ const MapModal = ({
             {errorState === 'invalidCode' ? (
               <>
                 <CustomText style={styles.errorText}>
-                  없는 초대코드예요!
+                  잘못된 초대코드예요!
                 </CustomText>
               </>
             ) : errorState === 'full' ? (
