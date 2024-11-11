@@ -1,10 +1,11 @@
 package com.ssafy.fittapet.backend.common.config;
 
+import com.ssafy.fittapet.backend.application.service.map.MapService;
 import com.ssafy.fittapet.backend.common.constant.entity_field.*;
-import com.ssafy.fittapet.backend.domain.entity.PersonalQuest;
-import com.ssafy.fittapet.backend.domain.entity.Quest;
-import com.ssafy.fittapet.backend.domain.entity.User;
+import com.ssafy.fittapet.backend.domain.entity.*;
 import com.ssafy.fittapet.backend.domain.repository.auth.UserRepository;
+import com.ssafy.fittapet.backend.domain.repository.guild.GuildRepository;
+import com.ssafy.fittapet.backend.domain.repository.map.MapRepository;
 import com.ssafy.fittapet.backend.domain.repository.personal_quest.PersonalQuestRepository;
 import com.ssafy.fittapet.backend.domain.repository.quest.QuestRepository;
 import jakarta.annotation.PostConstruct;
@@ -21,6 +22,9 @@ public class DbInit {
     private final UserRepository userRepository;
     private final QuestRepository questRepository;
     private final PersonalQuestRepository personalQuestRepository;
+    private final MapService mapService;
+    private final MapRepository mapRepository;
+    private final GuildRepository guildRepository;
 
     @PostConstruct
     void init() {
@@ -72,7 +76,27 @@ public class DbInit {
             personalQuestRepository.save(personalQuest);
         }
 
+        guildRepository.save(
+                Guild.builder().guildLeader(userRepository.findById(3L).orElse(null))
+                        .guildName("Init Guild")
+                        .build()
+        );
 
+        mapRepository.save(
+                Map.builder()
+                        .guild(guildRepository.findByGuildName("Init Guild"))
+                        .guildPosition(1L)
+                        .user(userRepository.findById(3L).orElse(null))
+                        .build()
+        );
+
+        mapRepository.save(
+                Map.builder()
+                        .guild(guildRepository.findByGuildName("Init Guild"))
+                        .guildPosition(1L)
+                        .user(userRepository.findById(2L).orElse(null))
+                        .build()
+        );
     }
 
     private User createUser(String userUniqueName, String userName, String providerId, String provider, String

@@ -14,6 +14,7 @@ public class MapValidator {
     }
 
     public boolean isAlreadyJoined(Long userId, Long guildId){
+        System.out.println(userId+" "+guildId);
         return mapRepository.findByUserIdAndGuildId(userId, guildId)!=null;
     }
 
