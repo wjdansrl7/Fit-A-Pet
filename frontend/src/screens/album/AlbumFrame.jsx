@@ -8,7 +8,6 @@ function AlbumFrame({ pet, onPress }) {
   return (
     <View style={styles.container}>
       <View style={styles.doubleContainer}>
-        {/* <Pressable onPress={onPress}> */}
         {petImage ? (
           <Pressable style={{ alignItems: 'center' }} onPress={onPress}>
             <View style={styles.imageContainer}>
@@ -19,7 +18,6 @@ function AlbumFrame({ pet, onPress }) {
         ) : (
           <CustomText style={styles.placeholder}>?</CustomText>
         )}
-        {/* </Pressable> */}
       </View>
     </View>
   );
