@@ -67,10 +67,12 @@ public class DbInit {
             PersonalQuest personalQuest = PersonalQuest.builder()
                     .quest(quest)
                     .user(user)
-                    .questStatus(false)
+                    .questStatus(quest.getId() % 3 != 0)
                     .build();
             personalQuestRepository.save(personalQuest);
         }
+
+
     }
 
     private User createUser(String userUniqueName, String userName, String providerId, String provider, String

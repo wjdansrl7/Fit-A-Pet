@@ -15,6 +15,7 @@ public class QuestResponse {
     String questTier;
     String questCategory;
     boolean questStatus;
+    Long questReward;
 
     @Builder
     @QueryProjection
@@ -25,5 +26,6 @@ public class QuestResponse {
         this.questTier = quest.getQuestTier().getValue();
         this.questCategory = quest.getQuestCategory().getName();
         this.questStatus = questStatus;
+        this.questReward = quest.getQuestReward();
     }
 }
