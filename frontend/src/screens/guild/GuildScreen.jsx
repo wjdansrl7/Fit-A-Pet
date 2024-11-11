@@ -8,20 +8,46 @@ import GuildByeModal from './GuildByeModal';
 import CustomText from '@components/CustomText/CustomText';
 import CustomButton from '@components/CustomButton/CustomButton';
 
-function GuildScreen({ navigation }) {
-  const [quest, setQuest] = useState('');
+import {
+  useGuildInfo,
+  useMemberInfo,
+  useQuestInfo,
+  useQuests,
+  useByeGuild,
+  useChooseQuest,
+} from '@hooks/queries/useGuild';
+
+function GuildScreen({ navigation, route }) {
+  const { guildId } = route.params;
   const [activeModal, setActiveModal] = useState(null);
-  const members = Array(6).fill(null);
-  const guildName = '문기의 보금자리';
-  const inviteCode = '12312123';
 
-  const quests = [
-    // quests data here...
-  ];
+  const { data: guildInfo } = useGuildInfo(guildId);
+  const { data: memberInfo } = useMemberInfo(guildId);
+  const { data: questInfo } = useQuestInfo(guildId);
+  const { mutate: byeGuild } = useByeGuild(guildId);
+  console.log('길드정보', guildInfo); // 리더 아이디로 조건 달아야해
+  console.log('멤버', memberInfo);
+  const [quest, setQuest] = useState(questInfo);
 
+  const guildName = guildInfo?.guildName;
+  const { mutate: chooseQuest } = useChooseQuest();
+  const members = Array(6)
+    .fill(null)
+    .map((_, index) => (memberInfo && memberInfo[index]) || null);
+
+  const { data: quests } = useQuests();
   const openModal = (modal) => setActiveModal(modal);
   const closeModal = () => setActiveModal(null);
 
+  const refetchQuest = (newQuest) => {
+    setQuest(newQuest);
+    chooseQuest({ guildId, questId: newQuest.id });
+  };
+
+  const leaveGuild = (guildId) => {
+    byeGuild(guildId);
+    navigation.navigate('Map');
+  };
   return (
     <View style={styles.container}>
       {/* 추가 기능 */}
@@ -40,7 +66,9 @@ function GuildScreen({ navigation }) {
         style={styles.questContainer}
         onPress={() => openModal('quest')}
       >
-        <CustomText>{quest || '일일 퀘스트를 설정해주세요'}</CustomText>
+        <CustomText>
+          {quest?.questContent || '일일 퀘스트를 설정해주세요'}
+        </CustomText>
       </TouchableOpacity>
 
       <View style={styles.memberContainer}>
@@ -61,7 +89,7 @@ function GuildScreen({ navigation }) {
               )}
             </TouchableOpacity>
             <CustomText style={styles.memberName}>
-              {member ? member.name : '???'}
+              {member ? member.userName : '???'}
             </CustomText>
           </View>
         ))}
@@ -78,13 +106,14 @@ function GuildScreen({ navigation }) {
         isVisible={activeModal === 'quest'}
         onClose={closeModal}
         onSetQuest={(newQuest) => {
-          setQuest(newQuest);
+          console.log(newQuest);
+          refetchQuest(newQuest);
           closeModal();
         }}
         quests={quests}
       />
       <GuildInviteModal
-        inviteCode={inviteCode}
+        guildId={guildId}
         isVisible={activeModal === 'invite'}
         onClose={closeModal}
       />
@@ -94,7 +123,7 @@ function GuildScreen({ navigation }) {
         onClose={closeModal}
         onLeave={() => {
           // 탈퇴 로직 실행
-          closeModal();
+          leaveGuild(guildId);
         }}
       />
     </View>

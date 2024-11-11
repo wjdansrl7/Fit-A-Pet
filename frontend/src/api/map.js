@@ -5,11 +5,6 @@ const getMapInfo = async () => {
   return data;
 };
 
-const guildCreateInfo = {
-  guildPostion: 1,
-  guildName: 'ssafy',
-};
-
 const createGuild = async (guildCreateInfo) => {
   const { data } = await axiosInstance.post(
     `/maps/create-guild`,

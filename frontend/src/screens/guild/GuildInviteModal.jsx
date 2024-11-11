@@ -1,16 +1,33 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { View, TouchableOpacity, StyleSheet } from 'react-native';
 import Clipboard from '@react-native-clipboard/clipboard';
 import CustomModal from '@components/CustomModal/CustomModal';
 import CustomText from '@components/CustomText/CustomText';
 import CustomButton from '@components/CustomButton/CustomButton';
 import { colors } from '@src/constants';
-const GuildInviteModal = ({ inviteCode, isVisible, onClose }) => {
+import { getEnteringCode } from '@api/guild';
+const GuildInviteModal = ({ guildId, isVisible, onClose }) => {
   const [isAlertVisible, setAlertVisible] = useState(false);
+  const [inviteCode, setInviteCode] = useState(null);
+
+  useEffect(() => {
+    const fetchInviteCode = async () => {
+      try {
+        const code = await getEnteringCode(guildId);
+        setInviteCode(code);
+      } catch (error) {
+        console.error('Failed to fetch invite code:', error);
+      }
+    };
+
+    if (isVisible && !inviteCode) {
+      fetchInviteCode();
+    }
+  }, [isVisible, guildId]);
 
   const handleCopyInviteCode = () => {
     Clipboard.setString(inviteCode);
-    setAlertVisible(true); // 커스텀 알림 모달 열기
+    setAlertVisible(true);
   };
 
   const handleCloseInviteCode = () => {
@@ -52,7 +69,7 @@ const styles = StyleSheet.create({
   },
   inviteCodeText: {
     marginTop: 10,
-    fontSize: 30,
+    fontSize: 20,
     color: colors.MAIN_GREEN,
     textDecorationLine: 'underline',
   },

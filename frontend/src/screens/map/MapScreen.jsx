@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import {
   StyleSheet,
   View,
@@ -6,7 +6,6 @@ import {
   ImageBackground,
   Image,
 } from 'react-native';
-// import { useNavigation } from '@react-navigation/native';  페이지 이동 생기면
 import CustomText from '@components/CustomText/CustomText';
 
 import map2x from '@assets/backgrounds/map/map2x.webp';
@@ -14,44 +13,90 @@ import ActiveHouse from '@assets/backgrounds/map/ActiveHouse.png';
 import InActiveHouse from '@assets/backgrounds/map/InActiveHouse.png';
 import MapModal from '@screens/map/MapModal';
 import { colors } from '@src/constants';
-
+import {
+  useMapInfo,
+  useCreateGuild,
+  useJoinGuild,
+} from '@hooks/queries/useMap';
 function MapScreen({ navigation }) {
   const [isModalVisible, setModalVisible] = useState(false);
   const [modalViewState, setModalViewState] = useState('init');
+  const [modalErrorState, setModalErrorState] = useState(null); // 에러 상태: 'duplicate', 'invalidCode', 'full'
   const [selectedHouse, setSelectedHouse] = useState(null);
+  const { data, isSuccess, refetch } = useMapInfo(); // refetch 추가
+  const { mutateAsync: createGuildAsync } = useCreateGuild();
+  const { mutateAsync: joinGuildAsync } = useJoinGuild();
 
-  const houses = [
-    {
-      id: 1,
-      name: 'House A',
-      isActive: true,
-      position: { top: 120, right: 20 },
-    },
-    {
-      id: 2,
-      name: 'House B',
-      isActive: false,
-      position: { top: 380, left: 40 },
-    },
-    {
-      id: 3,
-      name: 'House C',
-      isActive: true,
-      position: { bottom: 150, right: 20 },
-    },
-  ];
-
-  const handleCreateGuild = () => {
-    console.log('create');
+  const housePosition = {
+    1: { top: 120, right: 20 },
+    2: { top: 380, left: 40 },
+    3: { bottom: 150, right: 20 },
   };
 
-  const handleJoinGuild = () => {
-    console.log('join');
+  const initialHouses = [
+    { id: -1, name: null, isActive: false, position: 1 },
+    { id: -2, name: null, isActive: false, position: 2 },
+    { id: -3, name: null, isActive: false, position: 3 },
+  ];
+  const [houses, setHouses] = useState(initialHouses);
+
+  useEffect(() => {
+    setHouses(initialHouses);
+    if (isSuccess && data.length > 0) {
+      const updatedHouses = initialHouses.map((house) => {
+        const matchingGuild = data.find(
+          (guild) => guild.guildPosition === house.position
+        );
+
+        if (matchingGuild) {
+          return {
+            ...house,
+            id: matchingGuild.guildId,
+            name: matchingGuild.guildName,
+            isActive: true,
+          };
+        }
+        return house;
+      });
+      setHouses(updatedHouses);
+    }
+  }, [data, isSuccess]);
+  console.log(houses);
+  const handleCreateGuild = async (guildCreateInfo) => {
+    try {
+      const result = await createGuildAsync(guildCreateInfo);
+      setModalErrorState(result);
+      console.log(result);
+      if (result === 'success') {
+        await refetch();
+        setModalVisible(false);
+        setModalViewState('init');
+        setModalErrorState(null);
+      }
+    } catch (error) {
+      console.error('Unexpected error:', error);
+    }
+  };
+
+  const handleJoinGuild = async (guildJoinInfo) => {
+    try {
+      const result = await joinGuildAsync(guildJoinInfo);
+      setModalErrorState(result);
+      console.log(result);
+      if (result === 'success') {
+        await refetch();
+        setModalVisible(false);
+        setModalViewState('init');
+        setModalErrorState(null);
+      }
+    } catch (error) {
+      console.error('Unexpected error:', error);
+    }
   };
 
   const handleHouseClick = (house) => {
     if (house.isActive) {
-      navigation.navigate('Guild');
+      navigation.navigate('Guild', { guildId: house.id });
     } else {
       setSelectedHouse(house);
       setModalViewState('init');
@@ -70,7 +115,7 @@ function MapScreen({ navigation }) {
           <TouchableOpacity
             key={house.id}
             activeOpacity={0.9}
-            style={[styles.house, house.position]}
+            style={[styles.house, housePosition[house.position]]}
             onPress={() => handleHouseClick(house)}
           >
             <Image
@@ -87,8 +132,11 @@ function MapScreen({ navigation }) {
         {/* 단일 모달 컴포넌트 */}
         <MapModal
           isVisible={isModalVisible}
-          viewState={modalViewState} // init, create, join 중 하나
-          setModalViewState={setModalViewState} // setModalViewState 함수 전달
+          viewState={modalViewState}
+          errorState={modalErrorState}
+          selectedHouse={selectedHouse}
+          setViewState={setModalViewState}
+          setErrorState={setModalErrorState}
           onClose={() => setModalVisible(false)}
           onCreateGuild={handleCreateGuild}
           onJoinGuild={handleJoinGuild}

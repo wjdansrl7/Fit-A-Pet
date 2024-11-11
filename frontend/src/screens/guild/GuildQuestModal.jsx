@@ -8,7 +8,6 @@ import { colors } from '@src/constants';
 const GuildQuestModal = ({ isVisible, onClose, onSetQuest, quests }) => {
   const [selectedCategory, setSelectedCategory] = useState('전체');
   const [selectedQuest, setSelectedQuest] = useState(null);
-
   const getFilteredQuests = () => {
     if (selectedCategory === '전체') {
       return quests;
@@ -16,11 +15,10 @@ const GuildQuestModal = ({ isVisible, onClose, onSetQuest, quests }) => {
     return quests.filter((quest) => quest.questCategory === selectedCategory);
   };
 
-  const filteredQuests = getFilteredQuests();
-
+  const filteredQuests = getFilteredQuests() || [];
   const handleQuestSelect = () => {
     if (selectedQuest) {
-      onSetQuest(selectedQuest.questName);
+      onSetQuest(selectedQuest);
       onClose();
     }
   };
@@ -59,7 +57,7 @@ const GuildQuestModal = ({ isVisible, onClose, onSetQuest, quests }) => {
             key={quest.questId}
             style={[
               styles.questFrameContainer,
-              selectedQuest?.questId === quest.questId
+              selectedQuest === quest
                 ? styles.selectedQuest
                 : styles.unselectedQuest,
             ]}
@@ -113,7 +111,7 @@ const styles = StyleSheet.create({
   },
   unselectedQuest: {
     borderColor: 'transparent',
-    borderWidth: 2, // 투명한 테두리로 일관성 유지
+    borderWidth: 2,
   },
   selectButtonContainer: {
     marginTop: 10,

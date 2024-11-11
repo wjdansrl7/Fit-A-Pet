@@ -1,50 +1,56 @@
 import { queryClient } from '@src/api/queryClient';
-import { useQuery, useMutation } from '@tanstack/react-query';
+import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { getMapInfo, createGuild, joinGuild } from '@api/map';
 
 function useMapInfo() {
-  const { isSuccess, data, isLoading } = useQuery({
+  const { isSuccess, data, isLoading, refetch } = useQuery({
     queryKey: ['map'],
     queryFn: getMapInfo,
-    staleTime: 1000 * 60 * 30,
-    cacheTime: 1000 * 60 * 60,
+    staleTime: 0,
+    // staleTime: 1000 * 60 * 30,
+    // cacheTime: 1000 * 60 * 60,
     refetchOnWindowFocus: true,
     refetchOnReconnect: true,
   });
 
-  return { isSuccess, data, isLoading };
+  return { isSuccess, data, isLoading, refetch };
 }
 
-function useCreateGuild(setErrorState) {
+function useCreateGuild() {
+  const queryClient = useQueryClient(); // useQueryClient로 queryClient 접근
+
   return useMutation({
-    mutationFn: createGuild,
-    onSuccess: () => {
-      queryClient.invalidateQueries(['map']);
-    },
-    onError: (error) => {
-      if (error.response && error.response.status === 406) {
-        setErrorState('duplicate'); // 중복 에러
-      } else {
-        setErrorState('error'); // 일반 에러
+    mutationFn: async (guildCreateInfo) => {
+      try {
+        await createGuild(guildCreateInfo);
+        queryClient.invalidateQueries(['map']); // 성공 시 map 쿼리 무효화
+        return 'success';
+      } catch (error) {
+        if (error.response && error.response.status === 406) {
+          return 'duplicate'; // 중복 오류 반환
+        } else {
+          return 'error'; // 일반 오류 반환
+        }
       }
-      console.error('Guild creation failed:', error);
     },
   });
 }
 
-function useJoinGuild(setErrorState) {
+function useJoinGuild() {
+  const queryClient = useQueryClient(); // useQueryClient로 queryClient 접근
   return useMutation({
-    mutationFn: joinGuild,
-    onSuccess: () => {
-      queryClient.invalidateQueries(['map']);
-    },
-    onError: (error) => {
-      if (error.response && error.response.status === 406) {
-        setErrorState('invalidCode'); // 초대 에러
-      } else {
-        setErrorState('full'); // 풀방 에러
+    mutationFn: async (guildJoinInfo) => {
+      try {
+        await joinGuild(guildJoinInfo);
+        queryClient.invalidateQueries(['map']); // 성공 시 map 쿼리 무효화
+        return 'success';
+      } catch (error) {
+        if (error.response && error.response.status === 406) {
+          return 'full';
+        } else {
+          return 'invalidCode';
+        }
       }
-      console.error('Guild join failed:', error);
     },
   });
 }
