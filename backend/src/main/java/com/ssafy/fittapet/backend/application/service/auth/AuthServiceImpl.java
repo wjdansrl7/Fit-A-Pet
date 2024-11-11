@@ -232,4 +232,9 @@ public class AuthServiceImpl implements AuthService {
                 .role(String.valueOf(user.getRole()))
                 .build();
     }
+
+    public void updateMainPet(Long petBookId, User loginUser) {
+        loginUser.updatePetMainId(petBookId);
+        userRepository.save(loginUser);
+    }
 }
