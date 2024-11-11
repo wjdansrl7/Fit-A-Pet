@@ -30,8 +30,8 @@ import java.util.Optional;
 public class AuthServiceImpl implements AuthService {
 
     private final JWTUtil jwtUtil;
-    private final RefreshRepository refreshRepository;
-    private final BlacklistRepository blacklistRepository;
+//    private final RefreshRepository refreshRepository;
+//    private final BlacklistRepository blacklistRepository;
     private final UserRepository userRepository;
 
     @Value("${access-token.milli-second}")
@@ -46,7 +46,6 @@ public class AuthServiceImpl implements AuthService {
     /**
      * 토큰 재발급 메소드
      */
-    @Transactional
     public ResponseEntity<?> reissueToken(HttpServletRequest request) {
 
         String refresh = null;
@@ -64,9 +63,9 @@ public class AuthServiceImpl implements AuthService {
         }
 
         //blacklist check
-        if (blacklistRepository.existsById(refresh)) {
-            return new ResponseEntity<>("refreshToken is blacklisted", HttpStatus.BAD_REQUEST);
-        }
+//        if (blacklistRepository.existsById(refresh)) {
+//            return new ResponseEntity<>("refreshToken is blacklisted", HttpStatus.BAD_REQUEST);
+//        }
 
         //expired check
         try {
@@ -83,19 +82,19 @@ public class AuthServiceImpl implements AuthService {
 
         //DB에 저장되어 있는지 확인
         Long userId = jwtUtil.getUserId(refresh);
-        Optional<RefreshToken> optionalRefreshToken = refreshRepository.findById(userId);
-        if (optionalRefreshToken.isPresent()) {
-            RefreshToken savedRefreshToken = optionalRefreshToken.get();
-
-            //저장된 토큰과 입력된 토큰 비교
-            if (savedRefreshToken.getToken().equals(refresh)) {
-                log.info("match refreshToken");
-            } else {
-                return new ResponseEntity<>("mismatch refreshToken", HttpStatus.BAD_REQUEST);
-            }
-        } else {
-            return new ResponseEntity<>("not exist refreshToken", HttpStatus.BAD_REQUEST);
-        }
+//        Optional<RefreshToken> optionalRefreshToken = refreshRepository.findById(userId);
+//        if (optionalRefreshToken.isPresent()) {
+//            RefreshToken savedRefreshToken = optionalRefreshToken.get();
+//
+//            //저장된 토큰과 입력된 토큰 비교
+//            if (savedRefreshToken.getToken().equals(refresh)) {
+//                log.info("match refreshToken");
+//            } else {
+//                return new ResponseEntity<>("mismatch refreshToken", HttpStatus.BAD_REQUEST);
+//            }
+//        } else {
+//            return new ResponseEntity<>("not exist refreshToken", HttpStatus.BAD_REQUEST);
+//        }
 
         String username = jwtUtil.getUsername(refresh);
         String role = jwtUtil.getRole(refresh);
@@ -105,7 +104,7 @@ public class AuthServiceImpl implements AuthService {
         String newRefresh = jwtUtil.createJwt("refresh", userId, username, role, refreshExpiredMs);
 
         //refresh update
-        addRefreshEntity(userId, newRefresh, refreshExpiredMs);
+//        addRefreshEntity(userId, newRefresh, refreshExpiredMs);
 
         //token return
         log.info("tokens 재발급");
@@ -122,7 +121,6 @@ public class AuthServiceImpl implements AuthService {
      * AccessToken -> 사용자 정보 GET
      * todo 신규 유저 퀘스트 연관 추가
      */
-    @Transactional
     public ResponseEntity<?> loginWithKakao(String kakaoAccessToken) {
 
         log.info("loginWithKakao");
@@ -146,7 +144,7 @@ public class AuthServiceImpl implements AuthService {
         log.info("redis end");
 
         //refresh update
-        addRefreshEntity(userId, refresh, refreshExpiredMs);
+//        addRefreshEntity(userId, refresh, refreshExpiredMs);
 
         //token return
         log.info("tokens 발급");
@@ -170,23 +168,21 @@ public class AuthServiceImpl implements AuthService {
     /**
      * 가장 마지막 RefreshToken 등록
      */
-    @Transactional
-    protected void addRefreshEntity(Long userId, String refresh, Long expiredMs) {
-
-        RefreshToken refreshToken = RefreshToken.builder()
-                .userId(userId)
-                .token(refresh)
-                .expiration(expiredMs)
-                .build();
-
-        refreshRepository.save(refreshToken);
-    }
+//    private void addRefreshEntity(Long userId, String refresh, Long expiredMs) {
+//
+//        RefreshToken refreshToken = RefreshToken.builder()
+//                .userId(userId)
+//                .token(refresh)
+//                .expiration(expiredMs)
+//                .build();
+//
+//        refreshRepository.save(refreshToken);
+//    }
 
     /**
      * 카카오 유저 정보 읽어오기
      */
-    @Transactional
-    protected CustomOAuth2User getUserInfoFromKakao(String accessToken) {
+    private CustomOAuth2User getUserInfoFromKakao(String accessToken) {
 
         log.info("AuthService getUserInfoFromKakao");
 
