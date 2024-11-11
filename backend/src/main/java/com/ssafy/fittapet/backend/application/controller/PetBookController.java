@@ -35,6 +35,12 @@ public class PetBookController {
         PetBook petBook = petBookService.createPetBook(petBookRequestDto.getPetNickname(),
                 loginUser);
 
+        // 이미 모든 알을 가지고 있는 경우
+        if (petBook == null) {
+            return new ResponseEntity<>("이미 모든 펫을 가지고 있습니다.", HttpStatus.OK);
+        }
+
+
         // 처음 알이 등록되면 로그인한 유저의 대표 캐릭터 변경
         loginUser.updatePetMainId(petBook.getId());
 

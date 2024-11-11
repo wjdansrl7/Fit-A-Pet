@@ -35,6 +35,8 @@ public class QUser extends EntityPathBase<User> {
 
     public final ListPath<PersonalQuest, QPersonalQuest> personalQuests = this.<PersonalQuest, QPersonalQuest>createList("personalQuests", PersonalQuest.class, QPersonalQuest.class, PathInits.DIRECT2);
 
+    public final NumberPath<Long> petMainId = createNumber("petMainId", Long.class);
+
     public final StringPath provider = createString("provider");
 
     public final StringPath providerId = createString("providerId");

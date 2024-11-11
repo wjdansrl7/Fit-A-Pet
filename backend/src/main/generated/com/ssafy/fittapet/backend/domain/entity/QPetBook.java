@@ -32,18 +32,16 @@ public class QPetBook extends EntityPathBase<PetBook> {
 
     public final NumberPath<Long> id = createNumber("id", Long.class);
 
-    public final BooleanPath isMain = createBoolean("isMain");
-
     //inherited
     public final DateTimePath<java.time.LocalDateTime> modifiedAt = _super.modifiedAt;
 
+    public final QPet pet;
+
     public final NumberPath<Integer> petExp = createNumber("petExp", Integer.class);
 
+    public final NumberPath<Integer> petLevel = createNumber("petLevel", Integer.class);
+
     public final StringPath petNickname = createString("petNickname");
-
-    public final EnumPath<com.ssafy.fittapet.backend.common.constant.entity_field.PetStatus> petStatus = createEnum("petStatus", com.ssafy.fittapet.backend.common.constant.entity_field.PetStatus.class);
-
-    public final EnumPath<com.ssafy.fittapet.backend.common.constant.entity_field.PetType> petType = createEnum("petType", com.ssafy.fittapet.backend.common.constant.entity_field.PetType.class);
 
     public final QUser user;
 
@@ -65,6 +63,7 @@ public class QPetBook extends EntityPathBase<PetBook> {
 
     public QPetBook(Class<? extends PetBook> type, PathMetadata metadata, PathInits inits) {
         super(type, metadata, inits);
+        this.pet = inits.isInitialized("pet") ? new QPet(forProperty("pet")) : null;
         this.user = inits.isInitialized("user") ? new QUser(forProperty("user")) : null;
     }
 
