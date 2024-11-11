@@ -46,6 +46,7 @@ public class AuthServiceImpl implements AuthService {
     /**
      * 토큰 재발급 메소드
      */
+    @Transactional
     public ResponseEntity<?> reissueToken(HttpServletRequest request) {
 
         String refresh = null;
@@ -121,6 +122,7 @@ public class AuthServiceImpl implements AuthService {
      * AccessToken -> 사용자 정보 GET
      * todo 신규 유저 퀘스트 연관 추가
      */
+    @Transactional
     public ResponseEntity<?> loginWithKakao(String kakaoAccessToken) {
 
         log.info("loginWithKakao");
@@ -168,7 +170,8 @@ public class AuthServiceImpl implements AuthService {
     /**
      * 가장 마지막 RefreshToken 등록
      */
-    private void addRefreshEntity(Long userId, String refresh, Long expiredMs) {
+    @Transactional
+    protected void addRefreshEntity(Long userId, String refresh, Long expiredMs) {
 
         RefreshToken refreshToken = RefreshToken.builder()
                 .userId(userId)
@@ -182,7 +185,8 @@ public class AuthServiceImpl implements AuthService {
     /**
      * 카카오 유저 정보 읽어오기
      */
-    private CustomOAuth2User getUserInfoFromKakao(String accessToken) {
+    @Transactional
+    protected CustomOAuth2User getUserInfoFromKakao(String accessToken) {
 
         log.info("AuthService getUserInfoFromKakao");
 
@@ -212,6 +216,7 @@ public class AuthServiceImpl implements AuthService {
             User existData = userRepository.findByUserUniqueName(username);
 
             log.info("existData: {}", existData);
+            log.info("username: {}", username);
 
             if (existData == null) {
                 User user = User.builder()
