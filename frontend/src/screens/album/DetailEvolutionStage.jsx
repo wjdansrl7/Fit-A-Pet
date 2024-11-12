@@ -1,39 +1,17 @@
 import React from 'react';
 import { View, Image, Text, StyleSheet } from 'react-native';
 import CustomText from '@components/CustomText/CustomText';
-
-// 이미지 하나씩 하드코딩 하슈
-// 상수로 저장해 놓은거 갖다 쓰셈
-const petImages = {
-  벨루가: {
-    stage1: require('@assets/pets/beluga_egg.png'),
-    stage2: require('@assets/pets/beluga_2.png'),
-    stage3: require('@assets/pets/beluga_3.png'),
-  },
-  사자: {
-    stage1: require('@assets/pets/egg_gray_1.png'),
-    stage2: require('@assets/pets/egg_gray_1.png'),
-    stage3: require('@assets/pets/egg_gray_1.png'),
-  },
-};
+import { petImages } from '@constants/petImage';
 
 function DetailEvolutionStage({ species, status }) {
   const petEvolutionStages = petImages[species];
   const stages = ['알', '준성체', '성체'];
 
-  const getEvolutionImage = (stageIndex) => {
-    if (stages.indexOf(stageIndex) > stages.indexOf(status)) {
+  const getEvolutionImage = (stage) => {
+    if (stages.indexOf(stage) > stages.indexOf(status)) {
       return require('@assets/pets/unknown_level.png');
     }
-
-    switch (stageIndex) {
-      case '준성체':
-        return petEvolutionStages.stage2;
-      case '성체':
-        return petEvolutionStages.stage3;
-      default:
-        return petEvolutionStages.stage1;
-    }
+    return petEvolutionStages[stage];
   };
 
   return (

@@ -52,8 +52,8 @@ const AlbumDetailModal = ({ isVisible, onClose, pet }) => {
             <CustomText>
               개체: {pet.petStatus == '알' ? '?' : pet.petType}
             </CustomText>
-            <CustomText>레벨: 40</CustomText>
-            <CustomText>만난 날: {pet.dateMet}</CustomText>
+            <CustomText>레벨: {pet.petLevel}</CustomText>
+            <CustomText>만난 날: {pet.createdAt}</CustomText>
           </View>
 
           {/* 메인 펫 설정 버튼(상황에 따라 비활성화) */}

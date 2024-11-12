@@ -3,77 +3,35 @@ import {
   View,
   Text,
   StyleSheet,
-  Pressable,
-  Image,
   ScrollView,
-  Button,
-  FlatList,
+  ActivityIndicator,
 } from 'react-native';
-import axios from 'axios';
 import AlbumFrame from './AlbumFrame';
 import AlbumDetailModal from './AlbumDetailModal';
+import { usePetAlbumList } from '@hooks/queries/usePet';
+import { colors } from '@constants/colors';
 
+// 데이터모양
 const pets = [
   {
-    type: '벨루가',
-    name: '뭉기',
-    image: require('../../assets/pets/beluga_3.png'),
-    status: '성체',
-    dateMet: '24-10-30',
-    level: 40,
-    isMain: false,
-  },
-  null,
-  null,
-  {
-    type: '사자',
-    name: '동규니',
-    image: require('../../assets/pets/egg_gray_1.png'),
-    status: '알',
-    dateMet: '24-10-30',
-    level: 1,
-    isMain: true,
-  },
-  null,
-  null,
-];
-
-const realData = [
-  {
-    petId: 1,
-    petNickname: '뭉기',
-    petType: '벨루가',
-    petStatus: '성체',
-  },
-  {
-    petId: 4,
-    petNickname: '동규니',
-    petType: '사자',
+    createdAt: '2024-11-11',
+    petBookId: 1,
+    petLevel: 1,
+    petNickname: '소라게',
+    petPercent: 0,
     petStatus: '알',
+    petType: '사자',
+    // isMain 어디감????
   },
 ];
 
 function AlbumScreen() {
-  const [loading, setLoading] = useState(true);
-  const [petAlbumList, setPetAlbumList] = useState([]);
   const [selectedPet, setSelectedPet] = useState(null);
   const [isModalVisible, setModalVisible] = useState(false);
 
-  // const getPetAlbumList = async () => {
-  //   try {
-  //     const response = await axios.get(
-  //       'https://jsonplaceholder.typicode.com/posts'
-  //     );
-  //     setPetAlbumList(response.data);
-  //   } catch (error) {
-  //     console.log(error);
-  //   } finally {
-  //   }
-  // };
+  const { data: petAlbumList, isLoading, isError } = usePetAlbumList();
 
-  // useEffect(() => {
-  //   getPetAlbumList();
-  // }, []);
+  console.log('Fetched data:', petAlbumList); // 데이터 출력
 
   const openModal = (pet) => {
     setSelectedPet(pet);
@@ -81,12 +39,19 @@ function AlbumScreen() {
   };
 
   const closeModal = () => {
-    // setSelectedPet(null);
     setModalVisible(false);
   };
 
+  if (isLoading) {
+    return <ActivityIndicator size="large" color={colors.MAIN_GREEN} />;
+  }
+
+  if (isError) {
+    return <Text>Error occurred: {isError.message}</Text>;
+  }
+
   const petGrid = Array.from({ length: 6 }).map((_, index) => {
-    const pet = realData.find((p) => p.petId === index + 1); // 해당 petId로 위치 확인
+    const pet = petAlbumList.find((p) => p.petBookId === index + 1); // 해당 petId로 위치 확인
     return pet ? pet : { petId: index + 1 }; // 데이터가 없으면 기본값
   });
 
@@ -103,16 +68,6 @@ function AlbumScreen() {
         ))}
       </View>
 
-      {/* <FlatList
-        data={petGrid}
-        numColumns={2}
-        keyExtractor={(item) => item.petId.toString()}
-        renderItem={({ item }) => (
-          <AlbumFrame pet={item} onPress={() => item && openModal(item)} />
-        )}
-      /> */}
-
-      {/* 실제 모달: 컴포넌트로 따로 */}
       <AlbumDetailModal
         isVisible={isModalVisible}
         onClose={closeModal}
