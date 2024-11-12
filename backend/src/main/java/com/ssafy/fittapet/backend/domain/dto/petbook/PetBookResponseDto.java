@@ -16,6 +16,7 @@ public class PetBookResponseDto {
     private String petStatus;
     private Integer petPercent;
     private Integer petLevel;
+    private boolean isMain;
 
 //    private LocalDateTime createdAt;
     @JsonFormat(pattern = "yyyy-MM-dd")
@@ -23,7 +24,7 @@ public class PetBookResponseDto {
 
     @Builder
     public PetBookResponseDto(Long petBookId, String petNickname, PetType petType,
-            PetStatus petStatus, Integer petPercent, Integer petLevel, LocalDateTime createdAt) {
+            PetStatus petStatus, Integer petPercent, Integer petLevel, LocalDateTime createdAt, boolean isMain) {
         this.petBookId = petBookId;
         this.petNickname = petNickname;
         this.petType = (petType != null) ? petType.getValue() : null;
@@ -31,6 +32,7 @@ public class PetBookResponseDto {
         this.petPercent = petPercent;
         this.petLevel = petLevel;
         this.createdAt = createdAt.toLocalDate().toString();
+        this.isMain = isMain;
     }
 
 }

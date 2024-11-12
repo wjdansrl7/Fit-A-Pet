@@ -64,6 +64,7 @@ public class PetBookController {
         List<PetBookResponseDto> petBookResponseDtos = new ArrayList<>();
 
         for (PetBook petBook : petBooks) {
+            boolean isMain = loginUser.getPetMainId().equals(petBook.getId());
             PetBookResponseDto petBookResponseDto = PetBookResponseDto.builder()
                     .petBookId(petBook.getId())
                     .petNickname(petBook.getPetNickname())
@@ -71,7 +72,9 @@ public class PetBookController {
                     .petStatus(petBook.getPet().getPetStatus())
                     .petLevel(petBook.getPetLevel())
                     .petPercent(petBook.getNextLevelPercentage())
-                    .createdAt(petBook.getCreatedAt()).build();
+                    .createdAt(petBook.getCreatedAt())
+                    .isMain(isMain)
+                    .build();
             petBookResponseDtos.add(petBookResponseDto);
         }
 
@@ -98,9 +101,8 @@ public class PetBookController {
     @GetMapping("/{petBook-id}")
     public ResponseEntity<?> getPetBook(@PathVariable("petBook-id") Long petBookId) {
         User loginUser = authService.getLoginUser(1L);
-
         PetBook petBook = petBookService.selectPetBook(petBookId, loginUser);
-        log.info("======={}", petBook.getId());
+        boolean isMain = loginUser.getPetMainId().equals(petBook.getId());
 
         PetBookResponseDto petBookResponseDto = PetBookResponseDto.builder()
                 .petBookId(petBook.getId())
@@ -109,7 +111,9 @@ public class PetBookController {
                 .petStatus(petBook.getPet().getPetStatus())
                 .petLevel(petBook.getPetLevel())
                 .petPercent(petBook.getNextLevelPercentage())
-                .createdAt(petBook.getCreatedAt()).build();
+                .createdAt(petBook.getCreatedAt())
+                .isMain(isMain)
+                .build();
 
         return new ResponseEntity<>(petBookResponseDto, HttpStatus.OK);
 
