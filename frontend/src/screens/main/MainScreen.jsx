@@ -21,10 +21,11 @@ import { useMainPetInfo, useUpdateNickname } from '@hooks/queries/usePet';
 import { useQueryClient } from '@tanstack/react-query';
 
 function MainScreen({ navigation }) {
-  const [isModalVisible, setModalVisible] = useState(false);
   const { data: mainPetInfo, isLoading, isError } = useMainPetInfo();
   const queryClient = useQueryClient();
+  const mutation = useUpdateNickname();
 
+  const [isModalVisible, setModalVisible] = useState(false);
   const [petNickname, setPetNickname] = useState('');
   const [petBookId, setpetBookId] = useState('');
 
@@ -36,9 +37,6 @@ function MainScreen({ navigation }) {
       setpetBookId(mainPetInfo.petBookId);
     }
   }, [mainPetInfo]);
-
-  // 닉네임 변경 mutation
-  const mutation = useUpdateNickname();
 
   if (isLoading) {
     return <ActivityIndicator size="large" color={colors.MAIN_GREEN} />;
@@ -55,7 +53,6 @@ function MainScreen({ navigation }) {
           onSuccess: () => {
             // 닉네임 변경 후 mainPetInfo를 다시 불러옴
             queryClient.invalidateQueries(['mainPetInfo']);
-            Alert.alert('Success', '닉네임이 성공적으로 변경되었습니다.');
             setModalVisible(false);
           },
           onError: (error) => {
