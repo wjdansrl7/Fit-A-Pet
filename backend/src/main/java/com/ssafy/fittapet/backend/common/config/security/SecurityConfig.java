@@ -25,11 +25,9 @@ import java.util.Collections;
 @RequiredArgsConstructor
 public class SecurityConfig {
 
-    @Value("${frontend.server.url}")
-    private String url;
+//    @Value("${frontend.server.url}")
+//    private String url;
 
-//    private final CustomOAuth2UserService customOAuth2UserService;
-//    private final CustomSuccessHandler customSuccessHandler;
     private final RefreshRepository refreshRepository;
     private final BlacklistRepository blacklistRepository;
     private final JWTUtil jwtUtil;
@@ -85,9 +83,9 @@ public class SecurityConfig {
         //경로별 인가 작업
         http
                 .authorizeHttpRequests((auth) -> auth
-                        .anyRequest().permitAll());
-//                        .requestMatchers("/auth/kakao","/auth/reissue").permitAll()
-//                        .anyRequest().authenticated());
+//                        .anyRequest().permitAll());
+                        .requestMatchers("/auth/kakao", "/auth/reissue", "/auth/test").permitAll()
+                        .anyRequest().authenticated());
 
         //세션 설정 : STATELESS
         http

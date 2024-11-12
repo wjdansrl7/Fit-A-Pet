@@ -39,20 +39,19 @@ public class MapServiceImpl implements MapService {
     private final UserRepository userRepository;
 
     @Override
-    public List<MapResponse> getAll() {
-        // todo : 로그인한 유저 id 갖고오기
-        Long userId = 1L;
+    public List<MapResponse> getAll(Long userId) {
 
         return guildRepository.findAllByUserId(userId);
     }
 
     @Override
-    public void createGuild(GuildRequest guildRequest) throws CustomException {
+    public void createGuild(GuildRequest guildRequest, Long userId) throws CustomException {
         // 1. todo : 로그인한 유저 id
 //        Long userId = 1L;
 //        User user = User.builder().id(userId).build();
-        User user = userRepository.findById(1L).orElse(null);
-        Long userId = user.getId();
+//        User user = userRepository.findById(1L).orElse(null);
+        User user = userRepository.findById(userId).orElse(null);
+//        Long userId = user.getId();
         // 2. position 유효 검사
         if(!mapValidator.isAblePosition(userId, guildRequest.getGuildPosition())) throw new CustomException(NOT_AVAILABLE_POSITION);
         // 3. 그룹 이름 유효 검사?
@@ -72,10 +71,10 @@ public class MapServiceImpl implements MapService {
     }
 
     @Override
-    public Boolean joinGuild(GuildJoinRequest guildJoinRequest) throws Exception {
+    public Boolean joinGuild(GuildJoinRequest guildJoinRequest, Long userId) throws Exception {
 
             // todo : 요청자 정보 받아오기
-            User user = userRepository.findById(2L).orElse(null);
+            User user = userRepository.findById(userId).orElse(null);
 
             String enteringCode = guildJoinRequest.getEnteringCode();
             Long guildPosition = guildJoinRequest.getGuildPosition();
@@ -104,13 +103,13 @@ public class MapServiceImpl implements MapService {
 
     @Override
     @Transactional
-    public void leaveGuild(Long guildId) throws CustomException {
+    public void leaveGuild(Long guildId, Long userId) throws CustomException {
         // map에서 삭제
         // todo : 요청자 정보 가져오기
-        User user = User.builder().id(2L).build();
+        User user = userRepository.findById(userId).orElse(null);
         if(guildValidator.isExist(guildId).isEmpty()) throw new CustomException(NO_GUILD);
         if(!mapValidator.isAlreadyJoined(user.getId(), guildId)) throw new CustomException(NOT_GUILD_MEMBER);
-        if(guildValidator.isGuildLeader(guildId, 1L)) throw new CustomException(LEADER_CANNOT_EXIT);
+        if(guildValidator.isGuildLeader(guildId, userId)) throw new CustomException(LEADER_CANNOT_EXIT);
 
         mapRepository.deleteByGuildIdAndUserId(guildId, user.getId());
 

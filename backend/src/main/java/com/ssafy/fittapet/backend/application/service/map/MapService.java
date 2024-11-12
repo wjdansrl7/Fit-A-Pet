@@ -8,11 +8,11 @@ import com.ssafy.fittapet.backend.domain.dto.map.MapResponse;
 import java.util.List;
 
 public interface MapService {
-    List<MapResponse> getAll();
+    List<MapResponse> getAll(Long userId);
 
-    void createGuild(GuildRequest guildRequest) throws CustomException;
+    void createGuild(GuildRequest guildRequest, Long userId) throws CustomException;
 
-    Boolean joinGuild(GuildJoinRequest guildJoinRequest) throws Exception;
+    Boolean joinGuild(GuildJoinRequest guildJoinRequest, Long userId) throws Exception;
 
-    void leaveGuild(Long guildId) throws CustomException;
+    void leaveGuild(Long guildId, Long userId) throws CustomException;
 }

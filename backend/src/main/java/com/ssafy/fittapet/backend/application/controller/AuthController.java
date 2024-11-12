@@ -2,7 +2,6 @@ package com.ssafy.fittapet.backend.application.controller;
 
 import com.ssafy.fittapet.backend.application.service.auth.AuthServiceImpl;
 import com.ssafy.fittapet.backend.domain.dto.auth.CustomOAuth2User;
-import com.ssafy.fittapet.backend.domain.entity.User;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -55,8 +54,8 @@ public class AuthController {
     }
 
     @GetMapping("/test2")
-    public String test2Get(@AuthenticationPrincipal custom) {
-        log.info("test2 success");
+    public String test2Get(@AuthenticationPrincipal CustomOAuth2User customOAuth2User) {
+        log.info("test2 success {}", customOAuth2User.getUsername());
         return "test";
     }
 }

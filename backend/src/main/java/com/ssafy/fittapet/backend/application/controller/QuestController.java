@@ -2,6 +2,7 @@ package com.ssafy.fittapet.backend.application.controller;
 
 import com.ssafy.fittapet.backend.application.service.quest.QuestService;
 import com.ssafy.fittapet.backend.common.exception.CustomException;
+import com.ssafy.fittapet.backend.domain.dto.auth.CustomOAuth2User;
 import com.ssafy.fittapet.backend.domain.dto.quest.QuestCompleteRequestDTO;
 import com.ssafy.fittapet.backend.domain.dto.quest.QuestQueryRequestDTO;
 import com.ssafy.fittapet.backend.domain.dto.quest.QuestResponse;
@@ -10,6 +11,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -31,8 +33,8 @@ public class QuestController {
     }
 
     @GetMapping
-    public ResponseEntity<?> getMyQuestList() {
-        Map<String, List<QuestResponse>> myQuestResponse = questService.getMyQuestList();
+    public ResponseEntity<?> getMyQuestList(@AuthenticationPrincipal CustomOAuth2User customOAuth2User) {
+        Map<String, List<QuestResponse>> myQuestResponse = questService.getMyQuestList(customOAuth2User.getId());
         return new ResponseEntity<>(myQuestResponse, HttpStatus.OK);
     }
 
@@ -42,16 +44,18 @@ public class QuestController {
     }
 
     @PostMapping("/personal/complete")
-    public ResponseEntity<?> completePersonalQuest(@RequestBody QuestCompleteRequestDTO dto) {
+    public ResponseEntity<?> completePersonalQuest(@RequestBody QuestCompleteRequestDTO dto,
+                                                   @AuthenticationPrincipal CustomOAuth2User customOAuth2User) {
 
         log.info("QuestController completePersonalQuest");
-        return ResponseEntity.ok(questService.completePersonalQuest(dto));
+        return ResponseEntity.ok(questService.completePersonalQuest(dto, customOAuth2User.getId()));
     }
 
     @PostMapping("/guild/complete")
-    public ResponseEntity<?> completeGuildQuest(@RequestBody QuestCompleteRequestDTO dto) {
+    public ResponseEntity<?> completeGuildQuest(@RequestBody QuestCompleteRequestDTO dto,
+                                                @AuthenticationPrincipal CustomOAuth2User customOAuth2User) {
 
         log.info("QuestController completeGuildQuest");
-        return ResponseEntity.ok(questService.completeGuildQuest(dto));
+        return ResponseEntity.ok(questService.completeGuildQuest(dto, customOAuth2User.getId()));
     }
 }
