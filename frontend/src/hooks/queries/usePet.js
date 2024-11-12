@@ -1,7 +1,6 @@
 import { useQuery, useQueryClient, useMutation } from '@tanstack/react-query';
 import axiosInstance from '@api/axios';
-
-const queryClient = useQueryClient();
+import { Alert } from 'react-native';
 
 const fetchPetAlbumList = async () => {
   const response = await axiosInstance.get('/petbooks');
@@ -9,11 +8,11 @@ const fetchPetAlbumList = async () => {
 };
 
 export const usePetAlbumList = () => {
-  const { data, isError, isLoading } = useQuery({
+  const { data, error, isLoading, isError } = useQuery({
     queryKey: ['petAlbumList'],
     queryFn: fetchPetAlbumList,
   });
-  return { data, isError, isLoading };
+  return { data, error, isLoading, isError };
 };
 
 const fetchMainPetInfo = async () => {
@@ -22,11 +21,11 @@ const fetchMainPetInfo = async () => {
 };
 
 export const useMainPetInfo = () => {
-  const { data, isError, isLoading } = useQuery({
+  const { data, isError, isLoading, error } = useQuery({
     queryKey: ['mainPet'],
     queryFn: fetchMainPetInfo,
   });
-  return { data, isError, isLoading };
+  return { data, isError, isLoading, error };
 };
 
 const updateNickname = async ({ petBookId, newNickname }) => {
@@ -37,14 +36,21 @@ const updateNickname = async ({ petBookId, newNickname }) => {
 };
 
 export const useUpdateNickname = () => {
-  const mutation = useMutation({
+  const queryClient = useQueryClient();
+
+  return useMutation({
     mutationFn: updateNickname,
-    // onSuccess: (data) => {
-    //   console.log('Updated nickname:', data);
-    // },
-    // onError: (error) => {
-    //   console.error(error);
-    // },
+    onSuccess: () => {
+      queryClient.invalidateQueries(['mainPetInfo']);
+    },
+    onError: (error) => {
+      Alert.alert('Error', '닉네임 변경에 실패했습니다.');
+      console.error(error);
+    },
   });
-  return mutation;
+};
+
+const updateMain = async (petBookId) => {
+  const response = await axiosInstance.post(`/petbooks/main/${petBookId}`);
+  return response.data;
 };

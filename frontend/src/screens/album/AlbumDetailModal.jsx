@@ -62,13 +62,13 @@ const AlbumDetailModal = ({ isVisible, onClose, pet }) => {
             activeOpacity={0.8}
             style={[
               styles.button,
-              pet.isMain ? { backgroundColor: 'gray' } : null,
+              pet.main ? { backgroundColor: 'gray' } : null,
             ]}
             onPress={onClose}
-            disabled={pet.isMain}
+            disabled={pet.main}
           >
             <CustomText style={styles.buttonText}>
-              {pet.isMain ? '메인 펫으로 설정 됨' : '메인 펫으로 설정'}
+              {pet.main ? '메인 펫으로 설정 됨' : '메인 펫으로 설정'}
             </CustomText>
           </TouchableOpacity>
         </View>

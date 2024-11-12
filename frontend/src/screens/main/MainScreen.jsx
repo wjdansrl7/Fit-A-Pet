@@ -1,4 +1,4 @@
-import React, { useCallback, useState, useEffect } from 'react';
+import React, { useState, useEffect } from 'react';
 import {
   View,
   Text,
@@ -24,54 +24,37 @@ import CustomModal from '@components/CustomModal/CustomModal';
 import { colors } from '@constants/colors';
 import { petImages } from '@constants/petImage';
 import { useMainPetInfo, useUpdateNickname } from '@hooks/queries/usePet';
-import { useQueryClient } from '@tanstack/react-query';
+// import { useQueryClient } from '@tanstack/react-query';
 
 function MainScreen({ navigation }) {
-  const { data: mainPetInfo, isLoading, isError } = useMainPetInfo();
-  const queryClient = useQueryClient();
-  const mutation = useUpdateNickname();
-
   const [isModalVisible, setModalVisible] = useState(false);
   const [petNickname, setPetNickname] = useState('');
-  const [petBookId, setpetBookId] = useState('');
+  const [petBookId, setPetBookId] = useState('');
+  const { data: mainPetInfo, isLoading, isError, error } = useMainPetInfo();
+  const { mutate } = useUpdateNickname();
 
-  console.log('메인펫', mainPetInfo);
-  // 로딩이 끝나고 데이터가 존재할 때만 상태를 업데이트
   useEffect(() => {
     if (mainPetInfo) {
       setPetNickname(mainPetInfo.petNickname);
-      setpetBookId(mainPetInfo.petBookId);
+      setPetBookId(mainPetInfo.petBookId);
     }
   }, [mainPetInfo]);
 
-  if (isLoading) {
-    return <ActivityIndicator size="large" color={colors.MAIN_GREEN} />;
-  }
-  if (isError) {
-    return <Text>Error occurred: {isError.message}</Text>;
-  }
-
   const handleUpdateNickname = () => {
     if (petNickname.trim()) {
-      mutation.mutate(
-        { petBookId, newNickname: petNickname.trim() },
-        {
-          onSuccess: () => {
-            // 닉네임 변경 후 mainPetInfo를 다시 불러옴
-            queryClient.invalidateQueries(['mainPetInfo']);
-            setModalVisible(false);
-          },
-          onError: (error) => {
-            Alert.alert('Error', '닉네임 변경에 실패했습니다.');
-            console.error(error);
-          },
-        }
-      );
+      mutate({ petBookId, newNickname: petNickname.trim() });
       setModalVisible(false);
     } else {
       Alert.alert('Error', '닉네임을 입력해주세요');
     }
   };
+
+  if (isLoading) {
+    return <ActivityIndicator size="large" color={colors.MAIN_GREEN} />;
+  }
+  if (isError) {
+    return <Text>Error occurred: {error.message}</Text>;
+  }
 
   const petImage =
     // 대표 이미지 로딩
