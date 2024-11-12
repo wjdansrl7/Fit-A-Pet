@@ -18,7 +18,7 @@ function AlbumScreen() {
 
   const { data: petAlbumList, isLoading, isError, error } = usePetAlbumList();
 
-  console.log('Fetched data:', petAlbumList); // 데이터 출력
+  console.log('Fetched data:', petAlbumList);
 
   const openModal = (pet) => {
     setSelectedPet(pet);

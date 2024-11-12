@@ -13,18 +13,18 @@ import {
 } from 'react-native';
 
 import MenuButton from './MenuButton';
-import CustomText from '@components/CustomText/CustomText';
 import AlbumIcon from '@assets/icons/도감_icon.png';
 import MapIcon from '@assets/icons/지도_icon.png';
 import MyInfoIcon from '@assets/icons/나의기록_icon.png';
 import QuestIcon from '@assets/icons/퀘스트_icon.png';
 import FoodLensIcon from '@assets/icons/식단기록_icon.png';
 
+import CustomText from '@components/CustomText/CustomText';
 import CustomModal from '@components/CustomModal/CustomModal';
+
 import { colors } from '@constants/colors';
 import { petImages } from '@constants/petImage';
 import { useMainPetInfo, useUpdateNickname } from '@hooks/queries/usePet';
-// import { useQueryClient } from '@tanstack/react-query';
 
 function MainScreen({ navigation }) {
   const [isModalVisible, setModalVisible] = useState(false);
@@ -126,6 +126,7 @@ function MainScreen({ navigation }) {
 
       {/* 중앙 - 펫 */}
       <View style={styles.petContainer}>
+        {/* 이미지 상수처리 끝낸 후 바꾸기 */}
         {/* <Image source={petImage} style={styles.petImage} /> */}
         <Image
           source={require('@assets/pets/beluga_3.png')}
