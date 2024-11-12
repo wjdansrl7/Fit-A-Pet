@@ -8,11 +8,11 @@ const fetchPetAlbumList = async () => {
 };
 
 export const usePetAlbumList = () => {
-  const { data, isError, isLoading } = useQuery({
+  const { data, error, isLoading, isError } = useQuery({
     queryKey: ['petAlbumList'],
     queryFn: fetchPetAlbumList,
   });
-  return { data, isError, isLoading };
+  return { data, error, isLoading, isError };
 };
 
 const fetchMainPetInfo = async () => {
@@ -21,11 +21,11 @@ const fetchMainPetInfo = async () => {
 };
 
 export const useMainPetInfo = () => {
-  const { data, isError, isLoading } = useQuery({
+  const { data, isError, isLoading, error } = useQuery({
     queryKey: ['mainPet'],
     queryFn: fetchMainPetInfo,
   });
-  return { data, isError, isLoading };
+  return { data, isError, isLoading, error };
 };
 
 const updateNickname = async ({ petBookId, newNickname }) => {

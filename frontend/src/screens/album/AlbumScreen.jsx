@@ -10,6 +10,7 @@ import AlbumFrame from './AlbumFrame';
 import AlbumDetailModal from './AlbumDetailModal';
 import { usePetAlbumList } from '@hooks/queries/usePet';
 import { colors } from '@constants/colors';
+import HealthData from './HealthData';
 
 // 데이터모양
 const pets = [
@@ -29,7 +30,7 @@ function AlbumScreen() {
   const [selectedPet, setSelectedPet] = useState(null);
   const [isModalVisible, setModalVisible] = useState(false);
 
-  const { data: petAlbumList, isLoading, isError } = usePetAlbumList();
+  const { data: petAlbumList, isLoading, isError, error } = usePetAlbumList();
 
   console.log('Fetched data:', petAlbumList); // 데이터 출력
 
@@ -47,7 +48,7 @@ function AlbumScreen() {
   }
 
   if (isError) {
-    return <Text>Error occurred: {isError.message}</Text>;
+    return <Text>Error occurred: {error.message}</Text>;
   }
 
   const petGrid = Array.from({ length: 6 }).map((_, index) => {
@@ -57,6 +58,7 @@ function AlbumScreen() {
 
   return (
     <ScrollView contentContainerStyle={styles.container}>
+      <HealthData />
       <View style={styles.grid}>
         {petGrid.map((pet, index) => (
           <AlbumFrame

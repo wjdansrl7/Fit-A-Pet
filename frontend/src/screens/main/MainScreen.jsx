@@ -30,7 +30,7 @@ function MainScreen({ navigation }) {
   const [isModalVisible, setModalVisible] = useState(false);
   const [petNickname, setPetNickname] = useState('');
   const [petBookId, setPetBookId] = useState('');
-  const { data: mainPetInfo, isLoading, isError } = useMainPetInfo();
+  const { data: mainPetInfo, isLoading, isError, error } = useMainPetInfo();
   const { mutate } = useUpdateNickname();
 
   useEffect(() => {
@@ -53,7 +53,7 @@ function MainScreen({ navigation }) {
     return <ActivityIndicator size="large" color={colors.MAIN_GREEN} />;
   }
   if (isError) {
-    return <Text>Error occurred: {isError.message}</Text>;
+    return <Text>Error occurred: {error.message}</Text>;
   }
 
   const petImage =
