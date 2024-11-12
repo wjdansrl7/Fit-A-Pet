@@ -1,6 +1,5 @@
 package com.ssafy.fittapet.backend.application.service.auth;
 
-import com.ssafy.fittapet.backend.application.service.quest.QuestService;
 import com.ssafy.fittapet.backend.common.constant.entity_field.Role;
 import com.ssafy.fittapet.backend.common.constant.entity_field.UserTier;
 import com.ssafy.fittapet.backend.common.util.JWTUtil;
@@ -15,6 +14,7 @@ import com.ssafy.fittapet.backend.domain.repository.auth.UserRepository;
 import com.ssafy.fittapet.backend.domain.repository.personal_quest.PersonalQuestRepository;
 import com.ssafy.fittapet.backend.domain.repository.quest.QuestRepository;
 import io.jsonwebtoken.ExpiredJwtException;
+import jakarta.persistence.EntityNotFoundException;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -275,5 +275,18 @@ public class AuthServiceImpl implements AuthService {
                 .toList();
 
         personalQuestRepository.saveAll(personalQuests);
+    }
+
+    public UserDTO getInfo(Long userId) {
+        User user = userRepository.findById(userId)
+                .orElseThrow(() -> new EntityNotFoundException("User Not Found"));
+
+        return UserDTO.builder()
+                .userId(user.getId())
+                .userName(user.getUserName())
+                .userUniqueName(user.getUserUniqueName())
+                .role(String.valueOf(user.getRole()))
+                .userTier(String.valueOf(user.getUserTier()))
+                .build();
     }
 }
