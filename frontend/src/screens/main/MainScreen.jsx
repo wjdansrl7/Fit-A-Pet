@@ -127,11 +127,11 @@ function MainScreen({ navigation }) {
       {/* 중앙 - 펫 */}
       <View style={styles.petContainer}>
         {/* 이미지 상수처리 끝낸 후 바꾸기 */}
-        {/* <Image source={petImage} style={styles.petImage} /> */}
-        <Image
+        <Image source={petImage} style={styles.petImage} />
+        {/* <Image
           source={require('@assets/pets/beluga_3.png')}
           style={styles.petImage}
-        />
+        /> */}
       </View>
 
       {/* 우측 메뉴 */}

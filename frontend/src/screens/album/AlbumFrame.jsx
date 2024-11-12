@@ -64,7 +64,7 @@ const styles = StyleSheet.create({
   },
   placeholder: {
     fontSize: 120,
-    color: '#444',
+    color: '#555',
   },
 });
 

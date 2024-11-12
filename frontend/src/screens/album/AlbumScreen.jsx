@@ -26,6 +26,7 @@ function AlbumScreen() {
   };
 
   const closeModal = () => {
+    // setSelectedPet(null);
     setModalVisible(false);
   };
 
