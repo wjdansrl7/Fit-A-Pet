@@ -12,8 +12,8 @@ const GuildByeModal = ({ guildName, isVisible, onClose, onLeave }) => {
         <CustomText>정말로 나가실 건가요?</CustomText>
       </View>
       <View style={styles.guildModalBottomTwoB}>
-        <CustomButton title="아니" onPress={onLeave} />
-        <CustomButton title="그래" onPress={onClose} />
+        <CustomButton title="아니" onPress={onClose} />
+        <CustomButton title="그래" onPress={onLeave} />
       </View>
     </CustomModal>
   );
