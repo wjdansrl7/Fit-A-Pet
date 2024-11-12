@@ -9,12 +9,12 @@ import {
   TextInput,
   ActivityIndicator,
   Alert,
+  Dimensions,
 } from 'react-native';
 
 import MenuButton from './MenuButton';
 import CustomText from '@components/CustomText/CustomText';
 import AlbumIcon from '@assets/icons/도감_icon.png';
-
 import MapIcon from '@assets/icons/지도_icon.png';
 import MyInfoIcon from '@assets/icons/나의기록_icon.png';
 import QuestIcon from '@assets/icons/퀘스트_icon.png';
@@ -91,12 +91,14 @@ function MainScreen({ navigation }) {
             } // 모달을 닫는 함수
           }
         >
-          <TextInput
-            style={styles.input}
-            value={petNickname}
-            onChangeText={setPetNickname}
-            keyboardType="default"
-          />
+          <View style={styles.inputContainer}>
+            <TextInput
+              style={styles.input}
+              value={petNickname}
+              onChangeText={setPetNickname}
+              keyboardType="default"
+            />
+          </View>
 
           <TouchableOpacity
             activeOpacity={0.8}
@@ -122,9 +124,13 @@ function MainScreen({ navigation }) {
         </View>
       </View>
 
-      {/* 중앙 - 펫(알 모양) */}
+      {/* 중앙 - 펫 */}
       <View style={styles.petContainer}>
-        <Image source={petImage} style={styles.petImage} />
+        {/* <Image source={petImage} style={styles.petImage} /> */}
+        <Image
+          source={require('@assets/pets/beluga_3.png')}
+          style={styles.petImage}
+        />
       </View>
 
       {/* 우측 메뉴 */}
@@ -140,8 +146,6 @@ function MainScreen({ navigation }) {
 
       {/* 하단 메뉴 */}
       <View style={styles.bottomMenu}>
-        {/* 나머지 페이지 만들어지면 연결 */}
-
         <Pressable onPress={() => navigation.navigate('Map')}>
           <MenuButton title={'지도'} icon={MapIcon}></MenuButton>
         </Pressable>
@@ -167,7 +171,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     padding: 15,
     marginTop: 30,
-    marginBottom: 20,
+    marginBottom: 10,
     marginHorizontal: 20,
     backgroundColor: 'rgba(255, 255, 255, 0.5)',
     opacity: 100,
@@ -177,13 +181,11 @@ const styles = StyleSheet.create({
   },
   petName: {
     fontSize: 26,
-    // fontWeight: 'bold',
     marginBottom: 5,
     width: '80%',
     textAlign: 'center',
   },
   petNameUpdate: {
-    backgroundColor: 'yellowgreen',
     position: 'absolute',
     right: 20,
     top: 15,
@@ -193,7 +195,6 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   levelText: {
-    // fontWeight: 'bold',
     fontSize: 30,
     backgroundColor: '#00BFFF',
     marginRight: -20,
@@ -205,55 +206,65 @@ const styles = StyleSheet.create({
     textAlignVertical: 'center',
   },
   progressBar: {
-    width: 250,
+    width: '90%',
     height: 30,
     backgroundColor: '#eee',
     borderRadius: 20,
   },
   progressFill: {
     height: '100%',
-    backgroundColor: '#FFD700', // 노란색
+    backgroundColor: colors.STAR_YELLOW,
     borderRadius: 20,
   },
   petContainer: {
     alignItems: 'center',
     padding: 10,
-    marginTop: 220,
-    marginBottom: 20,
-    backgroundColor: 'rgba(0, 0, 0, 0.2)',
+    height: Dimensions.get('screen').width - 80,
+    position: 'absolute',
+    bottom: 150,
+    left: 40,
+    right: 40,
+    // backgroundColor: 'rgba(0, 0, 0, 0.2)',
   },
   petImage: {
-    width: 270,
-    height: 270,
+    width: '100%',
+    height: '100%',
+    // backgroundColor: 'tomato',
   },
+
   rightMenu: {
-    position: 'absolute',
-    right: 30,
-    top: 200,
+    paddingHorizontal: 20,
+    alignItems: 'flex-end',
   },
+
   bottomMenu: {
     flexDirection: 'row',
     justifyContent: 'space-between',
-    paddingHorizontal: 40,
+    paddingHorizontal: 20,
     position: 'absolute',
-    bottom: 10,
+    bottom: 20,
     left: 20,
     right: 20,
+  },
+
+  inputContainer: {
+    width: 250,
+    backgroundColor: colors.BACKGROUND_COLOR,
+    paddingHorizontal: 15,
+    borderRadius: 10,
+    alignItems: 'center',
   },
 
   input: {
     fontFamily: 'DungGeunMo',
     fontSize: 25,
-    // backgroundColor: colors.BACKGROUND_COLOR,
-    paddingLeft: 15,
-    borderRadius: 20,
   },
 
   button: {
     justifyContent: 'center',
     alignItems: 'center',
     borderRadius: 10,
-    backgroundColor: 'seagreen',
+    backgroundColor: colors.MAIN_GREEN,
     padding: 15,
     marginTop: 20,
   },
