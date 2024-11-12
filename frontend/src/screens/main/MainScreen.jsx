@@ -11,6 +11,11 @@ import {
 import MenuButton from './MenuButton';
 import CustomText from '@components/CustomText/CustomText';
 import AlbumIcon from '@assets/icons/도감_icon.png';
+import MapIcon from '@assets/icons/지도_icon.png';
+import MyInfoIcon from '@assets/icons/나의기록_icon.png';
+import QuestIcon from '@assets/icons/퀘스트_icon.png';
+import FoodLensIcon from '@assets/icons/식단기록_icon.png';
+
 import CustomModal from '@components/CustomModal/CustomModal';
 
 function MainScreen({ navigation }) {
@@ -76,11 +81,11 @@ function MainScreen({ navigation }) {
       {/* 우측 메뉴 */}
       <View style={styles.rightMenu}>
         {/* 푸드렌즈 카메라 */}
-        <MenuButton title={'식단기록'} icon={null}></MenuButton>
+        <MenuButton title={'식단기록'} icon={FoodLensIcon}></MenuButton>
         {/* 퀘스트 모아보기 페이지로 이동 */}
 
         <Pressable onPress={() => navigation.navigate('Quest')}>
-          <MenuButton title={'퀘스트'} icon={null}></MenuButton>
+          <MenuButton title={'퀘스트'} icon={QuestIcon}></MenuButton>
         </Pressable>
       </View>
 
@@ -89,13 +94,13 @@ function MainScreen({ navigation }) {
         {/* 나머지 페이지 만들어지면 연결 */}
 
         <Pressable onPress={() => navigation.navigate('Map')}>
-          <MenuButton title={'지도'} icon={null}></MenuButton>
+          <MenuButton title={'지도'} icon={MapIcon}></MenuButton>
         </Pressable>
         <Pressable onPress={() => navigation.navigate('Album')}>
           <MenuButton title={'도감'} icon={AlbumIcon}></MenuButton>
         </Pressable>
         <Pressable onPress={() => navigation.navigate('MyInfo')}>
-          <MenuButton title={'나의기록'}></MenuButton>
+          <MenuButton title={'기록보기'} icon={MyInfoIcon}></MenuButton>
         </Pressable>
       </View>
     </View>
