@@ -12,27 +12,13 @@ import { usePetAlbumList } from '@hooks/queries/usePet';
 import { colors } from '@constants/colors';
 import HealthData from './HealthData';
 
-// 데이터모양
-const pets = [
-  {
-    createdAt: '2024-11-11',
-    petBookId: 1,
-    petLevel: 1,
-    petNickname: '소라게',
-    petPercent: 0,
-    petStatus: '알',
-    petType: '사자',
-    // isMain 어디감????
-  },
-];
-
 function AlbumScreen() {
   const [selectedPet, setSelectedPet] = useState(null);
   const [isModalVisible, setModalVisible] = useState(false);
 
   const { data: petAlbumList, isLoading, isError, error } = usePetAlbumList();
 
-  console.log('Fetched data:', petAlbumList); // 데이터 출력
+  console.log('Fetched data:', petAlbumList);
 
   const openModal = (pet) => {
     setSelectedPet(pet);
@@ -40,6 +26,7 @@ function AlbumScreen() {
   };
 
   const closeModal = () => {
+    // setSelectedPet(null);
     setModalVisible(false);
   };
 
@@ -65,7 +52,6 @@ function AlbumScreen() {
             key={index}
             pet={pet}
             onPress={() => pet && openModal(pet)}
-            style={styles.frameBorder}
           />
         ))}
       </View>
@@ -82,15 +68,16 @@ function AlbumScreen() {
 const styles = StyleSheet.create({
   container: {
     flexGrow: 1,
-    padding: 40,
+    padding: 25,
     backgroundColor: '#FFF8DC',
   },
 
   grid: {
     flexDirection: 'row',
     flexWrap: 'wrap',
-    gap: 30,
+    justifyContent: 'space-between',
+    // gap: 20,
   },
 });
-
+5;
 export default AlbumScreen;
