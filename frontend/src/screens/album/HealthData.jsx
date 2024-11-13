@@ -39,7 +39,7 @@ const HealthData = () => {
         });
 
         setRecords(records);
-        console.log('Health Connect 데이터:', records);
+        // console.log('Health Connect 데이터:', records);
       } catch (error) {
         console.error('Health Connect 데이터 가져오기 오류:', error);
       }
