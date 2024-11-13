@@ -11,6 +11,8 @@ import AlbumDetailModal from './AlbumDetailModal';
 import { usePetAlbumList } from '@hooks/queries/usePet';
 import { colors } from '@constants/colors';
 import HealthData from './HealthData';
+import { fetchHealthData } from './healthData';
+import useHealthDataStore from '@src/stores/healthDataStore';
 
 function AlbumScreen() {
   const [selectedPet, setSelectedPet] = useState(null);
@@ -18,7 +20,16 @@ function AlbumScreen() {
 
   const { data: petAlbumList, isLoading, isError, error } = usePetAlbumList();
 
-  console.log('Fetched data:', petAlbumList);
+  const { steps, sleepHours, updateHealthData } = useHealthDataStore();
+
+  useEffect(() => {
+    const initializeHealthData = async () => {
+      const { steps, sleepHours } = await fetchHealthData();
+      updateHealthData(steps, sleepHours);
+    };
+
+    initializeHealthData();
+  }, []);
 
   const openModal = (pet) => {
     setSelectedPet(pet);
@@ -26,7 +37,6 @@ function AlbumScreen() {
   };
 
   const closeModal = () => {
-    // setSelectedPet(null);
     setModalVisible(false);
   };
 
@@ -46,6 +56,8 @@ function AlbumScreen() {
   return (
     <ScrollView contentContainerStyle={styles.container}>
       <HealthData />
+      <Text>걸음: {steps}</Text>
+      <Text>수면: {sleepHours}</Text>
       <View style={styles.grid}>
         {petGrid.map((pet, index) => (
           <AlbumFrame
