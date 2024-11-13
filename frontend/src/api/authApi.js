@@ -28,14 +28,30 @@ const postKakaoLogin = async () => {
   }
 };
 
-// 2. refreshToken 가지고 access토큰 받아오는 api
-const getAccessToken = async () => {
+// 2. 로그인 후, 유저 정보 받아오는 api
+const getProfile = async () => {
+  const { data } = await axiosInstance.get('/auth/info');
+
+  return data;
+};
+
+// 3. refreshToken 가지고 access토큰 받아오는 api
+const postAccessToken = async () => {
+  console.log('getAccessToken api 시작');
   const refreshToken = await getEncryptStorage('refreshToken');
-  const { data } = await axiosInstance.get('/auth/reissue', {
-    headers: {
-      Authorization: `Bearer ${refreshToken}`,
-    },
-  });
+  console.log('refreshToken :', refreshToken);
+
+  const { data } = await axiosInstance.post(
+    '/auth/reissue',
+    {},
+    {
+      headers: {
+        Authorization: `Bearer ${refreshToken}`,
+        // Authorization: `Bearer <${refreshToken}>`,
+      },
+    }
+  );
+  console.log('postAccessToken: ', data);
   return data;
 };
 
@@ -43,5 +59,5 @@ const getAccessToken = async () => {
 const postLogout = async () => {
   await axiosInstance.post('/auth/logout');
 };
-export { postKakaoLogin, getAccessToken, postLogout };
+export { postKakaoLogin, postAccessToken, postLogout, getProfile };
 // export { postKakaoLogin, getProfile, getAccessToken, logout };
