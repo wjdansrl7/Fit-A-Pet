@@ -1,4 +1,4 @@
-import React, { useCallback, useState, useEffect } from 'react';
+// import { FoodLensCore, FoodLensType, NetworkService } from 'foodlens-sdk'; //ndk
 import {
   View,
   Text,
@@ -9,7 +9,14 @@ import {
   TextInput,
   ActivityIndicator,
   Alert,
+  Na,
+  NativeModules,
 } from 'react-native';
+import React, { useCallback, useState, useEffect } from 'react';
+
+import { launchCamera } from 'react-native-image-picker'; //ndk
+const { FoodLensModule } = NativeModules;
+
 
 import MenuButton from './MenuButton';
 import CustomText from '@components/CustomText/CustomText';
@@ -22,6 +29,7 @@ import FoodLensIcon from '@assets/icons/식단기록_icon.png';
 
 import CustomModal from '@components/CustomModal/CustomModal';
 import { colors } from '@constants/colors';
+// import { colors } from '../../constants/colors';
 import { petImages } from '@constants/petImage';
 import { useMainPetInfo, useUpdateNickname } from '@hooks/queries/usePet';
 import { useQueryClient } from '@tanstack/react-query';
@@ -45,7 +53,7 @@ function MainScreen({ navigation }) {
   }, [mainPetInfo]);
 
   if (isLoading) {
-    return <ActivityIndicator size="large" color={colors.MAIN_GREEN} />;
+    return <ActivityIndicator size="large" color={'#009F58'} />; //ndk
   }
   if (isError) {
     return <Text>Error occurred: {isError.message}</Text>;
@@ -73,9 +81,40 @@ function MainScreen({ navigation }) {
     }
   };
 
+  const handleFoodRecognition = () => {
+    launchCamera(
+      {
+        mediaType: 'photo',
+        quality: 1,
+      },
+      (response) => {
+        if (response.didCancel) {
+          console.log("User cancelled image picker");
+        } else if (response.errorCode) {
+          console.error("ImagePicker Error: ", response.errorMessage);
+        } else if (response.assets && response.assets[0]) {
+          const imageUri = response.assets[0].uri;
+          const byteData = { uri: imageUri, type: 'image/jpeg', name: 'photo.jpg' };
+
+          // 비동기 함수 호출을 then/catch로 처리
+          FoodLensModule.recognizeFood(imageUri)
+            .then((result) => {
+              console.log("Recognition Result:", result);
+              Alert.alert("Recognition Successful", `Detected food: ${result}`);
+            })
+            .catch((error) => {
+              console.error("Recognition Error:", error);
+              Alert.alert("Recognition Error", "Failed to recognize food.");
+            });
+        }
+      }
+    );
+  };
+
   const petImage =
     // 대표 이미지 로딩
-    petImages[mainPetInfo.petType]?.[mainPetInfo.petStatus] || null;
+//     petImages[mainPetInfo.petType]?.[mainPetInfo.petStatus] || null;
+    null;
 
   return (
     <View style={styles.container}>
@@ -147,9 +186,11 @@ function MainScreen({ navigation }) {
       {/* 우측 메뉴 */}
       <View style={styles.rightMenu}>
         {/* 푸드렌즈 카메라 */}
-        <MenuButton title={'식단기록'} icon={FoodLensIcon}></MenuButton>
-        {/* 퀘스트 모아보기 페이지로 이동 */}
+        <Pressable onPress={handleFoodRecognition}>
+          <MenuButton title={'식단기록'} icon={FoodLensIcon}></MenuButton>
+        </Pressable>
 
+        {/* 퀘스트 모아보기 페이지로 이동 */}
         <Pressable onPress={() => navigation.navigate('Quest')}>
           <MenuButton title={'퀘스트'} icon={QuestIcon}></MenuButton>
         </Pressable>

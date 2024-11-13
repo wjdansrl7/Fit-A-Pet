@@ -112,6 +112,8 @@ android {
 dependencies {
     // The version of react-native is set by the React Native Gradle Plugin
     implementation("com.facebook.react:react-android")
+//    implementation("com.doinglab.foodlens:FoodLens:2.6.5")
+    implementation "com.doinglab.foodlens:FoodLensSDK-core:3.0.2"
 
     if (hermesEnabled.toBoolean()) {
         implementation("com.facebook.react:hermes-android")
