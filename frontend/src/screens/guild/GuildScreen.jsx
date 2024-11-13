@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useRef, useState, useEffect } from 'react';
 import { StyleSheet, View, TouchableOpacity, Image } from 'react-native';
 import TreasureBox from '@assets/backgrounds/guild/TreasureBox.png';
 import GuildQuestModal from './GuildQuestModal';
@@ -7,6 +7,7 @@ import GuildByeModal from './GuildByeModal';
 
 import CustomText from '@components/CustomText/CustomText';
 import CustomButton from '@components/CustomButton/CustomButton';
+import { petIdImages } from '@constants/petImage';
 
 import {
   useGuildInfo,
@@ -40,14 +41,21 @@ function GuildScreen({ navigation, route }) {
   const closeModal = () => setActiveModal(null);
 
   const refetchQuest = (newQuest) => {
-    setQuest(newQuest);
     chooseQuest({ guildId, questId: newQuest.id });
+    const formattedQuest = {
+      guildQuestContent: newQuest.questContent,
+      guildQuestId: newQuest.id,
+      guildQuestName: newQuest.questName,
+    };
+
+    setQuest(formattedQuest);
   };
 
   const leaveGuild = (guildId) => {
     byeGuild(guildId);
     navigation.navigate('Map');
   };
+
   return (
     <View style={styles.container}>
       {/* 추가 기능 */}
@@ -67,7 +75,7 @@ function GuildScreen({ navigation, route }) {
         onPress={() => openModal('quest')}
       >
         <CustomText>
-          {quest?.questContent || '일일 퀘스트를 설정해주세요'}
+          {quest?.guildQuestContent || '일일 퀘스트를 설정해주세요'}
         </CustomText>
       </TouchableOpacity>
 
@@ -81,8 +89,8 @@ function GuildScreen({ navigation, route }) {
             >
               {member ? (
                 <Image
-                  source={{ uri: member.image }}
-                  style={styles.memberImage}
+                  source={petIdImages[member.petId]}
+                  style={styles.petImage}
                 />
               ) : (
                 <CustomText style={styles.placeholderImageText}>+</CustomText>
@@ -194,11 +202,10 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center',
   },
-  memberImage: {
-    width: 50,
-    height: 50,
-    borderRadius: 25,
-    marginBottom: 5,
+  petImage: {
+    marginTop: 10,
+    width: 80,
+    height: 80,
   },
   memberName: {
     fontSize: 12,

@@ -1,0 +1,31 @@
+{
+  "frames": {
+    "0": {
+      "frame": { "x": 0, "y": 0, "w": 256, "h": 256 },
+      "rotated": false,
+      "trimmed": false,
+      "spriteSourceSize": { "x": 0, "y": 0, "w": 256, "h": 256 },
+      "sourceSize": { "w": 256, "h": 256 },
+      "duration": 100
+    },
+    "1": {
+      "frame": { "x": 0, "y": 256, "w": 256, "h": 256 },
+      "rotated": false,
+      "trimmed": false,
+      "spriteSourceSize": { "x": 0, "y": 0, "w": 256, "h": 256 },
+      "sourceSize": { "w": 256, "h": 256 },
+      "duration": 100
+    }
+  },
+  "meta": {
+    "app": "https://www.aseprite.org/",
+    "version": "1.x-dev",
+    "image": "lion_2_sprite.png",
+    "format": "RGBA8888",
+    "size": { "w": 256, "h": 512 },
+    "scale": "1",
+    "frameTags": [],
+    "layers": [{ "name": "Layer 1", "opacity": 255, "blendMode": "normal" }],
+    "slices": []
+  }
+}

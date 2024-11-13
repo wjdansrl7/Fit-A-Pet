@@ -34,12 +34,12 @@ const HealthData = () => {
           timeRangeFilter: {
             operator: 'between',
             startTime: '2024-11-10T12:00:00.405Z',
-            endTime: '2024-11-11T23:53:15.405Z',
+            endTime: '2024-11-15T23:53:15.405Z',
           },
         });
 
         setRecords(records);
-        console.log('Health Connect 데이터:', records);
+        // console.log('Health Connect 데이터:', records);
       } catch (error) {
         console.error('Health Connect 데이터 가져오기 오류:', error);
       }
