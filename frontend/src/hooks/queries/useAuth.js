@@ -8,7 +8,7 @@ import {
 } from '@src/api/authApi';
 import { removeEncryptStorage } from '@src/utils';
 import { setHeader, removeHeader } from '@src/utils/header';
-import { setEncryptStorage } from '@src/utils';
+import { setEncryptStorage, getEncryptStorage } from '@src/utils';
 import { useQuery, useMutation } from '@tanstack/react-query';
 import queryClient from '@api/queryClient';
 import { useNavigation } from '@react-navigation/native';
@@ -74,9 +74,13 @@ function usePostLogout() {
   return useMutation({
     mutationFn: postLogout,
     onSuccess: () => {
+      console.log('로그아웃전_refreshToken', getEncryptStorage('refreshToken'));
+      console.log('로그아웃전_loginStatus', getEncryptStorage('loginStatus'));
       removeHeader('Authorization');
       removeEncryptStorage('refreshToken');
       removeEncryptStorage('loginStatus');
+      console.log('로그아웃_refreshToken', getEncryptStorage('refreshToken'));
+      console.log('로그아웃_loginStatus', getEncryptStorage('loginStatus'));
       navigation.navigate('AuthHome');
     },
     onError: (error) => {
@@ -118,7 +122,12 @@ function useAuth() {
   // return { kakaoLoginMutation, isLogin, kakaoLogoutMutation };
   // return { kakaoLoginMutation, isLogin, getProfileQuery, kakaoLogoutMutation };
   // return { kakaoLoginMutation, isLogin, getProfileQuery };
-  return { kakaoLoginMutation, isLogin, kakaoLogoutMutation };
+  return {
+    refreshTokenMutation,
+    kakaoLoginMutation,
+    isLogin,
+    kakaoLogoutMutation,
+  };
   // return { kakaoLoginMutation };
 }
 

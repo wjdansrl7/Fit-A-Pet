@@ -7,17 +7,21 @@ import useAuth from '@hooks/queries/useAuth';
 import { getEncryptStorage } from '@src/utils';
 
 function RootNavigator() {
-  // const { isLogin } = useAuth();
-  const isLogin = getEncryptStorage('loginStatus');
-  // const isLogin = false;
+  const { refreshTokenMutation } = useAuth();
 
+  // const loginStatus = getEncryptStorage('loginStatus');
+  const [isLogin, setIsLogin] = useState(getEncryptStorage('loginStatus'));
+  // const isLogin = false;
+  console.log('loginStatus: ', getEncryptStorage('loginStatus'));
   const [loading, setLoading] = useState(true); // 로딩 상태 관리
 
   // isLogin 상태가 결정되었을 때 로딩 종료
   useEffect(() => {
-    if (isLogin !== undefined) {
+    refreshTokenMutation.mutate();
+    if (isLogin) {
       setLoading(false);
     }
+    // setIsLogin(loginStatus);
   }, [isLogin]);
 
   // 로딩 중일 때 보여줄 UI
@@ -28,6 +32,7 @@ function RootNavigator() {
       </View>
     );
   }
+
   // 로그인 상태에 따른 네비게이터 렌더링
   return <>{isLogin ? <MainStackNavigator /> : <AuthStackNavigator />}</>;
 }

@@ -12,7 +12,7 @@ import {
   getEncryptStorage,
 } from '@src/utils/encryptStorage';
 function AuthHomeScreen({ navigation }) {
-  const { kakaoLoginMutation } = useAuth();
+  const { refreshTokenMutation, kakaoLoginMutation } = useAuth();
   // const { mutate: kakaoLoginMutate } = kakaoLoginMutation();
 
   const onClickKakoLogin = () => {
