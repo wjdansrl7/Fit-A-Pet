@@ -11,9 +11,18 @@ import CustomText from '@components/CustomText/CustomText';
 import CustomModal from '@components/CustomModal/CustomModal';
 import CustomButton from '@components/CustomButton/CustomButton';
 import { authNavigations } from '@src/constants';
+import useAuth from '@hooks/queries/useAuth';
 
 function MyInfoScreen({ navigation }) {
   const [isModalVisible, setModalVisible] = useState(false);
+
+  const { kakaoLogoutMutation } = useAuth();
+  // const { mutate: kakaoLoginMutate } = kakaoLoginMutation();
+
+  const onClickKakaoLogout = () => {
+    console.log('logout click');
+    kakaoLogoutMutation.mutate();
+  };
 
   const userInfo = {
     userName: '장성일',
@@ -207,10 +216,7 @@ function MyInfoScreen({ navigation }) {
         </View>
         {/* 로그아웃 */}
         <View style={styles.logoutButtonContainer}>
-          <TouchableOpacity
-            onPress={() => navigation.navigate(authNavigations.LOGOUT)}
-            activeOpacity={0.5}
-          >
+          <TouchableOpacity onPress={onClickKakaoLogout} activeOpacity={0.5}>
             <CustomText style={styles.logoutButton}>로그아웃</CustomText>
           </TouchableOpacity>
         </View>

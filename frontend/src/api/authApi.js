@@ -1,5 +1,6 @@
 import axiosInstance from './axios';
 import { login } from '@react-native-seoul/kakao-login';
+import { getEncryptStorage } from '@src/utils/encryptStorage';
 
 // 1. 카카오 로그인
 const postKakaoLogin = async () => {
@@ -57,7 +58,19 @@ const postAccessToken = async () => {
 
 // 3. 로그아웃 api
 const postLogout = async () => {
-  await axiosInstance.post('/auth/logout');
+  const refreshToken = await getEncryptStorage('refreshToken');
+  console.log('postLogout_refreshToken :', refreshToken);
+  const { data } = await axiosInstance.post(
+    '/auth/logout',
+    {},
+    {
+      headers: {
+        Authorization: `Bearer ${refreshToken}`,
+      },
+    }
+  );
+  console.log('postLogout: ', data);
+  return data;
 };
 export { postKakaoLogin, postAccessToken, postLogout, getProfile };
 // export { postKakaoLogin, getProfile, getAccessToken, logout };

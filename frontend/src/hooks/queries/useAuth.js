@@ -8,10 +8,14 @@ import {
 } from '@src/api/authApi';
 import { removeEncryptStorage } from '@src/utils';
 import { setHeader, removeHeader } from '@src/utils/header';
+import { setEncryptStorage } from '@src/utils';
 import { useQuery, useMutation } from '@tanstack/react-query';
 import queryClient from '@api/queryClient';
+import { useNavigation } from '@react-navigation/native';
 
 function useKakaoLogin() {
+  const navigation = useNavigation();
+
   return useMutation({
     mutationFn: postKakaoLogin,
     onSuccess: (data) => {
@@ -19,7 +23,8 @@ function useKakaoLogin() {
       console.log('accessToken: ', data.accessToken);
       setHeader('Authorization', `Bearer ${data.accessToken}`);
       setEncryptStorage('refreshToken', data.refreshToken);
-      // navigation.navigate('Main');
+      setEncryptStorage('loginStatus', true);
+      navigation.navigate('Main');
     },
     onSettled: () => {
       // queryClient.refetchQueries({ queryKey: ['auth', 'getAccessToken'] });
@@ -64,11 +69,18 @@ function useGetProfile() {
 }
 
 function usePostLogout() {
+  const navigation = useNavigation();
+
   return useMutation({
     mutationFn: postLogout,
     onSuccess: () => {
       removeHeader('Authorization');
       removeEncryptStorage('refreshToken');
+      removeEncryptStorage('loginStatus');
+      navigation.navigate('AuthHome');
+    },
+    onError: (error) => {
+      console.log('usePostLogout에러 : ', error); // 실패 시 헤더와 스토리지 제거
     },
   });
 }
@@ -89,23 +101,24 @@ function usePostLogout() {
 // export default useAuth;
 function useAuth() {
   const refreshTokenMutation = usePostRefreshToken();
-  // const { data } = useGetProfile();
-  // console.log('test', data);
+  console.log('useAuth_refreshTokenMutation', refreshTokenMutation.isSuccess);
   // const getProfileQuery = useGetProfile({
   //   // enabled: refreshTokenMutation.isSuccess,
   // });
   // console.log('s', getProfileQuery);
   // const isLogin = refreshTokenMutation.isSuccess;
-  const isLogin = refreshTokenMutation.isSuccess;
   // console.log('isLogin: ', isLogin);
   const kakaoLoginMutation = useKakaoLogin();
+  const isLogin = kakaoLoginMutation.isSuccess;
+  console.log('useAuth_kakaoLoginMutation_isLogin', isLogin);
+
   // const isLoginLoading = refreshTokenQuery.isPending;
   const kakaoLogoutMutation = usePostLogout();
 
   // return { kakaoLoginMutation, isLogin, kakaoLogoutMutation };
   // return { kakaoLoginMutation, isLogin, getProfileQuery, kakaoLogoutMutation };
   // return { kakaoLoginMutation, isLogin, getProfileQuery };
-  return { kakaoLoginMutation, isLogin };
+  return { kakaoLoginMutation, isLogin, kakaoLogoutMutation };
   // return { kakaoLoginMutation };
 }
 
