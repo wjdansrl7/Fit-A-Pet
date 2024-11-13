@@ -6,23 +6,23 @@ const petImages = {
   },
   사자: {
     알: require('@assets/pets/lion_egg.png'),
-    준성체: require('@assets/pets/egg_gray_1.png'),
-    성체: require('@assets/pets/egg_gray_1.png'),
+    준성체: require('@assets/pets/lion_egg.png'),
+    성체: require('@assets/pets/lion_egg.png'),
   },
   친칠라: {
-    알: require('@assets/pets/lion_egg.png'),
-    준성체: require('@assets/pets/egg_gray_1.png'),
-    성체: require('@assets/pets/egg_gray_1.png'),
+    알: require('@assets/pets/chinchilla_egg.png'),
+    준성체: require('@assets/pets/chinchilla_egg.png'),
+    성체: require('@assets/pets/chinchilla_egg.png'),
   },
   족제비: {
-    알: require('@assets/pets/lion_egg.png'),
-    준성체: require('@assets/pets/egg_gray_1.png'),
-    성체: require('@assets/pets/egg_gray_1.png'),
+    알: require('@assets/pets/weasel_egg.png'),
+    준성체: require('@assets/pets/weasel_egg.png'),
+    성체: require('@assets/pets/weasel_egg.png'),
   },
   범고래: {
-    알: require('@assets/pets/lion_egg.png'),
-    준성체: require('@assets/pets/egg_gray_1.png'),
-    성체: require('@assets/pets/egg_gray_1.png'),
+    알: require('@assets/pets/whale_egg.png'),
+    준성체: require('@assets/pets/whale_egg.png'),
+    성체: require('@assets/pets/whale_egg.png'),
   },
 };
 

@@ -9,7 +9,7 @@ function DetailEvolutionStage({ species, status }) {
 
   const getEvolutionImage = (stage) => {
     if (stages.indexOf(stage) > stages.indexOf(status)) {
-      return require('@assets/pets/unknown_level.png');
+      return require('@assets/pets/unknown_level_mark.png');
     }
     return petEvolutionStages[stage];
   };
