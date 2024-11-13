@@ -12,8 +12,11 @@ import { setEncryptStorage, getEncryptStorage } from '@src/utils';
 import { useQuery, useMutation } from '@tanstack/react-query';
 import queryClient from '@api/queryClient';
 import { useNavigation } from '@react-navigation/native';
+import useAuthDataStore from '@src/stores/authDataStore';
 
 function useKakaoLogin() {
+  const { loginStatus, setAuthData, clearAuthData } = useAuthDataStore();
+
   const navigation = useNavigation();
 
   return useMutation({
@@ -23,7 +26,8 @@ function useKakaoLogin() {
       console.log('accessToken: ', data.accessToken);
       setHeader('Authorization', `Bearer ${data.accessToken}`);
       setEncryptStorage('refreshToken', data.refreshToken);
-      setEncryptStorage('loginStatus', true);
+      setAuthData(true);
+      // setEncryptStorage('loginStatus', true);
       navigation.navigate('Main');
     },
     onSettled: () => {
@@ -41,11 +45,13 @@ function usePostRefreshToken() {
       console.log('usePostRefreshToken_accessToken: ', data.accessToken);
       setHeader('Authorization', `Bearer ${data.accessToken}`);
       setEncryptStorage('refreshToken', data.refreshToken);
+      setAuthData(true);
     },
     onError: (error) => {
       console.log('usePostRefreshToken에러: ', error); // 실패 시 헤더와 스토리지 제거
       removeHeader('Authorization');
       removeEncryptStorage('refreshToken');
+      setAuthData(false);
     },
   });
 }
@@ -74,13 +80,14 @@ function usePostLogout() {
   return useMutation({
     mutationFn: postLogout,
     onSuccess: () => {
-      console.log('로그아웃전_refreshToken', getEncryptStorage('refreshToken'));
-      console.log('로그아웃전_loginStatus', getEncryptStorage('loginStatus'));
+      // console.log('로그아웃전_refreshToken', getEncryptStorage('refreshToken'));
+      // console.log('로그아웃전_loginStatus', getEncryptStorage('loginStatus'));
       removeHeader('Authorization');
       removeEncryptStorage('refreshToken');
-      removeEncryptStorage('loginStatus');
-      console.log('로그아웃_refreshToken', getEncryptStorage('refreshToken'));
-      console.log('로그아웃_loginStatus', getEncryptStorage('loginStatus'));
+      setAuthData(false);
+      // removeEncryptStorage('loginStatus');
+      // console.log('로그아웃_refreshToken', getEncryptStorage('refreshToken'));
+      // console.log('로그아웃_loginStatus', getEncryptStorage('loginStatus'));
       navigation.navigate('AuthHome');
     },
     onError: (error) => {

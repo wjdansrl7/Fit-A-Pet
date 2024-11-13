@@ -5,24 +5,27 @@ import AuthStackNavigator from '../stack/AuthStackNavigator';
 import { colors } from '@constants/colors';
 import useAuth from '@hooks/queries/useAuth';
 import { getEncryptStorage } from '@src/utils';
+import useAuthDataStore from '@src/stores/authDataStore';
 
 function RootNavigator() {
+  const { loginStatus } = useAuthDataStore();
+
   const { refreshTokenMutation } = useAuth();
 
-  // const loginStatus = getEncryptStorage('loginStatus');
-  const [isLogin, setIsLogin] = useState(getEncryptStorage('loginStatus'));
-  // const isLogin = false;
-  console.log('loginStatus: ', getEncryptStorage('loginStatus'));
+  const [isLogin, setIsLogin] = useState(loginStatus);
+  console.log('RootNavigator에서 isLogin: ', isLogin);
   const [loading, setLoading] = useState(true); // 로딩 상태 관리
 
   // isLogin 상태가 결정되었을 때 로딩 종료
   useEffect(() => {
     refreshTokenMutation.mutate();
-    if (isLogin) {
+
+    if (loginStatus != undefined) {
       setLoading(false);
+      setIsLogin(loginStatus);
     }
     // setIsLogin(loginStatus);
-  }, [isLogin]);
+  }, [loginStatus]);
 
   // 로딩 중일 때 보여줄 UI
   if (loading) {
