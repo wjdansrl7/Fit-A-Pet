@@ -9,10 +9,6 @@ import CustomText from '@components/CustomText/CustomText';
 import CustomButton from '@components/CustomButton/CustomButton';
 import { petIdImages } from '@constants/petImage';
 
-import AnimatedSprite from '@components/AnimatedSprite/AnimatedSprite';
-import spriteData from '@assets/pets/lion_3_sprite.json';
-import spriteImage from '@assets/pets/lion_3_sprite.png';
-
 import {
   useGuildInfo,
   useMemberInfo,

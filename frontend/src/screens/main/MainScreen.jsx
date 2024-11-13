@@ -23,8 +23,10 @@ import CustomText from '@components/CustomText/CustomText';
 import CustomModal from '@components/CustomModal/CustomModal';
 
 import { colors } from '@constants/colors';
-import { petImages } from '@constants/petImage';
+import { petImages, petSpriteImages } from '@constants/petImage';
 import { useMainPetInfo, useUpdateNickname } from '@hooks/queries/usePet';
+
+import AnimatedSprite from '@components/AnimatedSprite/AnimatedSprite';
 
 function MainScreen({ navigation }) {
   const [isModalVisible, setModalVisible] = useState(false);
@@ -56,13 +58,32 @@ function MainScreen({ navigation }) {
     return <Text>Error occurred: {error.message}</Text>;
   }
 
-  const petImage =
-    // 대표 이미지 로딩
-    petImages[mainPetInfo.petType]?.[mainPetInfo.petStatus] || null;
+  // const petImage =
+  //   // 대표 이미지 로딩
+  //   petImages[mainPetInfo.petType]?.[mainPetInfo.petStatus] || null;
+
+  const petSpriteImage =
+    petSpriteImages[mainPetInfo.petType]?.[mainPetInfo.petStatus] || null;
+
+  const petSpriteData = require('@assets/pets/sprite/sprite.json');
+
+  // 스프라이트 관련 코드
+  const frames = Object.values(petSpriteData.frames).map((frame) => ({
+    x: frame.frame.x,
+    y: frame.frame.y,
+    w: frame.frame.w,
+    h: frame.frame.h,
+    duration: frame.duration,
+  }));
+  const animations = {
+    walk: [0, 1, 0],
+    // 적당히 조절 해야할듯, 아님 동물마다 저장을 하던가
+  };
 
   return (
     <View style={styles.container}>
       {/* 상단 - 레벨 및 진행 상태 */}
+
       <View style={styles.header}>
         <View></View>
         <CustomText style={styles.petName}>
@@ -127,11 +148,22 @@ function MainScreen({ navigation }) {
       {/* 중앙 - 펫 */}
       <View style={styles.petContainer}>
         {/* 이미지 상수처리 끝낸 후 바꾸기 */}
-        <Image source={petImage} style={styles.petImage} />
-        {/* <Image
-          source={require('@assets/pets/beluga_3.png')}
-          style={styles.petImage}
-        /> */}
+        {/* <Image source={petImage} style={styles.petImage} /> */}
+
+        {/* 스프라이트 애니메이션으로 대체 */}
+        <AnimatedSprite
+          source={petSpriteImage} // 소스
+          spriteSheetWidth={256} // 실제 스프라이트 크기
+          spriteSheetHeight={512}
+          width={300} // 프레임의 너비
+          height={300} // 프레임의 높이
+          frames={frames} // 이건 거의 디폴트임
+          animations={animations} // 이걸로 움직이는 화면 조절
+          defaultAnimationName="walk" // 이건 해놔야 연동됨
+          inLoop={true} // 루프
+          autoPlay={true} // 자동시작
+          frameRate={5} // 움직이는 속도
+        />
       </View>
 
       {/* 우측 메뉴 */}
@@ -230,7 +262,7 @@ const styles = StyleSheet.create({
   petImage: {
     width: '100%',
     height: '100%',
-    // backgroundColor: 'tomato',
+    backgroundColor: 'tomato',
   },
 
   rightMenu: {

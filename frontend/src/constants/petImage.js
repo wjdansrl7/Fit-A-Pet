@@ -26,6 +26,34 @@ const petImages = {
   },
 };
 
+const petSpriteImages = {
+  벨루가: {
+    알: require('@assets/pets/sprite/lion_egg_sprite.png'),
+    준성체: require('@assets/pets/sprite/lion_2_sprite.png'),
+    성체: require('@assets/pets/sprite/lion_3_sprite.png'),
+  },
+  사자: {
+    알: require('@assets/pets/sprite/lion_egg_sprite.png'),
+    준성체: require('@assets/pets/sprite/lion_2_sprite.png'),
+    성체: require('@assets/pets/sprite/lion_3_sprite.png'),
+  },
+  친칠라: {
+    알: require('@assets/pets/sprite/lion_egg_sprite.png'),
+    준성체: require('@assets/pets/sprite/lion_2_sprite.png'),
+    성체: require('@assets/pets/sprite/lion_3_sprite.png'),
+  },
+  족제비: {
+    알: require('@assets/pets/sprite/lion_egg_sprite.png'),
+    준성체: require('@assets/pets/sprite/lion_2_sprite.png'),
+    성체: require('@assets/pets/sprite/lion_3_sprite.png'),
+  },
+  범고래: {
+    알: require('@assets/pets/sprite/lion_egg_sprite.png'),
+    준성체: require('@assets/pets/sprite/lion_2_sprite.png'),
+    성체: require('@assets/pets/sprite/lion_3_sprite.png'),
+  },
+};
+
 const petIdImages = {
   1: require('@assets/pets/beluga_egg.png'),
   2: require('@assets/pets/beluga_2.png'),
@@ -44,4 +72,4 @@ const petIdImages = {
   15: require('@assets/pets/whale_egg.png'),
 };
 
-export { petImages, petIdImages };
+export { petImages, petIdImages, petSpriteImages };
