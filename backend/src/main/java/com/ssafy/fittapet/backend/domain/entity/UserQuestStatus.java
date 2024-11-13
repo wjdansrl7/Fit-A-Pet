@@ -30,6 +30,7 @@ public class UserQuestStatus {
     public UserQuestStatus(Boolean questStatus, GuildQuest guildQuest, User user) {
         this.questStatus = questStatus;
         this.guildQuest = guildQuest;
+        this.user = user;
     }
 
     /**
