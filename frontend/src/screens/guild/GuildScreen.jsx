@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useRef, useState, useEffect } from 'react';
 import { StyleSheet, View, TouchableOpacity, Image } from 'react-native';
 import TreasureBox from '@assets/backgrounds/guild/TreasureBox.png';
 import GuildQuestModal from './GuildQuestModal';
@@ -7,9 +7,11 @@ import GuildByeModal from './GuildByeModal';
 
 import CustomText from '@components/CustomText/CustomText';
 import CustomButton from '@components/CustomButton/CustomButton';
+import { petIdImages } from '@constants/petImage';
 
-import spriteData from '@assets/pets/lion_3.json';
-import spriteImage from '@assets/pets/lion_3.png';
+import AnimatedSprite from '@components/AnimatedSprite/AnimatedSprite';
+import spriteData from '@assets/pets/lion_3_sprite.json';
+import spriteImage from '@assets/pets/lion_3_sprite.png';
 
 import {
   useGuildInfo,
@@ -31,17 +33,6 @@ function GuildScreen({ navigation, route }) {
   console.log('길드정보', guildInfo); // 리더 아이디로 조건 달아야해
   console.log('멤버', memberInfo);
   const [quest, setQuest] = useState(questInfo);
-  console.log('퀘스트', quest);
-  console.log(questInfo);
-  // const [frameIndex, setFrameIndex] = useState(0);
-
-  const frames = Object.values(spriteData.frames).map((frame) => ({
-    x: frame.frame.x,
-    y: frame.frame.y,
-    w: frame.frame.w,
-    h: frame.frame.h,
-    duration: frame.duration,
-  }));
 
   const guildName = guildInfo?.guildName;
   const { mutate: chooseQuest } = useChooseQuest();
@@ -68,6 +59,7 @@ function GuildScreen({ navigation, route }) {
     byeGuild(guildId);
     navigation.navigate('Map');
   };
+
   return (
     <View style={styles.container}>
       {/* 추가 기능 */}
@@ -101,18 +93,10 @@ function GuildScreen({ navigation, route }) {
             >
               {member ? (
                 <Image
-                  source={{ uri: member.image }}
-                  style={styles.memberImage}
+                  source={petIdImages[member.petId]}
+                  style={styles.petImage}
                 />
               ) : (
-                // <Sprite
-                //   source={spriteImage}
-                //   width={256}
-                //   height={256}
-                //   spriteSheetWidth={256}
-                //   spriteSheetHeight={768}
-                // />
-
                 <CustomText style={styles.placeholderImageText}>+</CustomText>
               )}
             </TouchableOpacity>
@@ -222,11 +206,10 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center',
   },
-  memberImage: {
-    width: 50,
-    height: 50,
-    borderRadius: 25,
-    marginBottom: 5,
+  petImage: {
+    marginTop: 10,
+    width: 80,
+    height: 80,
   },
   memberName: {
     fontSize: 12,
