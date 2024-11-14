@@ -47,8 +47,7 @@ function QuestPersonalFrame({ quests, seg }) {
               ) : (
                 <View style={[styles[`rewardCircle${seg}`]]}>
                   <CustomText style={styles.questName}>
-                    {' '}
-                    {quest.questReward}
+                    {/* {' '} */}+{quest.questReward}
                   </CustomText>
                 </View>
               )}
