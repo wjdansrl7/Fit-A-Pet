@@ -20,20 +20,23 @@ class FoodLensModule(reactContext: ReactApplicationContext) : ReactContextBaseJa
 
     @ReactMethod
     fun recognizeFood(imageData: String, promise: Promise) {
-        val byteData = Base64.decode(imageData, Base64.DEFAULT)
+        try {
+            val byteData = Base64.decode(imageData, Base64.DEFAULT)
+            val foodLensCoreService = FoodLensCore.createFoodLensService(this.reactApplicationContext, FoodLensType.FoodLens)
 
-        // FoodLens SDK 초기화 및 인식 요청
-        val foodLensCoreService = FoodLensCore.createFoodLensService(reactApplicationContext, FoodLensType.FoodLens)
-        foodLensCoreService.predict(byteData, object : RecognitionResultHandler {
-            override fun onSuccess(result: RecognitionResult?) {
-                // 인식 결과를 JSON으로 변환하여 전달
-                val jsonResult = result?.toJSONString()
-                promise.resolve(jsonResult)
-            }
+            foodLensCoreService.predict(byteData, object : RecognitionResultHandler {
+                override fun onSuccess(result: RecognitionResult?) {
+                    val jsonResult = result?.toJSONString() ?: "{}"
+                    promise.resolve(jsonResult) // 성공 시 Promise 반환
+                }
 
-            override fun onError(errorReason: BaseError?) {
-                promise.reject("Recognition Error", errorReason?.getMessage())
-            }
-        })
+                override fun onError(errorReason: BaseError?) {
+                    promise.reject("Recognition Error", errorReason?.getMessage())
+                }
+            })
+        } catch (e: Exception) {
+            e.printStackTrace()
+            promise.reject("Native Code Exception", e) // 오류 시 Promise 반환
+        }
     }
 }

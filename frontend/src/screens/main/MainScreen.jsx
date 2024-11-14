@@ -93,19 +93,25 @@ function MainScreen({ navigation }) {
         } else if (response.errorCode) {
           console.error("ImagePicker Error: ", response.errorMessage);
         } else if (response.assets && response.assets[0]) {
+            console.log("lets go")
           const imageUri = response.assets[0].uri;
           const byteData = { uri: imageUri, type: 'image/jpeg', name: 'photo.jpg' };
-
+          console.log(imageUri)
           // 비동기 함수 호출을 then/catch로 처리
-          FoodLensModule.recognizeFood(imageUri)
-            .then((result) => {
-              console.log("Recognition Result:", result);
-              Alert.alert("Recognition Successful", `Detected food: ${result}`);
-            })
-            .catch((error) => {
-              console.error("Recognition Error:", error);
-              Alert.alert("Recognition Error", "Failed to recognize food.");
-            });
+//           try {
+//             FoodLensModule.recognizeFood(imageUri)
+//               .then((result) => {
+//                 console.log("Recognition Result:", result);
+//                 Alert.alert("Recognition Successful", `Detected food: ${result}`);
+//               })
+//               .catch((error) => {
+//                 console.error("Recognition Error:", error);
+//                 Alert.alert("Recognition Error", "Failed to recognize food.");
+//               });
+//           } catch (error) {
+//             console.error("Native Module Error:", error);
+//             Alert.alert("Error", "Failed to process the image.");
+//           }
         }
       }
     );
@@ -122,7 +128,7 @@ function MainScreen({ navigation }) {
       <View style={styles.header}>
         <View></View>
         <CustomText style={styles.petName}>
-          {mainPetInfo.petNickname}
+          {mainPetInfo?.petNickname}
         </CustomText>
 
         {/* 펫 닉네임 수정 */}
@@ -142,7 +148,7 @@ function MainScreen({ navigation }) {
           title="닉네임 수정"
           onClose={
             () => {
-              setPetNickname(mainPetInfo.petNickname);
+              setPetNickname(mainPetInfo?.petNickname);
               setModalVisible(false);
             } // 모달을 닫는 함수
           }
@@ -165,13 +171,13 @@ function MainScreen({ navigation }) {
 
         <View style={styles.levelContainer}>
           <CustomText style={styles.levelText}>
-            {mainPetInfo.petLevel}
+            {mainPetInfo?.petLevel}
           </CustomText>
           <View style={styles.progressBar}>
             <View
               style={[
                 styles.progressFill,
-                { width: `${mainPetInfo.petPercent}%` },
+                { width: `${mainPetInfo?.petPercent}%` },
               ]}
             />
           </View>
