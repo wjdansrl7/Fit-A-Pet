@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useRef, useState, useEffect } from 'react';
 import { StyleSheet, View, TouchableOpacity, Image } from 'react-native';
 import TreasureBox from '@assets/backgrounds/guild/TreasureBox.png';
 import GuildQuestModal from './GuildQuestModal';
@@ -7,6 +7,7 @@ import GuildByeModal from './GuildByeModal';
 
 import CustomText from '@components/CustomText/CustomText';
 import CustomButton from '@components/CustomButton/CustomButton';
+import { petIdImages } from '@constants/petImage';
 
 import {
   useGuildInfo,
@@ -63,6 +64,7 @@ function GuildScreen({ navigation, route }) {
       },
     });
   };
+
   return (
     <View style={styles.container}>
       {/* 추가 기능 */}
@@ -94,8 +96,8 @@ function GuildScreen({ navigation, route }) {
             >
               {member ? (
                 <Image
-                  source={{ uri: member.image }}
-                  style={styles.memberImage}
+                  source={petIdImages[member.petId]}
+                  style={styles.petImage}
                 />
               ) : (
                 <CustomText style={styles.placeholderImageText}>+</CustomText>
@@ -209,11 +211,10 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center',
   },
-  memberImage: {
-    width: 50,
-    height: 50,
-    borderRadius: 25,
-    marginBottom: 5,
+  petImage: {
+    marginTop: 10,
+    width: 80,
+    height: 80,
   },
   memberName: {
     fontSize: 12,

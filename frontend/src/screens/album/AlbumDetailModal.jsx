@@ -11,12 +11,12 @@ import {
 import Modal from 'react-native-modal';
 import CustomText from '@components/CustomText/CustomText';
 import DetailEvolutionStage from './DetailEvolutionStage';
-
 import { petImages } from '@constants/petImage';
+import { useUpdateMain } from '@hooks/queries/usePet';
 
-// 일단 도감 전체에서 받아온 데이터 사용
-// 실제로는 도감 상세 API 호출
 const AlbumDetailModal = ({ isVisible, onClose, pet }) => {
+  const { mutate } = useUpdateMain();
+
   if (!pet) {
     return null;
   }
@@ -64,7 +64,10 @@ const AlbumDetailModal = ({ isVisible, onClose, pet }) => {
               styles.button,
               pet.main ? { backgroundColor: 'gray' } : null,
             ]}
-            onPress={onClose}
+            onPress={() => {
+              mutate(pet.petBookId);
+              onClose();
+            }}
             disabled={pet.main}
           >
             <CustomText style={styles.buttonText}>
