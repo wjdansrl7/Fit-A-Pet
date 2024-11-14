@@ -14,9 +14,36 @@ import android.util.Base64
 
 class FoodLensModule(reactContext: ReactApplicationContext) : ReactContextBaseJavaModule(reactContext) {
 
+    private lateinit var recognitionResult: RecognitionResult
+
     override fun getName(): String {
         return "FoodLensModule"  // JavaScript에서 사용할 이름
     }
+
+    //Create FoodLens Service
+    private val foodLensCoreService by lazy {
+        FoodLensCore.createFoodLensService(reactContext, FoodLensType.FoodLens)
+    }
+
+    private fun startFoodLensCore(byteData: ByteArray) {
+        foodLensCoreService.predict(byteData, object : RecognitionResultHandler {
+            override fun onSuccess(result: RecognitionResult?) {
+                result?.let {
+                    setRecognitionResultData(result)
+                }
+            }
+
+            override fun onError(errorReason: BaseError?) {
+                // FoodLens 시작 오류 시 코드 필요
+            }
+        })
+    }
+
+    private fun setRecognitionResultData(resultData: RecognitionResult) {
+        recognitionResult = resultData
+        var json = recognitionResult.toJSONString()
+    }
+
 
     @ReactMethod
     fun recognizeFood(imageData: String, promise: Promise) {

@@ -1,4 +1,3 @@
-// import { FoodLensCore, FoodLensType, NetworkService } from 'foodlens-sdk'; //ndk
 import {
   View,
   Text,
@@ -16,7 +15,6 @@ import React, { useCallback, useState, useEffect } from 'react';
 
 import { launchCamera } from 'react-native-image-picker'; //ndk
 const { FoodLensModule } = NativeModules;
-
 
 import MenuButton from './MenuButton';
 import CustomText from '@components/CustomText/CustomText';
@@ -86,6 +84,7 @@ function MainScreen({ navigation }) {
       {
         mediaType: 'photo',
         quality: 1,
+        includeBase64: true
       },
       (response) => {
         if (response.didCancel) {
@@ -93,25 +92,24 @@ function MainScreen({ navigation }) {
         } else if (response.errorCode) {
           console.error("ImagePicker Error: ", response.errorMessage);
         } else if (response.assets && response.assets[0]) {
-            console.log("lets go")
           const imageUri = response.assets[0].uri;
+          const imageBase64 = response.assets[0].base64;
           const byteData = { uri: imageUri, type: 'image/jpeg', name: 'photo.jpg' };
-          console.log(imageUri)
           // 비동기 함수 호출을 then/catch로 처리
-//           try {
-//             FoodLensModule.recognizeFood(imageUri)
-//               .then((result) => {
-//                 console.log("Recognition Result:", result);
-//                 Alert.alert("Recognition Successful", `Detected food: ${result}`);
-//               })
-//               .catch((error) => {
-//                 console.error("Recognition Error:", error);
-//                 Alert.alert("Recognition Error", "Failed to recognize food.");
-//               });
-//           } catch (error) {
-//             console.error("Native Module Error:", error);
-//             Alert.alert("Error", "Failed to process the image.");
-//           }
+          try {
+            FoodLensModule.recognizeFood(imageBase64)
+              .then((result) => {
+                console.log("Recognition Result:", result);
+                Alert.alert("Recognition Successful", `Detected food: ${result}`);
+              })
+              .catch((error) => {
+                console.error("Recognition Error:", error);
+                Alert.alert("Recognition Error", "Failed to recognize food.");
+              });
+          } catch (error) {
+            console.error("Native Module Error:", error);
+            Alert.alert("Error", "Failed to process the image.");
+          }
         }
       }
     );
