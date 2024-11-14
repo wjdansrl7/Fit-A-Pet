@@ -3,7 +3,7 @@ import EncryptedStorage from 'react-native-encrypted-storage';
 const setEncryptStorage = async (key, data) => {
   await EncryptedStorage.setItem(key, JSON.stringify(data));
   // await EncryptStorage.setItem(key, data);
-  console.log(data);
+  // console.log(data);
 };
 
 const getEncryptStorage = async (key) => {

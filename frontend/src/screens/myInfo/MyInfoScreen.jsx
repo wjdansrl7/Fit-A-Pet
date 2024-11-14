@@ -20,7 +20,7 @@ function MyInfoScreen({ navigation }) {
   // const { mutate: kakaoLoginMutate } = kakaoLoginMutation();
 
   const onClickKakaoLogout = () => {
-    console.log('logout click');
+    // console.log('logout click');
     kakaoLogoutMutation.mutate();
   };
 

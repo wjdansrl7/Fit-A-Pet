@@ -15,7 +15,7 @@ import { useNavigation } from '@react-navigation/native';
 import useAuthDataStore from '@src/stores/authDataStore';
 
 function useKakaoLogin() {
-  const { loginStatus, setAuthData, clearAuthData } = useAuthDataStore();
+  const { setAuthData } = useAuthDataStore();
 
   const navigation = useNavigation();
 
@@ -23,7 +23,7 @@ function useKakaoLogin() {
     mutationFn: postKakaoLogin,
     onSuccess: (data) => {
       // onSuccess: ({ accessToken, refreshToken }) => {
-      console.log('accessToken: ', data.accessToken);
+      // console.log('accessToken: ', data.accessToken);
       setHeader('Authorization', `Bearer ${data.accessToken}`);
       setEncryptStorage('refreshToken', data.refreshToken);
       setAuthData(true);
@@ -42,13 +42,13 @@ function usePostRefreshToken() {
     mutationFn: postAccessToken,
     onSuccess: (data) => {
       // 성공적으로 토큰을 받아왔을 때 헤더와 스토리지 설정
-      console.log('usePostRefreshToken_accessToken: ', data.accessToken);
+      // console.log('usePostRefreshToken_accessToken: ', data.accessToken);
       setHeader('Authorization', `Bearer ${data.accessToken}`);
       setEncryptStorage('refreshToken', data.refreshToken);
       setAuthData(true);
     },
     onError: (error) => {
-      console.log('usePostRefreshToken에러: ', error); // 실패 시 헤더와 스토리지 제거
+      // console.log('usePostRefreshToken에러: ', error); // 실패 시 헤더와 스토리지 제거
       removeHeader('Authorization');
       removeEncryptStorage('refreshToken');
       setAuthData(false);
@@ -75,6 +75,7 @@ function useGetProfile() {
 }
 
 function usePostLogout() {
+  const { setAuthData } = useAuthDataStore();
   const navigation = useNavigation();
 
   return useMutation({
@@ -112,7 +113,7 @@ function usePostLogout() {
 // export default useAuth;
 function useAuth() {
   const refreshTokenMutation = usePostRefreshToken();
-  console.log('useAuth_refreshTokenMutation', refreshTokenMutation.isSuccess);
+  // console.log('useAuth_refreshTokenMutation', refreshTokenMutation.isSuccess);
   // const getProfileQuery = useGetProfile({
   //   // enabled: refreshTokenMutation.isSuccess,
   // });
@@ -121,7 +122,7 @@ function useAuth() {
   // console.log('isLogin: ', isLogin);
   const kakaoLoginMutation = useKakaoLogin();
   const isLogin = kakaoLoginMutation.isSuccess;
-  console.log('useAuth_kakaoLoginMutation_isLogin', isLogin);
+  // console.log('useAuth_kakaoLoginMutation_isLogin', isLogin);
 
   // const isLoginLoading = refreshTokenQuery.isPending;
   const kakaoLogoutMutation = usePostLogout();

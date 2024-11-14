@@ -13,7 +13,7 @@ function RootNavigator() {
   const { refreshTokenMutation } = useAuth();
 
   const [isLogin, setIsLogin] = useState(loginStatus);
-  console.log('RootNavigator에서 isLogin: ', isLogin);
+  // console.log('RootNavigator에서 isLogin: ', isLogin);
   const [loading, setLoading] = useState(true); // 로딩 상태 관리
 
   // isLogin 상태가 결정되었을 때 로딩 종료

@@ -16,7 +16,7 @@ function AuthHomeScreen({ navigation }) {
   // const { mutate: kakaoLoginMutate } = kakaoLoginMutation();
 
   const onClickKakoLogin = () => {
-    console.log('kakao click');
+    // console.log('kakao click');
     kakaoLoginMutation.mutate();
   };
 
