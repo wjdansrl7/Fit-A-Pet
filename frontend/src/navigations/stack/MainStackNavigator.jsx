@@ -65,11 +65,11 @@ const MainStackNavigator = () => {
         component={GuildScreen}
         options={{ title: '길드' }}
       />
-      <Stack.Screen
+      {/* <Stack.Screen
         name={authNavigations.AUTH_HOME}
         component={AuthHomeScreen}
         options={{ title: '로고와 로그인' }}
-      />
+      /> */}
       <Stack.Screen
         name={authNavigations.KAKAO_LOGIN}
         component={KakaoLoginScreen}
