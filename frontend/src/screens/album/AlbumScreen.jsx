@@ -10,8 +10,8 @@ import AlbumFrame from './AlbumFrame';
 import AlbumDetailModal from './AlbumDetailModal';
 import { usePetAlbumList } from '@hooks/queries/usePet';
 import { colors } from '@constants/colors';
-import HealthData from './HealthData';
-import { fetchHealthData } from './healthData';
+import HealthData from './HealthData.jsx';
+import { fetchHealthData } from './healthData.js';
 import useHealthDataStore from '@src/stores/healthDataStore';
 
 function AlbumScreen() {
