@@ -51,7 +51,7 @@ function GuildScreen({ navigation, route }) {
   };
 
   const [byeError, setByeError] = useState(null); // 에러 상태 추가
-
+  console.log(guildId);
   const leaveGuild = (guildId) => {
     byeGuild(guildId, {
       onSuccess: () => {
