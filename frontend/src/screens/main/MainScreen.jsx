@@ -10,6 +10,7 @@ import {
   ActivityIndicator,
   Alert,
   Dimensions,
+  ImageBackground,
 } from 'react-native';
 
 import MenuButton from './MenuButton';
@@ -67,6 +68,16 @@ function MainScreen({ navigation }) {
 
   const petSpriteData = require('@assets/pets/sprite/sprite.json');
 
+  // 낮 시간인지 확인
+  const isDayTime = 6 <= new Date().getHours() < 18;
+
+  // 밤 시간 테스트용
+  // const isDayTime = false;
+
+  const backgroundImageSource = isDayTime
+    ? require('@assets/backgrounds/main/sky_day.png')
+    : require('@assets/backgrounds/main/sky_night.png');
+
   // 스프라이트 관련 코드
   const frames = Object.values(petSpriteData.frames).map((frame) => ({
     x: frame.frame.x,
@@ -82,113 +93,123 @@ function MainScreen({ navigation }) {
 
   return (
     <View style={styles.container}>
-      {/* 상단 - 레벨 및 진행 상태 */}
-
-      <View style={styles.header}>
-        <View></View>
-        <CustomText style={styles.petName}>
-          {mainPetInfo.petNickname}
-        </CustomText>
-
-        {/* 펫 닉네임 수정 */}
-        <Pressable
-          style={styles.petNameUpdate}
-          onPress={() => setModalVisible(true)}
-        >
-          <Image
-            source={require('@assets/icons/pencil_icon.png')}
-            style={{ width: 30, height: 30 }}
-          />
-        </Pressable>
-
-        <CustomModal
-          isVisible={isModalVisible}
-          wantClose={true}
-          title="닉네임 수정"
-          onClose={
-            () => {
-              setPetNickname(mainPetInfo.petNickname);
-              setModalVisible(false);
-            } // 모달을 닫는 함수
-          }
-        >
-          <View style={styles.inputContainer}>
-            <TextInput
-              style={styles.input}
-              value={petNickname}
-              onChangeText={setPetNickname}
-              keyboardType="default"
-            />
-          </View>
-
-          <TouchableOpacity
-            activeOpacity={0.8}
-            style={styles.button}
-            onPress={handleUpdateNickname}
-          >
-            <CustomText style={{ color: 'white' }}>변경하기</CustomText>
-          </TouchableOpacity>
-        </CustomModal>
-
-        <View style={styles.levelContainer}>
-          <CustomText style={styles.levelText}>
-            {mainPetInfo.petLevel}
+      <ImageBackground
+        source={backgroundImageSource}
+        style={styles.backgroundImage}
+        resizeMode="cover"
+      >
+        {/* 상단 - 레벨 및 진행 상태 */}
+        <View style={styles.header}>
+          <View></View>
+          <CustomText style={styles.petName}>
+            {mainPetInfo.petNickname}
           </CustomText>
-          <View style={styles.progressBar}>
-            <View
-              style={[
-                styles.progressFill,
-                { width: `${mainPetInfo.petPercent}%` },
-              ]}
+
+          {/* 펫 닉네임 수정 */}
+          <Pressable
+            style={styles.petNameUpdate}
+            onPress={() => setModalVisible(true)}
+          >
+            <Image
+              source={require('@assets/icons/pencil_icon.png')}
+              style={{ width: 30, height: 30 }}
             />
+          </Pressable>
+
+          <CustomModal
+            isVisible={isModalVisible}
+            wantClose={true}
+            title="닉네임 수정"
+            onClose={
+              () => {
+                setPetNickname(mainPetInfo.petNickname);
+                setModalVisible(false);
+              } // 모달을 닫는 함수
+            }
+          >
+            <View style={styles.inputContainer}>
+              <TextInput
+                style={styles.input}
+                value={petNickname}
+                onChangeText={setPetNickname}
+                keyboardType="default"
+              />
+            </View>
+
+            <TouchableOpacity
+              activeOpacity={0.8}
+              style={styles.button}
+              onPress={handleUpdateNickname}
+            >
+              <CustomText style={{ color: 'white' }}>변경하기</CustomText>
+            </TouchableOpacity>
+          </CustomModal>
+
+          <View style={styles.levelContainer}>
+            <CustomText style={styles.levelText}>
+              {mainPetInfo.petLevel}
+            </CustomText>
+            <View style={styles.progressBar}>
+              <View
+                style={[
+                  styles.progressFill,
+                  { width: `${mainPetInfo.petPercent}%` },
+                ]}
+              />
+            </View>
           </View>
         </View>
-      </View>
 
-      {/* 중앙 - 펫 */}
-      <View style={styles.petContainer}>
-        {/* 이미지 상수처리 끝낸 후 바꾸기 */}
-        {/* <Image source={petImage} style={styles.petImage} /> */}
+        {/* 우측 메뉴 */}
+        <View style={styles.rightMenu}>
+          {/* 푸드렌즈 카메라 */}
+          <MenuButton
+            title={'식단기록'}
+            icon={FoodLensIcon}
+            isBlack={isDayTime}
+          ></MenuButton>
+          {/* 퀘스트 모아보기 페이지로 이동 */}
 
-        {/* 스프라이트 애니메이션으로 대체 */}
-        <AnimatedSprite
-          source={petSpriteImage} // 소스
-          spriteSheetWidth={256} // 실제 스프라이트 크기
-          spriteSheetHeight={512}
-          width={300} // 프레임의 너비
-          height={300} // 프레임의 높이
-          frames={frames} // 이건 거의 디폴트임
-          animations={animations} // 이걸로 움직이는 화면 조절
-          defaultAnimationName="walk" // 이건 해놔야 연동됨
-          inLoop={true} // 루프
-          autoPlay={true} // 자동시작
-          frameRate={5} // 움직이는 속도
-        />
-      </View>
+          <Pressable onPress={() => navigation.navigate('Quest')}>
+            <MenuButton
+              title={'퀘스트'}
+              icon={QuestIcon}
+              isBlack={isDayTime}
+            ></MenuButton>
+          </Pressable>
+        </View>
 
-      {/* 우측 메뉴 */}
-      <View style={styles.rightMenu}>
-        {/* 푸드렌즈 카메라 */}
-        <MenuButton title={'식단기록'} icon={FoodLensIcon}></MenuButton>
-        {/* 퀘스트 모아보기 페이지로 이동 */}
+        {/* 중앙 - 펫 */}
+        <View style={styles.petContainer}>
+          {/* 스프라이트 애니메이션으로 대체 */}
+          <AnimatedSprite
+            source={petSpriteImage} // 소스
+            spriteSheetWidth={256} // 실제 스프라이트 크기
+            spriteSheetHeight={512}
+            width={300} // 프레임의 너비
+            height={300} // 프레임의 높이
+            frames={frames} // 이건 거의 디폴트임
+            animations={animations} // 이걸로 움직이는 화면 조절
+            defaultAnimationName="walk" // 이건 해놔야 연동됨
+            inLoop={true} // 루프
+            autoPlay={true} // 자동시작
+            frameRate={5} // 움직이는 속도
+          />
+        </View>
 
-        <Pressable onPress={() => navigation.navigate('Quest')}>
-          <MenuButton title={'퀘스트'} icon={QuestIcon}></MenuButton>
-        </Pressable>
-      </View>
-
-      {/* 하단 메뉴 */}
-      <View style={styles.bottomMenu}>
-        <Pressable onPress={() => navigation.navigate('Map')}>
-          <MenuButton title={'지도'} icon={MapIcon}></MenuButton>
-        </Pressable>
-        <Pressable onPress={() => navigation.navigate('Album')}>
-          <MenuButton title={'도감'} icon={AlbumIcon}></MenuButton>
-        </Pressable>
-        <Pressable onPress={() => navigation.navigate('MyInfo')}>
-          <MenuButton title={'기록보기'} icon={MyInfoIcon}></MenuButton>
-        </Pressable>
-      </View>
+        {/* 하단 메뉴 */}
+        <View style={styles.bottomMenu}>
+          <Pressable onPress={() => navigation.navigate('Map')}>
+            <MenuButton title={'지도'} icon={MapIcon}></MenuButton>
+          </Pressable>
+          <Pressable onPress={() => navigation.navigate('Album')}>
+            <MenuButton title={'도감'} icon={AlbumIcon}></MenuButton>
+          </Pressable>
+          <Pressable onPress={() => navigation.navigate('MyInfo')}>
+            <MenuButton title={'기록보기'} icon={MyInfoIcon}></MenuButton>
+          </Pressable>
+        </View>
+      </ImageBackground>
     </View>
   );
 }
@@ -196,8 +217,18 @@ function MainScreen({ navigation }) {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#C1EFFF', // 배경 하늘색
+    // backgroundColor: '#C1EFFF', // 배경 하늘색
+  },
+  backgroundImage: {
+    flex: 1,
     padding: 20,
+  },
+  backgroundImageGround: {
+    padding: 20,
+    position: 'absolute',
+    bottom: 0,
+    left: 0,
+    right: 0,
   },
   header: {
     justifyContent: 'space-between',
@@ -254,7 +285,7 @@ const styles = StyleSheet.create({
     padding: 10,
     height: Dimensions.get('screen').width - 80,
     position: 'absolute',
-    bottom: 150,
+    bottom: 180,
     left: 40,
     right: 40,
     // backgroundColor: 'rgba(0, 0, 0, 0.2)',

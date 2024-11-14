@@ -19,6 +19,11 @@ function getTodayTimeRange() {
   return { startTime, endTime };
 }
 
+function convertToKST(utcTime) {
+  const date = new Date(utcTime);
+  return date.toLocaleString('ko-KR', { timeZone: 'Asia/Seoul' });
+}
+
 export const fetchHealthData = async () => {
   try {
     const { startTime, endTime } = getTodayTimeRange();
@@ -50,21 +55,29 @@ export const fetchHealthData = async () => {
       },
     });
 
-    // const sleepResponse = await readRecords('SleepSession', {
-    //   timeRangeFilter: {
-    //     operator: 'between',
-    //     startTime: '2024-11-09T20:00:00Z',
-    //     endTime: '2024-11-11T23:59:59Z',
-    //     startZoneOffset: '-8',
-    //   },
-    // });
+    const sleepResponse = await readRecords('SleepSession', {
+      timeRangeFilter: {
+        operator: 'between',
+        startTime: '2024-11-11T20:00:00Z',
+        endTime: endTime,
+        // startZoneOffset: '-8',
+      },
+    });
 
     const [stepRecords] = stepResponse.records;
-    // const [sleepRecords] = sleepResponse.records;
+    const [sleepRecords] = sleepResponse.records;
 
-    // console.log('Health Connect 데이터:', stepRecords);
-    // console.log('원본', sleepResponse);
-    // console.log('Health Connect 데이터:', sleepRecords);
+    const endTimeKST = convertToKST(sleepRecords.endTime);
+    const startTimeKST = convertToKST(sleepRecords.startTime);
+
+    console.log('걸음 데이터:', stepRecords);
+
+    console.log('원본', sleepResponse);
+    console.log('수면 데이터:', sleepRecords);
+
+    console.log('한국 시간으로 변환된 시작 시간:', startTimeKST);
+    console.log('한국 시간으로 변환된 종료 시간:', endTimeKST);
+
     return {
       steps: stepRecords.count,
       sleepHours: 8,
