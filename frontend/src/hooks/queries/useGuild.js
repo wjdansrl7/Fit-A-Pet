@@ -97,6 +97,9 @@ function useChooseQuest() {
       queryClient.invalidateQueries(['guild', 'memberInfo', guildId]);
       queryClient.invalidateQueries(['guild', 'questInfo', guildId]);
     },
+    onError: (error) => {
+      console.error('뭐해요:', error);
+    },
   });
 }
 
