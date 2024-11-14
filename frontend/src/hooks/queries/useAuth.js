@@ -1,65 +1,101 @@
+import { useEffect } from 'react';
 // import { getAccessToken, postKakaoLogin, getProfile } from '@src/api/auth';
-import { getAccessToken, postKakaoLogin, postLogout } from '@src/api/authApi';
+import {
+  postAccessToken,
+  postKakaoLogin,
+  postLogout,
+  getProfile,
+} from '@src/api/authApi';
 import { removeEncryptStorage } from '@src/utils';
 import { setHeader, removeHeader } from '@src/utils/header';
+import { setEncryptStorage, getEncryptStorage } from '@src/utils';
 import { useQuery, useMutation } from '@tanstack/react-query';
-import { useEffect } from 'react';
+import queryClient from '@api/queryClient';
+import { useNavigation } from '@react-navigation/native';
+import useAuthDataStore from '@src/stores/authDataStore';
 
-export const useKakaoLogin = () => {
-  const mutation = useMutation({
+function useKakaoLogin() {
+  const { setAuthData } = useAuthDataStore();
+
+  const navigation = useNavigation();
+
+  return useMutation({
     mutationFn: postKakaoLogin,
-    // onSuccess: ({ data }) => {
-    //   // onSuccess: ({ accessToken, refreshToken }) => {
-    //   setEncryptStorage('refreshToken', data.refreshToken);
-    //   setHeader('Authorization', `Bearer${data.accessToken}`);
-    //   navigation.navigate('Main');
-    // },
-    // onSettled: () => {
-    //   queryClient.refetchQueries({ queryKey: ['auth', 'getAccessToken'] });
-    //   // queryClient.invalidateQueries({ queryKey: ['auth', 'getProfile'] });
-    // },
-    // ...mutationOptions,
-  });
-  return mutation;
-};
-
-export const useGetRefreshToken = () => {
-  const { isSuccess, isLoading, data, isError } = useQuery({
-    queryKey: ['auth', 'getAccessToken'],
-    queryFn: getAccessToken,
-    staleTime: 1000 * 60 * 30 - 1000 * 60 * 3,
-    refetchInterval: 1000 * 60 * 30 - 1000 * 60 * 3,
-    refetchOnReconnect: true,
-    refetchIntervalInBackground: true,
-  });
-
-  useEffect(() => {
-    if (isSuccess) {
+    onSuccess: (data) => {
+      // onSuccess: ({ accessToken, refreshToken }) => {
+      // console.log('accessToken: ', data.accessToken);
       setHeader('Authorization', `Bearer ${data.accessToken}`);
       setEncryptStorage('refreshToken', data.refreshToken);
-    }
-  }, [isSuccess]);
+      setAuthData(true);
+      // setEncryptStorage('loginStatus', true);
+      navigation.navigate('Main');
+    },
+    onSettled: () => {
+      // queryClient.refetchQueries({ queryKey: ['auth', 'getAccessToken'] });
+      // queryClient.invalidateQueries({ queryKey: ['auth', 'getProfile'] });
+    },
+  });
+}
 
-  useEffect(() => {
-    if (isError) {
+function usePostRefreshToken() {
+  return useMutation({
+    mutationFn: postAccessToken,
+    onSuccess: (data) => {
+      // 성공적으로 토큰을 받아왔을 때 헤더와 스토리지 설정
+      // console.log('usePostRefreshToken_accessToken: ', data.accessToken);
+      setHeader('Authorization', `Bearer ${data.accessToken}`);
+      setEncryptStorage('refreshToken', data.refreshToken);
+      setAuthData(true);
+    },
+    onError: (error) => {
+      // console.log('usePostRefreshToken에러: ', error); // 실패 시 헤더와 스토리지 제거
       removeHeader('Authorization');
       removeEncryptStorage('refreshToken');
-    }
-  }, [isError]);
+      setAuthData(false);
+    },
+  });
+}
 
-  return { isSuccess, isLoading, isError };
-};
+// function useGetProfile() {
+//   return useQuery({
+//     queryFn: getProfile,
+//     queryKey: ['auth', 'getProfile'],
+//   });
+// }
+function useGetProfile() {
+  const { isSuccess, data, isLoading, refetch } = useQuery({
+    queryKey: ['auth', 'getProfile'],
+    queryFn: getProfile,
+    staleTime: 0,
+    refetchOnWindowFocus: true,
+    refetchOnReconnect: true,
+  });
 
-export const usePostLogout = ({ navigation }) => {
+  return { isSuccess, data, isLoading, refetch };
+}
+
+function usePostLogout() {
+  const { setAuthData } = useAuthDataStore();
+  const navigation = useNavigation();
+
   return useMutation({
     mutationFn: postLogout,
     onSuccess: () => {
+      // console.log('로그아웃전_refreshToken', getEncryptStorage('refreshToken'));
+      // console.log('로그아웃전_loginStatus', getEncryptStorage('loginStatus'));
       removeHeader('Authorization');
       removeEncryptStorage('refreshToken');
-      navigation.navigate('AuthHomeScreen');
+      setAuthData(false);
+      // removeEncryptStorage('loginStatus');
+      // console.log('로그아웃_refreshToken', getEncryptStorage('refreshToken'));
+      // console.log('로그아웃_loginStatus', getEncryptStorage('loginStatus'));
+      navigation.navigate('AuthHome');
+    },
+    onError: (error) => {
+      console.log('usePostLogout에러 : ', error); // 실패 시 헤더와 스토리지 제거
     },
   });
-};
+}
 
 // function useAuth() {
 //   // const kakaoLoginMutation = useKakaoLogin();
@@ -75,3 +111,32 @@ export const usePostLogout = ({ navigation }) => {
 // }
 
 // export default useAuth;
+function useAuth() {
+  const refreshTokenMutation = usePostRefreshToken();
+  // console.log('useAuth_refreshTokenMutation', refreshTokenMutation.isSuccess);
+  // const getProfileQuery = useGetProfile({
+  //   // enabled: refreshTokenMutation.isSuccess,
+  // });
+  // console.log('s', getProfileQuery);
+  // const isLogin = refreshTokenMutation.isSuccess;
+  // console.log('isLogin: ', isLogin);
+  const kakaoLoginMutation = useKakaoLogin();
+  const isLogin = kakaoLoginMutation.isSuccess;
+  // console.log('useAuth_kakaoLoginMutation_isLogin', isLogin);
+
+  // const isLoginLoading = refreshTokenQuery.isPending;
+  const kakaoLogoutMutation = usePostLogout();
+
+  // return { kakaoLoginMutation, isLogin, kakaoLogoutMutation };
+  // return { kakaoLoginMutation, isLogin, getProfileQuery, kakaoLogoutMutation };
+  // return { kakaoLoginMutation, isLogin, getProfileQuery };
+  return {
+    refreshTokenMutation,
+    kakaoLoginMutation,
+    isLogin,
+    kakaoLogoutMutation,
+  };
+  // return { kakaoLoginMutation };
+}
+
+export default useAuth;

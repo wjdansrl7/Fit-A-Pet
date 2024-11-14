@@ -18,7 +18,7 @@ function KakaoLoginScreen({ navigation }) {
   const signInWithKakao = async () => {
     try {
       const token = await login();
-      console.log('login success ', token.accessToken);
+      // console.log('login success ', token.accessToken);
 
       // 2. accessToken을 포함하여 백엔드로 POST 요청 보내기
       // const response = await axios.post('http://70.12.246.179:8080/auth/kakao', {
@@ -29,7 +29,7 @@ function KakaoLoginScreen({ navigation }) {
         }
       );
 
-      console.log('Response from backend: ', response.data);
+      // console.log('Response from backend: ', response.data);
       setResult(response.data);
       // setResult(JSON.stringify(token));
       navigation.navigate('Main');
