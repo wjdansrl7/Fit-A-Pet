@@ -3,16 +3,14 @@ import { Dimensions, Image, Pressable, StyleSheet, View } from 'react-native';
 
 import useAuth from '@hooks/queries/useAuth';
 // import { kakaoLoginMutation, useGetRefreshToken } from '@hooks/queries/useAuth';
-import { authNavigations } from '@src/constants';
-import Config from 'react-native-config';
-import queryClient from '@api/queryClient';
-import { setHeader } from '@src/utils/header';
-import {
-  setEncryptStorage,
-  getEncryptStorage,
-} from '@src/utils/encryptStorage';
+// import { authNavigations } from '@src/constants';
+// import Config from 'react-native-config';
+// import queryClient from '@api/queryClient';
+// import { setHeader } from '@src/utils/header';
+
 function AuthHomeScreen({ navigation }) {
-  const { refreshTokenMutation, kakaoLoginMutation } = useAuth();
+  const { kakaoLoginMutation } = useAuth();
+  // const { refreshTokenMutation, kakaoLoginMutation } = useAuth();
   // const { mutate: kakaoLoginMutate } = kakaoLoginMutation();
 
   const onClickKakoLogin = () => {

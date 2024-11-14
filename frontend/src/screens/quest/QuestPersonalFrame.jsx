@@ -51,7 +51,9 @@ function QuestPersonalFrame({ quests, seg }) {
                   </CustomText>
                 </View>
               )}
-              <CustomText style={styles.questName}>
+              <CustomText
+                style={[styles.questName, { backgroundColor: colors.TAG_BLUE }]}
+              >
                 {quest.questContent}
               </CustomText>
             </View>
