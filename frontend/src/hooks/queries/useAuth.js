@@ -6,9 +6,11 @@ import {
   postLogout,
   getProfile,
 } from '@src/api/authApi';
-import { removeEncryptStorage } from '@src/utils';
+import {
+  setEncryptStorage,
+  removeEncryptStorage,
+} from '@src/utils/encryptStorage';
 import { setHeader, removeHeader } from '@src/utils/header';
-import { setEncryptStorage, getEncryptStorage } from '@src/utils';
 import { useQuery, useMutation } from '@tanstack/react-query';
 import queryClient from '@api/queryClient';
 import { useNavigation } from '@react-navigation/native';
@@ -41,6 +43,7 @@ function usePostRefreshToken() {
   return useMutation({
     mutationFn: postAccessToken,
     onSuccess: (data) => {
+      console.log('usePostRefreshToken: ', data);
       // 성공적으로 토큰을 받아왔을 때 헤더와 스토리지 설정
       // console.log('usePostRefreshToken_accessToken: ', data.accessToken);
       setHeader('Authorization', `Bearer ${data.accessToken}`);
@@ -49,8 +52,8 @@ function usePostRefreshToken() {
     },
     onError: (error) => {
       // console.log('usePostRefreshToken에러: ', error); // 실패 시 헤더와 스토리지 제거
-      removeHeader('Authorization');
-      removeEncryptStorage('refreshToken');
+      // removeHeader('Authorization');
+      // removeEncryptStorage('refreshToken');
       setAuthData(false);
     },
   });
@@ -84,7 +87,7 @@ function usePostLogout() {
       // console.log('로그아웃전_refreshToken', getEncryptStorage('refreshToken'));
       // console.log('로그아웃전_loginStatus', getEncryptStorage('loginStatus'));
       removeHeader('Authorization');
-      removeEncryptStorage('refreshToken');
+      // removeEncryptStorage('refreshToken');
       setAuthData(false);
       // removeEncryptStorage('loginStatus');
       // console.log('로그아웃_refreshToken', getEncryptStorage('refreshToken'));
