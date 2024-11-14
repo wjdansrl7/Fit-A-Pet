@@ -1,4 +1,4 @@
-package com.healthconnectexample
+package com.frontend
 
 import android.os.Bundle
 import android.webkit.WebResourceRequest
