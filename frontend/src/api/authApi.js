@@ -1,5 +1,6 @@
 import axiosInstance from './axios';
 import { login } from '@react-native-seoul/kakao-login';
+import { getEncryptStorage } from '@src/utils/encryptStorage';
 
 // 1. 카카오 로그인
 const postKakaoLogin = async () => {
@@ -28,20 +29,48 @@ const postKakaoLogin = async () => {
   }
 };
 
-// 2. refreshToken 가지고 access토큰 받아오는 api
-const getAccessToken = async () => {
+// 2. 로그인 후, 유저 정보 받아오는 api
+const getProfile = async () => {
+  const { data } = await axiosInstance.get('/auth/info');
+
+  return data;
+};
+
+// 3. refreshToken 가지고 access토큰 받아오는 api
+const postAccessToken = async () => {
+  // console.log('getAccessToken api 시작');
   const refreshToken = await getEncryptStorage('refreshToken');
-  const { data } = await axiosInstance.get('/auth/reissue', {
-    headers: {
-      Authorization: `Bearer ${refreshToken}`,
-    },
-  });
+  // console.log('refreshToken :', refreshToken);
+
+  const { data } = await axiosInstance.post(
+    '/auth/reissue',
+    {},
+    {
+      headers: {
+        Authorization: `Bearer ${refreshToken}`,
+        // Authorization: `Bearer <${refreshToken}>`,
+      },
+    }
+  );
+  // console.log('postAccessToken: ', data);
   return data;
 };
 
 // 3. 로그아웃 api
 const postLogout = async () => {
-  await axiosInstance.post('/auth/logout');
+  const refreshToken = await getEncryptStorage('refreshToken');
+  // console.log('postLogout_refreshToken :', refreshToken);
+  const { data } = await axiosInstance.post(
+    '/auth/logout',
+    {},
+    {
+      headers: {
+        Authorization: `Bearer ${refreshToken}`,
+      },
+    }
+  );
+  // console.log('postLogout: ', data);
+  return data;
 };
-export { postKakaoLogin, getAccessToken, postLogout };
+export { postKakaoLogin, postAccessToken, postLogout, getProfile };
 // export { postKakaoLogin, getProfile, getAccessToken, logout };
