@@ -34,7 +34,7 @@ const chooseQuest = async (guildId, questId) => {
   const { data } = await axiosInstance.put(
     `guilds/${guildId}/quests/${questId}`
   );
-  console.log(data);
+  console.log('asdasdasdadsdas', data);
   return data;
 };
 

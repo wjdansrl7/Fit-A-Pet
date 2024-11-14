@@ -26,7 +26,7 @@ function GuildScreen({ navigation, route }) {
   const { data: memberInfo } = useMemberInfo(guildId);
   const { data: questInfo } = useQuestInfo(guildId);
   const { mutate: byeGuild } = useByeGuild(guildId);
-  console.log('길드정보', guildInfo); // 리더 아이디로 조건 달아야해
+  console.log('길드정보', guildInfo);
   console.log('멤버', memberInfo);
   const [quest, setQuest] = useState(questInfo);
 
@@ -41,19 +41,28 @@ function GuildScreen({ navigation, route }) {
   const closeModal = () => setActiveModal(null);
 
   const refetchQuest = (newQuest) => {
-    chooseQuest({ guildId, questId: newQuest.id });
     const formattedQuest = {
       guildQuestContent: newQuest.questContent,
       guildQuestId: newQuest.id,
       guildQuestName: newQuest.questName,
     };
-
     setQuest(formattedQuest);
+    chooseQuest({ guildId, questId: newQuest.id });
   };
 
+  const [byeError, setByeError] = useState(null); // 에러 상태 추가
+  console.log(guildId);
   const leaveGuild = (guildId) => {
-    byeGuild(guildId);
-    navigation.navigate('Map');
+    byeGuild(guildId, {
+      onSuccess: () => {
+        setByeError(null);
+        navigation.navigate('Map');
+      },
+      onError: (error) => {
+        console.log(error);
+        setByeError('leader');
+      },
+    });
   };
 
   return (
@@ -68,7 +77,6 @@ function GuildScreen({ navigation, route }) {
       <View style={styles.nameContainer}>
         <CustomText>{guildName}</CustomText>
       </View>
-
       <TouchableOpacity
         activeOpacity={0.8}
         style={styles.questContainer}
@@ -78,7 +86,6 @@ function GuildScreen({ navigation, route }) {
           {quest?.guildQuestContent || '일일 퀘스트를 설정해주세요'}
         </CustomText>
       </TouchableOpacity>
-
       <View style={styles.memberContainer}>
         {members.map((member, index) => (
           <View key={index} style={styles.memberSlot}>
@@ -102,14 +109,12 @@ function GuildScreen({ navigation, route }) {
           </View>
         ))}
       </View>
-
       <CustomButton
         activeOpacity={0.8}
         style={styles.byeContainer}
         onPress={() => openModal('leave')}
         title="그룹 탈퇴하기"
       />
-
       <GuildQuestModal
         isVisible={activeModal === 'quest'}
         onClose={closeModal}
@@ -128,7 +133,11 @@ function GuildScreen({ navigation, route }) {
       <GuildByeModal
         guildName={guildName}
         isVisible={activeModal === 'leave'}
-        onClose={closeModal}
+        byeError={byeError}
+        onClose={() => {
+          closeModal();
+          setByeError(null); // byeError 상태 초기화
+        }}
         onLeave={() => {
           // 탈퇴 로직 실행
           leaveGuild(guildId);
