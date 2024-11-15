@@ -33,7 +33,17 @@ import { useMainPetInfo, useUpdateNickname } from '@hooks/queries/usePet';
 import { useQueryClient } from '@tanstack/react-query';
 
 function MainScreen({ navigation }) {
-  const { data: mainPetInfo, isLoading, isError } = useMainPetInfo();
+//   const { data: mainPetInfo, isLoading, isError } = useMainPetInfo();
+    const mainPetInfo = {
+        petBookId: 1,
+        petNickname: '뭉기',
+        petType: '벨루가',
+        petStatus: '알',
+        petExp: 1500,
+        isMain: true,
+        petPercent: 20,
+        createdAt: '2024년 10월 31일',
+      };
   const queryClient = useQueryClient();
   const mutation = useUpdateNickname();
 
@@ -50,12 +60,12 @@ function MainScreen({ navigation }) {
     }
   }, [mainPetInfo]);
 
-  if (isLoading) {
-    return <ActivityIndicator size="large" color={'#009F58'} />; //ndk
-  }
-  if (isError) {
-    return <Text>Error occurred: {isError.message}</Text>;
-  }
+//   if (isLoading) {
+//     return <ActivityIndicator size="large" color={'#009F58'} />; //ndk
+//   }
+//   if (isError) {
+//     return <Text>Error occurred: {isError.message}</Text>;
+//   }
 
   const handleUpdateNickname = () => {
     if (petNickname.trim()) {

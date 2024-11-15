@@ -9,9 +9,11 @@ import com.doinglab.foodlens.sdk.core.FoodLensCore
 import com.doinglab.foodlens.sdk.core.RecognitionResultHandler
 import com.doinglab.foodlens.sdk.core.error.BaseError
 import com.doinglab.foodlens.sdk.core.model.result.RecognitionResult
-import com.doinglab.foodlens.sdk.core.type.FoodLensType
-import com.doinglab.foodlens.sdk.core.type.NutritionRetrieveOption
+//import com.doinglab.foodlens.sdk.core.type.FoodLensType
+//import com.doinglab.foodlens.sdk.core.type.NutritionRetrieveOption
+import com.doinglab.foodlens.sdk.core.type.*
 import android.util.Base64
+import org.json.JSONObject
 
 class FoodLensModule(reactContext: ReactApplicationContext) : ReactContextBaseJavaModule(reactContext) {
 
@@ -23,6 +25,7 @@ class FoodLensModule(reactContext: ReactApplicationContext) : ReactContextBaseJa
 
     //Create FoodLens Service
     private val foodLensCoreService by lazy {
+//        FoodLensCore.createFoodLensService(reactContext, FoodLensType.FoodLens)
         FoodLensCore.createFoodLensService(reactContext, FoodLensType.FoodLens).apply {
             setNutritionRetrieveOption(NutritionRetrieveOption.TOP1_NUTRITION_ONLY)
         }
@@ -56,8 +59,25 @@ class FoodLensModule(reactContext: ReactApplicationContext) : ReactContextBaseJa
 
             foodLensCoreService.predict(byteData, object : RecognitionResultHandler {
                 override fun onSuccess(result: RecognitionResult?) {
-                    val jsonResult = result?.toJSONString() ?: "{}"
-                    promise.resolve(jsonResult) // 성공 시 Promise 반환
+                    if (result == null) {
+                        promise.reject("Recognition Error", "No result from FoodLens")
+                        return
+                    }
+
+                    // Extract the first candidate's carbohydrate, protein, fat, and energy values
+                    val candidate = result.foods.firstOrNull()?.candidates?.firstOrNull()
+                    if (candidate != null) {
+                        val nutritionData = JSONObject().apply {
+                            put("foodName", candidate.fullFoodName)
+                            put("carbohydrate", candidate.carbohydrate)
+                            put("protein", candidate.protein)
+                            put("fat", candidate.fat)
+                            put("energy", candidate.energy)
+                        }
+                        promise.resolve(nutritionData.toString())
+                    } else {
+                        promise.reject("Recognition Error", "No nutrition data available")
+                    }
                 }
 
                 override fun onError(errorReason: BaseError?) {
