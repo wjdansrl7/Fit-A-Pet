@@ -47,9 +47,9 @@ public class QuestServiceImpl implements QuestService {
     }
 
     @Override
-    public Map<String, List<QuestResponse>> getMyQuestList() {
+    public Map<String, List<QuestResponse>> getMyQuestList(Long userId) {
         // todo : 요청자 찾기
-        User user = userRepository.findById(1L).orElse(null);
+        User user = userRepository.findById(userId).orElse(null);
 
         Map<String, List<QuestResponse>> response = new HashMap<>();
 
@@ -67,7 +67,7 @@ public class QuestServiceImpl implements QuestService {
      * todo 경험치 Long, Integer / select 최소화 / 진화 여부 리턴
      */
     @Override
-    public Long completePersonalQuest(QuestCompleteRequestDTO dto) {
+    public Long completePersonalQuest(QuestCompleteRequestDTO dto, Long userId) {
         PersonalQuest personalQuest = personalQuestRepository.findByIdWithQuest(dto.getCompleteQuestId())
                 .orElseThrow(() -> new EntityNotFoundException("personalQuest not found"));
 
@@ -79,7 +79,7 @@ public class QuestServiceImpl implements QuestService {
         Integer reward = Math.toIntExact(personalQuest.getQuest().getQuestReward());
 
         // 경험치 상승
-        User user = authService.getLoginUser(1L);
+        User user = authService.getLoginUser(userId);
         PetBook petBook = petBookService.selectPetBook(user.getPetMainId(), user);
         petBookService.updateExpAndEvolveCheck(petBook, reward);
 
@@ -91,7 +91,7 @@ public class QuestServiceImpl implements QuestService {
      * todo 경험치 Long, Integer / select 최소화 / 진화 여부 리턴
      */
     @Override
-    public Long completeGuildQuest(QuestCompleteRequestDTO dto) {
+    public Long completeGuildQuest(QuestCompleteRequestDTO dto, Long userId) {
 
         UserQuestStatus userQuestStatus = userQuestStatusRepository.findByUserQuestStatusWithQuest(dto.getCompleteQuestId())
                 .orElseThrow(() -> new EntityNotFoundException("userQuestStatus not found"));
@@ -104,7 +104,7 @@ public class QuestServiceImpl implements QuestService {
         Integer reward = Math.toIntExact(userQuestStatus.getGuildQuest().getQuest().getQuestReward());
 
         // 경험치 상승
-        User user = authService.getLoginUser(1L);
+        User user = authService.getLoginUser(userId);
         PetBook petBook = petBookService.selectPetBook(user.getPetMainId(), user);
         petBookService.updateExpAndEvolveCheck(petBook, reward);
 

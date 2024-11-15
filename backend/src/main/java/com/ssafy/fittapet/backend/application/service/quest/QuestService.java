@@ -13,11 +13,11 @@ import java.util.Map;
 public interface QuestService {
     List<Quest> searchGuildQuest(String category) throws CustomException;
 
-    Map<String, List<QuestResponse>> getMyQuestList();
+    Map<String, List<QuestResponse>> getMyQuestList(Long userId);
 
-    Long completePersonalQuest(QuestCompleteRequestDTO dto);
+    Long completePersonalQuest(QuestCompleteRequestDTO dto, Long userId);
 
-    Long completeGuildQuest(QuestCompleteRequestDTO dto);
+    Long completeGuildQuest(QuestCompleteRequestDTO dto, Long userId);
 
     List<QuestQueryResponseDTO> queryQuest(QuestQueryRequestDTO dto);
 }

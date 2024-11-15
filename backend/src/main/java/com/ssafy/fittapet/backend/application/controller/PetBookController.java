@@ -2,18 +2,22 @@ package com.ssafy.fittapet.backend.application.controller;
 
 import com.ssafy.fittapet.backend.application.service.auth.AuthService;
 import com.ssafy.fittapet.backend.application.service.petbook.PetBookService;
+import com.ssafy.fittapet.backend.domain.dto.auth.CustomOAuth2User;
 import com.ssafy.fittapet.backend.domain.dto.petbook.PetBookCreateDto;
 import com.ssafy.fittapet.backend.domain.dto.petbook.PetBookResponseDto;
 import com.ssafy.fittapet.backend.domain.dto.petbook.PetMainResponseDto;
 import com.ssafy.fittapet.backend.domain.dto.petbook.PetNicknameRequestDto;
 import com.ssafy.fittapet.backend.domain.entity.PetBook;
 import com.ssafy.fittapet.backend.domain.entity.User;
+
 import java.util.ArrayList;
 import java.util.List;
+
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -34,8 +38,9 @@ public class PetBookController {
      * todo userId 쓰는거 추후 @AuthenticationPrincipal 변경
      */
     @PostMapping
-    public ResponseEntity<?> createPetBook(@RequestBody PetBookCreateDto petBookRequestDto) {
-        User loginUser = authService.getLoginUser(1L);
+    public ResponseEntity<?> createPetBook(@RequestBody PetBookCreateDto petBookRequestDto,
+                                           @AuthenticationPrincipal CustomOAuth2User customOAuth2User) {
+        User loginUser = authService.getLoginUser(customOAuth2User.getId());
         PetBook petBook = petBookService.createPetBook(petBookRequestDto.getPetNickname(), loginUser);
 
         // 이미 모든 알을 가지고 있는 경우
@@ -56,8 +61,8 @@ public class PetBookController {
     }
 
     @GetMapping
-    public ResponseEntity<?> getAllPetBooks() {
-        User loginUser = authService.getLoginUser(1L);
+    public ResponseEntity<?> getAllPetBooks(@AuthenticationPrincipal CustomOAuth2User customOAuth2User) {
+        User loginUser = authService.getLoginUser(customOAuth2User.getId());
 
         // 펫 도감에는 유저의 최신 상태의 펫들만 가지고 있음.
         List<PetBook> petBooks = petBookService.selectAllPetBook(loginUser);
@@ -82,9 +87,9 @@ public class PetBookController {
     }
 
     @GetMapping("/level")
-    public ResponseEntity<?> getPetMainStatus() {
+    public ResponseEntity<?> getPetMainStatus(@AuthenticationPrincipal CustomOAuth2User customOAuth2User) {
 
-        User loginUser = authService.getLoginUser(1L);
+        User loginUser = authService.getLoginUser(customOAuth2User.getId());
         Long petMainId = loginUser.getPetMainId();
 
         PetBook petBook = petBookService.selectPetBook(petMainId, loginUser);
@@ -99,8 +104,8 @@ public class PetBookController {
     }
 
     @GetMapping("/{petBook-id}")
-    public ResponseEntity<?> getPetBook(@PathVariable("petBook-id") Long petBookId) {
-        User loginUser = authService.getLoginUser(1L);
+    public ResponseEntity<?> getPetBook(@PathVariable("petBook-id") Long petBookId, @AuthenticationPrincipal CustomOAuth2User customOAuth2User) {
+        User loginUser = authService.getLoginUser(customOAuth2User.getId());
         PetBook petBook = petBookService.selectPetBook(petBookId, loginUser);
         boolean isMain = loginUser.getPetMainId().equals(petBook.getId());
 
@@ -120,8 +125,8 @@ public class PetBookController {
     }
 
     @GetMapping("/main")
-    public ResponseEntity<?> getMyPetMain() {
-        User loginUser = authService.getLoginUser(1L);
+    public ResponseEntity<?> getMyPetMain(@AuthenticationPrincipal CustomOAuth2User customOAuth2User) {
+        User loginUser = authService.getLoginUser(customOAuth2User.getId());
 
         PetBook petBook = petBookService.selectPetBook(loginUser.getPetMainId(), loginUser);
 
@@ -138,8 +143,9 @@ public class PetBookController {
     }
 
     @PostMapping("/main/{petBookId}")
-    public ResponseEntity<?> updatePetMain(@PathVariable("petBookId") Long petBookId) {
-        User loginUser = authService.getLoginUser(1L);
+    public ResponseEntity<?> updatePetMain(@PathVariable("petBookId") Long petBookId,
+                                           @AuthenticationPrincipal CustomOAuth2User customOAuth2User) {
+        User loginUser = authService.getLoginUser(customOAuth2User.getId());
         loginUser.updatePetMainId(petBookId);
         authService.updateMainPet(petBookId, loginUser);
 
@@ -148,8 +154,10 @@ public class PetBookController {
     }
 
     @PostMapping("/{petBookId}/nickname")
-    public ResponseEntity<?> createPetNickname(@PathVariable("petBookId") Long petBookId, @RequestBody PetNicknameRequestDto petNicknameRequestDto) {
-        User loginUser = authService.getLoginUser(1L);
+    public ResponseEntity<?> createPetNickname(@PathVariable("petBookId") Long petBookId,
+                                               @RequestBody PetNicknameRequestDto petNicknameRequestDto,
+                                               @AuthenticationPrincipal CustomOAuth2User customOAuth2User) {
+        User loginUser = authService.getLoginUser(customOAuth2User.getId());
 
         PetBook petBook = petBookService.selectPetBook(petBookId, loginUser);
 
