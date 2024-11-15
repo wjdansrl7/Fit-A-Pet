@@ -92,7 +92,9 @@ public class PetBookServiceImpl implements PetBookService{
 
     @Override
     public void updateExpAndEvolveCheck(PetBook petBook, Integer expGained) {
+        log.info("petBookService update exp pre {}", expGained);
         petBook.levelUp(expGained);
+        log.info("petBookService update exp aft {}", petBook.getPetExp());
 
         if (petBook.needsEvolution()) { // 진화 필요 조건 확인
             Optional<Pet> nextEvolutionPet = petRepository.findNextEvolution(

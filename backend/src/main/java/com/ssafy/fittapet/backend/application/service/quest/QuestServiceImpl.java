@@ -88,11 +88,14 @@ public class QuestServiceImpl implements QuestService {
 
         // 퀘스트 보상
         Integer reward = Math.toIntExact(personalQuest.getQuest().getQuestReward());
+        log.info("quest reward {}", reward);
 
         // 경험치 상승
         User user = personalQuest.getUser();
         PetBook petBook = petBookService.selectPetBook(user.getPetMainId(), user);
         petBookService.updateExpAndEvolveCheck(petBook, reward);
+
+        log.info("getReward {}", personalQuest.getQuest().getQuestReward());
 
         return personalQuest.getQuest().getQuestReward();
     }
