@@ -50,6 +50,8 @@ public class PetBook extends BaseEntity{
 
     private String petNickname;
 
+    private boolean issueEgg = false; // 새로운 알 발급 받았는지 확인
+
     public void updatePet(Pet pet) {
         this.pet = pet;
     }
@@ -58,11 +60,15 @@ public class PetBook extends BaseEntity{
         this.petNickname = petNickname;
     }
 
+    public void updateIssueEgg(boolean issueEgg) {
+        this.issueEgg = issueEgg;
+    }
+
     public void levelUp(Integer expGained) {
         this.petExp += expGained;
         if (this.petExp >= getRequiredExpForNextLevel()) {
-            this.petLevel++;
-            this.petExp = 0;
+            this.petLevel = this.petExp / 500 + 1;
+//            this.petExp = 0;
         }
     }
 

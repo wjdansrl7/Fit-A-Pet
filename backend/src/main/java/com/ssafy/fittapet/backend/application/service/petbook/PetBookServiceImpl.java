@@ -33,7 +33,7 @@ public class PetBookServiceImpl implements PetBookService{
 
 
     @Override
-    public PetBook createPetBook(String petNickname, User loginUser) {
+    public PetBook createPetBook(User loginUser) {
 
         // 사용자가 이미 소유한 펫 ID 목록 조회
         List<Long> ownedPetIds = petBookRepository.findOwnedPetIdsByUser(loginUser);
@@ -50,15 +50,16 @@ public class PetBookServiceImpl implements PetBookService{
         Pet randomEggPet = availablePets.get(random.nextInt(availablePets.size()));
 
         // 펫 닉네임이 없을 경우, 펫 종류로 기본 닉네임 설정
-        if (petNickname == null && petNickname.isEmpty()) {
-            petNickname = randomEggPet.getPetType().getValue();
-        }
+//        if (petNickname == null && petNickname.isEmpty()) {
+//            petNickname = randomEggPet.getPetType().getValue();
+//        }
 
         PetBook petBook = PetBook.builder()
                 .user(loginUser)
                 .pet(randomEggPet)
                 .petExp(0)
-                .petNickname(petNickname)
+                .petNickname(randomEggPet.getPetType().toString()) // 기본 펫 타입 이름으로 지정
+//                .petNickname(petNickname)
                 .build();
 
         petBookRepository.save(petBook);
@@ -91,23 +92,50 @@ public class PetBookServiceImpl implements PetBookService{
     }
 
     @Override
-    public void updateExpAndEvolveCheck(PetBook petBook, Integer expGained) {
-        log.info("petBookService update exp pre {}", expGained);
+    public boolean updateExpAndEvolveCheck(PetBook petBook, Integer expGained, User loginUser) {
         petBook.levelUp(expGained);
-        log.info("petBookService update exp aft {}", petBook.getPetExp());
-
-        if (petBook.needsEvolution()) { // 진화 필요 조건 확인
-            Optional<Pet> nextEvolutionPet = petRepository.findNextEvolution(
-                    petBook.getPet().getPetType(),
-                    petBook.getPet().getPetStatus(),
-                    petBook.getPet().getEvolutionLevel() + 1);
-
-            // 진화 단계의 Pet 을 업데이트
-            nextEvolutionPet.ifPresent(petBook::updatePet);
+        // 최고 레벨에 도달했는지 확인
+        if (petBook.getPetLevel() >= 40 && !petBook.isIssueEgg()) {
+            // 알 발급가능한 상태이므로, 알을 발급받는다.
+            this.createPetBook(loginUser);
+            petBookRepository.save(petBook);
+            return true;
         }
 
-        petBookRepository.save(petBook); // 변경 사항을 저장
+        // 진화 필요 조건 확인
+        if (petBook.needsEvolution()) {
+            // 다음 진화 펫의 ID 계산
+            Long nextPetId = calculateNextPetId(petBook.getPet().getId(), petBook.getPet().getEvolutionLevel());
+
+            // 다음 진화 Pet 검색
+            Optional<Pet> nextEvolutionPet = petRepository.findById(nextPetId);
+
+            if (nextEvolutionPet.isEmpty()) {
+                log.warn("진화할 펫을 찾지 못했습니다. Pet ID: {}", nextPetId);
+            } else {
+                log.info("진화합니다. 다음 Pet: {}", nextEvolutionPet.get().getPetStatus());
+                // 진화 단계의 Pet 업데이트
+                petBook.updatePet(nextEvolutionPet.get());
+                log.info("업데이트된 Pet 상태: {}", petBook.getPet().getPetStatus());
+            }
+        }
+
+        petBookRepository.save(petBook);
+        return false;
     }
+
+
+
+    private Long calculateNextPetId(Long currentPetId, int currentLevel) {
+        // 레벨에 따른 다음 진화 Pet ID 계산
+        if (currentLevel == 10) {
+            return currentPetId + 1; // 준성체
+        } else if (currentLevel == 20) {
+            return currentPetId + 1; // 성체
+        }
+        return currentPetId; // 기본적으로 현재 ID 반환
+    }
+
 
     public void updatePetNickname(String updatePetNickname, PetBook petBook) {
         PetBook updatingPetBook = petBookRepository.findById(petBook.getId()).orElseThrow(() -> new IllegalArgumentException("해당하는 펫이 없습니다."));

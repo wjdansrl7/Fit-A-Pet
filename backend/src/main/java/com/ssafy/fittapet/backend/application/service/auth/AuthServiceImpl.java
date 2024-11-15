@@ -128,6 +128,7 @@ public class AuthServiceImpl implements AuthService {
      * 카카오 로그인 메소드
      * AccessToken -> 사용자 정보 GET
      * todo 신규 유저 퀘스트 연관 추가
+     * TOOD: 여기에 새로 생성된 펫 등록 추가 필요
      */
     public ResponseEntity<?> loginWithKakao(String kakaoAccessToken) {
 

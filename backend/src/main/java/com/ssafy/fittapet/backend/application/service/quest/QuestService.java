@@ -15,9 +15,11 @@ public interface QuestService {
 
     Map<String, List<QuestResponse>> getMyQuestList(Long userId);
 
-    Long completePersonalQuest(QuestCompleteRequestDTO dto, Long userId);
+    boolean completePersonalQuest(QuestCompleteRequestDTO dto, Long userId);
 
-    Long completeGuildQuest(QuestCompleteRequestDTO dto, Long userId);
+    boolean completeGuildQuest(QuestCompleteRequestDTO dto, Long userId);
 
     List<QuestQueryResponseDTO> queryQuest(QuestQueryRequestDTO dto);
+
+
 }

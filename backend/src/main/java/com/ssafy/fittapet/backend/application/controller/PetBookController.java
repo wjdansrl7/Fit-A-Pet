@@ -37,28 +37,28 @@ public class PetBookController {
     /**
      * todo userId 쓰는거 추후 @AuthenticationPrincipal 변경
      */
-    @PostMapping
-    public ResponseEntity<?> createPetBook(@RequestBody PetBookCreateDto petBookRequestDto,
-                                           @AuthenticationPrincipal CustomOAuth2User customOAuth2User) {
-        User loginUser = authService.getLoginUser(customOAuth2User.getId());
-        PetBook petBook = petBookService.createPetBook(petBookRequestDto.getPetNickname(), loginUser);
-
-        // 이미 모든 알을 가지고 있는 경우
-        if (petBook == null) {
-            return new ResponseEntity<>("이미 모든 펫을 가지고 있습니다.", HttpStatus.OK);
-        }
-
-        PetBookResponseDto petBookResponseDto = PetBookResponseDto.builder()
-                .petBookId(petBook.getId())
-                .petNickname(petBook.getPetNickname())
-                .petType(petBook.getPet().getPetType())
-                .petStatus(petBook.getPet().getPetStatus())
-                .petLevel(petBook.getPetLevel())
-                .petPercent(petBook.getNextLevelPercentage())
-                .createdAt(petBook.getCreatedAt()).build();
-
-        return new ResponseEntity<>(petBookResponseDto, HttpStatus.CREATED);
-    }
+//    @PostMapping
+//    public ResponseEntity<?> createPetBook(@RequestBody PetBookCreateDto petBookRequestDto,
+//                                           @AuthenticationPrincipal CustomOAuth2User customOAuth2User) {
+//        User loginUser = authService.getLoginUser(customOAuth2User.getId());
+//        PetBook petBook = petBookService.createPetBook(petBookRequestDto.getPetNickname(), loginUser);
+//
+//        // 이미 모든 알을 가지고 있는 경우
+//        if (petBook == null) {
+//            return new ResponseEntity<>("이미 모든 펫을 가지고 있습니다.", HttpStatus.OK);
+//        }
+//
+//        PetBookResponseDto petBookResponseDto = PetBookResponseDto.builder()
+//                .petBookId(petBook.getId())
+//                .petNickname(petBook.getPetNickname())
+//                .petType(petBook.getPet().getPetType())
+//                .petStatus(petBook.getPet().getPetStatus())
+//                .petLevel(petBook.getPetLevel())
+//                .petPercent(petBook.getNextLevelPercentage())
+//                .createdAt(petBook.getCreatedAt()).build();
+//
+//        return new ResponseEntity<>(petBookResponseDto, HttpStatus.CREATED);
+//    }
 
     @GetMapping
     public ResponseEntity<?> getAllPetBooks(@AuthenticationPrincipal CustomOAuth2User customOAuth2User) {
@@ -70,6 +70,7 @@ public class PetBookController {
 
         for (PetBook petBook : petBooks) {
             boolean isMain = loginUser.getPetMainId().equals(petBook.getId());
+
             PetBookResponseDto petBookResponseDto = PetBookResponseDto.builder()
                     .petBookId(petBook.getId())
                     .petNickname(petBook.getPetNickname())
