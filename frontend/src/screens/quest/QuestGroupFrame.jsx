@@ -49,7 +49,7 @@ function QuestGroupFrame({ quest }) {
         </View>
         <View>
           <CustomText style={styles.questReward}>
-            보상: {quest.questReward}
+            보상: +{quest.questReward}
           </CustomText>
         </View>
       </View>

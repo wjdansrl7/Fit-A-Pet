@@ -49,7 +49,6 @@ function useQuestInfo(guildId) {
   });
   return { isSuccess, data, isLoading };
 }
-
 // function useEnteringCode(guildId) {
 //   const { isSuccess, data, isLoading } = useQuery({
 //     queryKey: ['guild', 'enteringCode', guildId],
@@ -97,6 +96,9 @@ function useChooseQuest() {
       queryClient.invalidateQueries(['guild', 'guildInfo', guildId]);
       queryClient.invalidateQueries(['guild', 'memberInfo', guildId]);
       queryClient.invalidateQueries(['guild', 'questInfo', guildId]);
+    },
+    onError: (error) => {
+      console.error('뭐해요:', error);
     },
   });
 }

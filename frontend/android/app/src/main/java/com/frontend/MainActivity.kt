@@ -11,6 +11,7 @@ import com.doinglab.foodlens.sdk.core.model.result.RecognitionResult
 import com.doinglab.foodlens.sdk.core.type.*
 import android.widget.Toast
 import android.os.Bundle;
+import dev.matinzd.healthconnect.permissions.HealthConnectPermissionDelegate
 
 import android.graphics.BitmapFactory
 import android.util.Base64
@@ -25,16 +26,17 @@ class MainActivity : ReactActivity() {
    * rendering of the component.
    */
   override fun getMainComponentName(): String = "frontend"
-  
+
+  override fun onCreate(savedInstanceState: Bundle?) {
+    super.onCreate(null)
+    // In order to handle permission contract results, we need to set the permission delegate.
+    HealthConnectPermissionDelegate.setPermissionDelegate(this)
+  }
+
   /**
    * Returns the instance of the [ReactActivityDelegate]. We use [DefaultReactActivityDelegate]
    * which allows you to enable New Architecture with a single boolean flags [fabricEnabled]
    */
   override fun createReactActivityDelegate(): ReactActivityDelegate =
-      DefaultReactActivityDelegate(this, mainComponentName, fabricEnabled)
-  
-
-  override fun onCreate(savedInstanceState: Bundle?) {
-    super.onCreate(null)
-  }
+    DefaultReactActivityDelegate(this, mainComponentName, fabricEnabled)
 }
