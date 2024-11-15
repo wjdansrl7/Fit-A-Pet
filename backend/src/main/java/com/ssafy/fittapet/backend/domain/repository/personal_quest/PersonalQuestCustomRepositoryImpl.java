@@ -13,6 +13,7 @@ import java.util.Optional;
 
 import static com.ssafy.fittapet.backend.domain.entity.QPersonalQuest.personalQuest;
 import static com.ssafy.fittapet.backend.domain.entity.QQuest.quest;
+import static com.ssafy.fittapet.backend.domain.entity.QUser.user;
 
 @Repository
 @RequiredArgsConstructor
@@ -40,16 +41,15 @@ public class PersonalQuestCustomRepositoryImpl implements PersonalQuestCustomRep
                 .fetch();
     }
 
-    /**
-     * todo BatchSize 활용
-     */
     @Override
-    public Optional<PersonalQuest> findByIdWithQuest(Long completeQuestId) {
+    public Optional<PersonalQuest> findByUserAndQuest(Long userId, Long questId) {
+
         return Optional.ofNullable(queryFactory
                 .selectFrom(personalQuest)
-                .join(personalQuest.quest, quest)
-                .fetchJoin()
-                .where(personalQuest.id.eq(completeQuestId))
+                .join(personalQuest.user, user).fetchJoin()
+                .join(personalQuest.quest, quest).fetchJoin()
+                .where(user.id.eq(userId)
+                        .and(quest.id.eq(questId)))
                 .fetchOne());
     }
 }

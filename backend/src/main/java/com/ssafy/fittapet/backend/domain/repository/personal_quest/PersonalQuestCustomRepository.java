@@ -9,10 +9,8 @@ import java.util.List;
 import java.util.Optional;
 
 public interface PersonalQuestCustomRepository {
+
     List<QuestResponse> findByCategoryAndUser(QuestCategory category, User user);
 
-    /**
-     * 개인 퀘스트 id -> 퀘스트 함께 리턴
-     */
-    Optional<PersonalQuest> findByIdWithQuest(Long completeQuestId);
+    Optional<PersonalQuest> findByUserAndQuest(Long userId, Long questId);
 }
