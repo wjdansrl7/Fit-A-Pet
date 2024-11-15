@@ -10,6 +10,7 @@ import com.doinglab.foodlens.sdk.core.RecognitionResultHandler
 import com.doinglab.foodlens.sdk.core.error.BaseError
 import com.doinglab.foodlens.sdk.core.model.result.RecognitionResult
 import com.doinglab.foodlens.sdk.core.type.FoodLensType
+import com.doinglab.foodlens.sdk.core.type.NutritionRetrieveOption
 import android.util.Base64
 
 class FoodLensModule(reactContext: ReactApplicationContext) : ReactContextBaseJavaModule(reactContext) {
@@ -22,7 +23,9 @@ class FoodLensModule(reactContext: ReactApplicationContext) : ReactContextBaseJa
 
     //Create FoodLens Service
     private val foodLensCoreService by lazy {
-        FoodLensCore.createFoodLensService(reactContext, FoodLensType.FoodLens)
+        FoodLensCore.createFoodLensService(reactContext, FoodLensType.FoodLens).apply {
+            setNutritionRetrieveOption(NutritionRetrieveOption.TOP1_NUTRITION_ONLY)
+        }
     }
 
     private fun startFoodLensCore(byteData: ByteArray) {
@@ -63,7 +66,7 @@ class FoodLensModule(reactContext: ReactApplicationContext) : ReactContextBaseJa
             })
         } catch (e: Exception) {
             e.printStackTrace()
-            promise.reject("Native Code Exception", e) // 오류 시 Promise 반환
+            promise.reject("Native Code Exception", e) // 오류 시 Promaise 반환
         }
     }
 }
