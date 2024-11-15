@@ -16,6 +16,7 @@ import com.ssafy.fittapet.backend.domain.repository.quest.QuestRepository;
 import com.ssafy.fittapet.backend.domain.repository.user_quest.UserQuestStatusRepository;
 import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
 import java.util.HashMap;
@@ -26,6 +27,7 @@ import static com.ssafy.fittapet.backend.common.constant.error_code.QuestErrorCo
 
 @Service
 @RequiredArgsConstructor
+@Slf4j
 public class QuestServiceImpl implements QuestService {
     private final QuestRepository questRepository;
     private final PersonalQuestRepository personalQuestRepository;
@@ -68,6 +70,10 @@ public class QuestServiceImpl implements QuestService {
      */
     @Override
     public Long completePersonalQuest(QuestCompleteRequestDTO dto, Long userId) {
+
+        log.info("completePersonalQuest dto {}", dto.toString());
+        log.info("QuestService questId {}", dto.getCompleteQuestId());
+        log.info("QuestService userId {}", userId);
 
         PersonalQuest personalQuest = personalQuestRepository.findByUserAndQuest(userId, dto.getCompleteQuestId())
                 .orElseThrow(() -> new EntityNotFoundException("personalQuest not found"));
