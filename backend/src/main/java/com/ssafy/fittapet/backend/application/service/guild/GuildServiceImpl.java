@@ -7,11 +7,11 @@ import com.ssafy.fittapet.backend.common.validator.QuestValidator;
 import com.ssafy.fittapet.backend.domain.dto.guild.GuildInfoResponse;
 import com.ssafy.fittapet.backend.domain.dto.guild.GuildMemberInfoResponse;
 import com.ssafy.fittapet.backend.domain.dto.guild.GuildQuestInfoResponse;
-import com.ssafy.fittapet.backend.domain.entity.Guild;
-import com.ssafy.fittapet.backend.domain.entity.GuildQuest;
-import com.ssafy.fittapet.backend.domain.entity.Quest;
+import com.ssafy.fittapet.backend.domain.entity.*;
 import com.ssafy.fittapet.backend.domain.repository.guild.GuildRepository;
 import com.ssafy.fittapet.backend.domain.repository.guild_quest.GuildQuestRepository;
+import com.ssafy.fittapet.backend.domain.repository.map.MapRepository;
+import com.ssafy.fittapet.backend.domain.repository.user_quest.UserQuestStatusRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -29,6 +29,8 @@ public class GuildServiceImpl implements GuildService {
 
     private final GuildValidator guildValidator;
     private final QuestValidator questValidator;
+    private final UserQuestStatusRepository userQuestStatusRepository;
+    private final MapRepository mapRepository;
 
 
     @Override
@@ -63,17 +65,32 @@ public class GuildServiceImpl implements GuildService {
         // GuildQuest 테이블 확인
         GuildQuest guildQuest = guildQuestRepository.findByGuildId(guildId);
         if(guildQuest == null){
-            guildQuestRepository.save(GuildQuest.builder().
+            guildQuest = guildQuestRepository.save(GuildQuest.builder().
                     guild(guild).
                     quest(quest).
                     build());
+            List<Map> list =  mapRepository.findByGuild(guild);
+            for(Map map : list){
+                userQuestStatusRepository.save(UserQuestStatus.builder().
+                        questStatus(false).
+                        guildQuest(guildQuest).
+                        user(map.getUser()).
+                        build());
+            }
         }
         else{
             if(guildQuest.getQuest().getId().equals(questId)) throw new CustomException(ALREADY_SET_QUEST);
             guildQuest.setQuest(quest);
-            guildQuestRepository.save(guildQuest);
+            guildQuest = guildQuestRepository.save(guildQuest);
+
+            // todo : 유저 퀘스트 상태 테이블 데이터 관련 처리
+            List<UserQuestStatus> list = userQuestStatusRepository.findByGuildQuest(guildQuest);
+            for (UserQuestStatus userQuestStatus : list) {
+                userQuestStatus.updateStatus(false);
+            }
+
+            userQuestStatusRepository.saveAll(list);
         }
-        // todo : 유저 퀘스트 상태 테이블 실제 활동 정보로 초기화
     }
 
     @Override

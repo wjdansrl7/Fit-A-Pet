@@ -7,10 +7,7 @@ import com.ssafy.fittapet.backend.common.validator.MapValidator;
 import com.ssafy.fittapet.backend.domain.dto.guild.GuildJoinRequest;
 import com.ssafy.fittapet.backend.domain.dto.guild.GuildRequest;
 import com.ssafy.fittapet.backend.domain.dto.map.MapResponse;
-import com.ssafy.fittapet.backend.domain.entity.Guild;
-import com.ssafy.fittapet.backend.domain.entity.GuildQuest;
-import com.ssafy.fittapet.backend.domain.entity.Map;
-import com.ssafy.fittapet.backend.domain.entity.User;
+import com.ssafy.fittapet.backend.domain.entity.*;
 import com.ssafy.fittapet.backend.domain.repository.auth.UserRepository;
 import com.ssafy.fittapet.backend.domain.repository.guild.GuildRepository;
 import com.ssafy.fittapet.backend.domain.repository.guild_quest.GuildQuestRepository;
@@ -97,6 +94,15 @@ public class MapServiceImpl implements MapService {
                     guild(guild).
                     guildPosition(guildPosition).
                     build());
+
+            GuildQuest guildQuest = guildQuestRepository.findByGuildId(guildId);
+            if(guildQuest != null){
+                userQuestStatusRepository.save(UserQuestStatus.builder().
+                        questStatus(false).
+                        guildQuest(guildQuest).
+                        user(user).
+                        build());
+            }
 
             return true;
     }
