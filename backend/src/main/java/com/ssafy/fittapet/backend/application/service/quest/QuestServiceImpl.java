@@ -68,7 +68,8 @@ public class QuestServiceImpl implements QuestService {
      */
     @Override
     public Long completePersonalQuest(QuestCompleteRequestDTO dto, Long userId) {
-        PersonalQuest personalQuest = personalQuestRepository.findByIdWithQuest(dto.getCompleteQuestId())
+
+        PersonalQuest personalQuest = personalQuestRepository.findByUserAndQuest(userId, dto.getCompleteQuestId())
                 .orElseThrow(() -> new EntityNotFoundException("personalQuest not found"));
 
         if (personalQuest.isQuestStatus()) {
@@ -83,7 +84,7 @@ public class QuestServiceImpl implements QuestService {
         Integer reward = Math.toIntExact(personalQuest.getQuest().getQuestReward());
 
         // 경험치 상승
-        User user = authService.getLoginUser(userId);
+        User user = personalQuest.getUser();
         PetBook petBook = petBookService.selectPetBook(user.getPetMainId(), user);
         petBookService.updateExpAndEvolveCheck(petBook, reward);
 
