@@ -28,6 +28,8 @@ import { petImages, petSpriteImages } from '@constants/petImage';
 import { useMainPetInfo, useUpdateNickname } from '@hooks/queries/usePet';
 
 import AnimatedSprite from '@components/AnimatedSprite/AnimatedSprite';
+import { fetchHealthData } from '@api/healthData';
+import useHealthDataStore from '@src/stores/healthDataStore';
 
 function MainScreen({ navigation }) {
   const [isModalVisible, setModalVisible] = useState(false);
@@ -35,7 +37,9 @@ function MainScreen({ navigation }) {
   const [petBookId, setPetBookId] = useState('');
   const { data: mainPetInfo, isLoading, isError, error } = useMainPetInfo();
   const { mutate } = useUpdateNickname();
+  const { steps, sleepHours, updateHealthData } = useHealthDataStore();
 
+  // 메인펫 정보가 바뀌면 업데이트
   useEffect(() => {
     if (mainPetInfo) {
       setPetNickname(mainPetInfo.petNickname);
@@ -43,6 +47,17 @@ function MainScreen({ navigation }) {
     }
   }, [mainPetInfo]);
 
+  // 헬스 데이터 업데이트
+  useEffect(() => {
+    const initializeHealthData = async () => {
+      const { steps, sleepHours } = await fetchHealthData();
+      updateHealthData(steps, sleepHours);
+    };
+
+    initializeHealthData();
+  }, []);
+
+  // 닉네임 변경 함수
   const handleUpdateNickname = () => {
     if (petNickname.trim()) {
       mutate({ petBookId, newNickname: petNickname.trim() });
@@ -98,6 +113,8 @@ function MainScreen({ navigation }) {
         style={styles.backgroundImage}
         resizeMode="cover"
       >
+        <Text>{steps}</Text>
+        <Text>{sleepHours}</Text>
         {/* 상단 - 레벨 및 진행 상태 */}
         <View style={styles.header}>
           <View></View>
@@ -193,7 +210,7 @@ function MainScreen({ navigation }) {
             defaultAnimationName="walk" // 이건 해놔야 연동됨
             inLoop={true} // 루프
             autoPlay={true} // 자동시작
-            frameRate={5} // 움직이는 속도
+            frameRate={3} // 움직이는 속도
           />
         </View>
 

@@ -11,7 +11,6 @@ import AlbumDetailModal from './AlbumDetailModal';
 import { usePetAlbumList } from '@hooks/queries/usePet';
 import { colors } from '@constants/colors';
 import HealthData from './HealthData.jsx';
-import { fetchHealthData } from './healthData.js';
 import useHealthDataStore from '@src/stores/healthDataStore';
 
 function AlbumScreen() {
@@ -20,16 +19,7 @@ function AlbumScreen() {
 
   const { data: petAlbumList, isLoading, isError, error } = usePetAlbumList();
 
-  const { steps, sleepHours, updateHealthData } = useHealthDataStore();
-
-  useEffect(() => {
-    const initializeHealthData = async () => {
-      const { steps, sleepHours } = await fetchHealthData();
-      updateHealthData(steps, sleepHours);
-    };
-
-    initializeHealthData();
-  }, []);
+  const { steps, sleepHours } = useHealthDataStore();
 
   const openModal = (pet) => {
     setSelectedPet(pet);
