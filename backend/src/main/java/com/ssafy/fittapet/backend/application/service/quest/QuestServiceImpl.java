@@ -71,6 +71,10 @@ public class QuestServiceImpl implements QuestService {
         PersonalQuest personalQuest = personalQuestRepository.findByIdWithQuest(dto.getCompleteQuestId())
                 .orElseThrow(() -> new EntityNotFoundException("personalQuest not found"));
 
+        if (personalQuest.isQuestStatus()) {
+            return 0L;
+        }
+
         // 퀘스트 상태 변경
         personalQuest.updateStatus(true);
         personalQuestRepository.save(personalQuest);
