@@ -238,8 +238,9 @@ public class AuthServiceImpl implements AuthService {
                         .role(Role.USER)
                         .build();
 
-                petBookService.createPetBook(user);
                 userRepository.save(user);
+
+                petBookService.createPetBook(user);
 
                 addPersonalQuests(user);
 
