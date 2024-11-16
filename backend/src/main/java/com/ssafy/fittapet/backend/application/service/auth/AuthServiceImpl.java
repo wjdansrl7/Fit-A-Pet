@@ -142,6 +142,7 @@ public class AuthServiceImpl implements AuthService {
 
         String username = customUserDetails.getUsername();
         Long userId = customUserDetails.getId();
+        User loginUser = userRepository.findByUserUniqueName(username);
 
         log.info("redis start");
 
@@ -154,8 +155,8 @@ public class AuthServiceImpl implements AuthService {
         //refresh update
         addRefreshEntity(userId, refresh, refreshExpiredMs);
 
-        // 초기 알 생성
-        PetBook petBook = petBookService.createPetBook(this.getLoginUser(userId));
+        PetBook petBook = petBookService.selectPetBook(loginUser.getPetMainId(), loginUser);
+
 
         SignupResponseDto signupResponseDto = SignupResponseDto.builder()
                 .accessToken(access)
@@ -236,6 +237,7 @@ public class AuthServiceImpl implements AuthService {
                         .role(Role.USER)
                         .build();
 
+                petBookService.createPetBook(user);
                 userRepository.save(user);
 
                 addPersonalQuests(user);
