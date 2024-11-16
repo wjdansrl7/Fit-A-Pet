@@ -34,12 +34,12 @@ public class GuildServiceImpl implements GuildService {
 
 
     @Override
-    public String getEnteringCode(Long guildId) {
+    public String getEnteringCode(Long guildId, Long userId) {
         // 생성날짜 + 그룹 id로 인코딩된 코드 받아오기
         try {
             Optional<Guild> guild = guildRepository.findById(guildId);
             if(guild.isEmpty() || guild == null) throw new CustomException(NO_GUILD);
-            if(!guildValidator.isGuildLeader(guildId, 1L)) throw new CustomException(NOT_GUILD_LEADER);
+            if(!guildValidator.isGuildLeader(guildId, userId)) throw new CustomException(NOT_GUILD_LEADER);
             return EnteringCodeUtil.encrypt(guildId);
         } catch (Exception e) {
             throw new RuntimeException(e);
