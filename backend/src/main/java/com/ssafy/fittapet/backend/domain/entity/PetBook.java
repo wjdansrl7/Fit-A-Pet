@@ -64,11 +64,11 @@ public class PetBook extends BaseEntity{
         this.issueEgg = issueEgg;
     }
 
+    // 퀘스트 완료에 따른 경험치 상승
     public void levelUp(Integer expGained) {
         this.petExp += expGained;
         if (this.petExp >= getRequiredExpForNextLevel()) {
             this.petLevel = this.petExp / 500 + 1;
-//            this.petExp = 0;
         }
     }
 

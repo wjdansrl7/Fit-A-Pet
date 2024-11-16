@@ -49,17 +49,11 @@ public class PetBookServiceImpl implements PetBookService{
         // 랜덤으로 하나의 펫 선택
         Pet randomEggPet = availablePets.get(random.nextInt(availablePets.size()));
 
-        // 펫 닉네임이 없을 경우, 펫 종류로 기본 닉네임 설정
-//        if (petNickname == null && petNickname.isEmpty()) {
-//            petNickname = randomEggPet.getPetType().getValue();
-//        }
-
         PetBook petBook = PetBook.builder()
                 .user(loginUser)
                 .pet(randomEggPet)
                 .petExp(0)
                 .petNickname(randomEggPet.getPetType().toString()) // 기본 펫 타입 이름으로 지정
-//                .petNickname(petNickname)
                 .build();
 
         petBookRepository.save(petBook);
@@ -94,14 +88,16 @@ public class PetBookServiceImpl implements PetBookService{
     @Override
     public boolean updateExpAndEvolveCheck(PetBook petBook, Integer expGained, User loginUser) {
         petBook.levelUp(expGained);
+
         // 최고 레벨에 도달했는지 확인
-        if (petBook.getPetLevel() >= 40 && !petBook.isIssueEgg()) {
+        if (petBook.getPetLevel() >= 30 && !petBook.isIssueEgg()) {
             // 알 발급가능한 상태이므로, 알을 발급받는다.
             this.createPetBook(loginUser);
+            petBook.updateIssueEgg(true);
             petBookRepository.save(petBook);
+            System.out.println(petBook.isIssueEgg());
             return true;
         }
-
         // 진화 필요 조건 확인
         if (petBook.needsEvolution()) {
             // 다음 진화 펫의 ID 계산
@@ -110,16 +106,9 @@ public class PetBookServiceImpl implements PetBookService{
             // 다음 진화 Pet 검색
             Optional<Pet> nextEvolutionPet = petRepository.findById(nextPetId);
 
-            if (nextEvolutionPet.isEmpty()) {
-                log.warn("진화할 펫을 찾지 못했습니다. Pet ID: {}", nextPetId);
-            } else {
-                log.info("진화합니다. 다음 Pet: {}", nextEvolutionPet.get().getPetStatus());
-                // 진화 단계의 Pet 업데이트
-                petBook.updatePet(nextEvolutionPet.get());
-                log.info("업데이트된 Pet 상태: {}", petBook.getPet().getPetStatus());
-            }
+            // 진화 단계의 Pet 업데이트
+            nextEvolutionPet.ifPresent(petBook::updatePet);
         }
-
         petBookRepository.save(petBook);
         return false;
     }

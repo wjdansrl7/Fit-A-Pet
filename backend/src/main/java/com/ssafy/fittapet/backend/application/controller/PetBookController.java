@@ -106,7 +106,8 @@ public class PetBookController {
 
     @GetMapping("/{petBook-id}")
     public ResponseEntity<?> getPetBook(@PathVariable("petBook-id") Long petBookId, @AuthenticationPrincipal CustomOAuth2User customOAuth2User) {
-        User loginUser = authService.getLoginUser(customOAuth2User.getId());
+//        User loginUser = authService.getLoginUser(customOAuth2User.getId());
+        User loginUser = authService.getLoginUser(1L);
         PetBook petBook = petBookService.selectPetBook(petBookId, loginUser);
         boolean isMain = loginUser.getPetMainId().equals(petBook.getId());
 

@@ -1,13 +1,11 @@
 package com.ssafy.fittapet.backend.application.service.auth;
 
+import com.ssafy.fittapet.backend.application.service.petbook.PetBookService;
 import com.ssafy.fittapet.backend.common.constant.entity_field.Role;
 import com.ssafy.fittapet.backend.common.constant.entity_field.UserTier;
 import com.ssafy.fittapet.backend.common.util.JWTUtil;
 import com.ssafy.fittapet.backend.domain.dto.auth.*;
-import com.ssafy.fittapet.backend.domain.entity.PersonalQuest;
-import com.ssafy.fittapet.backend.domain.entity.Quest;
-import com.ssafy.fittapet.backend.domain.entity.RefreshToken;
-import com.ssafy.fittapet.backend.domain.entity.User;
+import com.ssafy.fittapet.backend.domain.entity.*;
 import com.ssafy.fittapet.backend.domain.repository.auth.BlacklistRepository;
 import com.ssafy.fittapet.backend.domain.repository.auth.RefreshRepository;
 import com.ssafy.fittapet.backend.domain.repository.auth.UserRepository;
@@ -41,6 +39,7 @@ public class AuthServiceImpl implements AuthService {
     private final UserRepository userRepository;
     private final QuestRepository questRepository;
     private final PersonalQuestRepository personalQuestRepository;
+    private final PetBookService petBookService;
 
     @Value("${access-token.milli-second}")
     private Long accessExpiredMs;
@@ -155,14 +154,17 @@ public class AuthServiceImpl implements AuthService {
         //refresh update
         addRefreshEntity(userId, refresh, refreshExpiredMs);
 
-        //token return
-        log.info("tokens 발급");
-        TokenDTO tokens = TokenDTO.builder()
+        // 초기 알 생성
+        PetBook petBook = petBookService.createPetBook(this.getLoginUser(userId));
+
+        SignupResponseDto signupResponseDto = SignupResponseDto.builder()
                 .accessToken(access)
                 .refreshToken(refresh)
+                .petType(petBook.getPet().getPetType().getValue())
+                .petStatus(petBook.getPet().getPetStatus().getValue())
                 .build();
 
-        return ResponseEntity.ok(tokens);
+        return ResponseEntity.ok(signupResponseDto);
     }
 
     /**
