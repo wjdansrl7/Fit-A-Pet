@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+
 import {
   View,
   Text,
@@ -9,9 +10,13 @@ import {
   TextInput,
   ActivityIndicator,
   Alert,
+  NativeModules,
   Dimensions,
   ImageBackground,
 } from 'react-native';
+
+import { launchCamera } from 'react-native-image-picker'; //ndk
+const { FoodLensModule } = NativeModules;
 
 import MenuButton from './MenuButton';
 import AlbumIcon from '@assets/icons/도감_icon.png';
@@ -66,6 +71,44 @@ function MainScreen({ navigation }) {
       Alert.alert('Error', '닉네임을 입력해주세요');
     }
   };
+
+  // 영양정보 함수 (사진촬영 + 푸드렌즈)
+  const handleFoodRecognition = () => {
+      launchCamera(
+        {
+          mediaType: 'photo',
+          quality: 1,
+          includeBase64: true
+        },
+        (response) => {
+          if (response.didCancel) {
+            console.log("User cancelled image picker");
+          } else if (response.errorCode) {
+            console.error("ImagePicker Error: ", response.errorMessage);
+          } else if (response.assets && response.assets[0]) {
+//             const imageUri = response.assets[0].uri;
+            const imageBase64 = response.assets[0].base64;
+//             const byteData = { uri: imageUri, type: 'image/jpeg', name: 'photo.jpg' };
+            // 비동기 함수 호출을 then/catch로 처리
+            try {
+              FoodLensModule.recognizeFood(imageBase64)
+                .then((result) => {
+                  console.log("Recognition Result:", result);
+                  Alert.alert("Recognition Successful", `Detected food: ${result}`);
+                })
+                .catch((error) => {
+                  console.error("Recognition Error:", error);
+                  Alert.alert("Recognition Error", "Failed to recognize food.");
+                });
+            } catch (error) {
+              console.error("Native Module Error:", error);
+              Alert.alert("Error", "Failed to process the image.");
+            }
+          }
+        }
+      );
+    };
+
 
   if (isLoading) {
     return <ActivityIndicator size="large" color={colors.MAIN_GREEN} />;
@@ -180,11 +223,13 @@ function MainScreen({ navigation }) {
         {/* 우측 메뉴 */}
         <View style={styles.rightMenu}>
           {/* 푸드렌즈 카메라 */}
-          <MenuButton
-            title={'식단기록'}
-            icon={FoodLensIcon}
-            isBlack={isDayTime}
-          ></MenuButton>
+          <Pressable onPress={handleFoodRecognition}>
+              <MenuButton
+                title={'식단기록'}
+                icon={FoodLensIcon}
+                isBlack={isDayTime}
+              ></MenuButton>
+          </Pressable>
           {/* 퀘스트 모아보기 페이지로 이동 */}
 
           <Pressable onPress={() => navigation.navigate('Quest')}>
