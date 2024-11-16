@@ -34,24 +34,53 @@ import useHealthDataStore from '@src/stores/healthDataStore';
 function MainScreen({ navigation }) {
   const [isModalVisible, setModalVisible] = useState(false);
   const [petNickname, setPetNickname] = useState('');
+  const [petLevel, setPetLevel] = useState(0);
+  const [petPercent, setPetPercent] = useState(0);
   const [petBookId, setPetBookId] = useState('');
-  const { data: mainPetInfo, isLoading, isError, error } = useMainPetInfo();
+
+  const {
+    data: mainPetInfo,
+    isLoading,
+    isError,
+    error,
+    refetch,
+  } = useMainPetInfo();
+
   const { mutate } = useUpdateNickname();
-  const { steps, sleepHours, updateHealthData } = useHealthDataStore();
+  const { steps, sleepHours, completedQuestIds } = useHealthDataStore();
 
   // 메인펫 정보가 바뀌면 업데이트
   useEffect(() => {
     if (mainPetInfo) {
       setPetNickname(mainPetInfo.petNickname);
       setPetBookId(mainPetInfo.petBookId);
+      setPetLevel(mainPetInfo.petLevel);
+      setPetPercent(mainPetInfo.petPercent);
     }
   }, [mainPetInfo]);
+
+  // 임시 더미 데이터
+  // const mainPetInfo = {
+  //   petBookId: 1,
+  //   petNickname: '뭉기',
+  //   petType: '벨루가',
+  //   petStatus: '알',
+  //   petExp: 1500,
+  //   isMain: true,
+  //   petPercent: 97,
+  //   createdAt: '2024년 10월 31일',
+  //   petLevel: 1,
+  // };
 
   // 헬스 데이터 업데이트
   useEffect(() => {
     const initializeHealthData = async () => {
       const { steps, sleepHours } = await fetchHealthData();
+      const { updateHealthData, checkQuestCompletion } =
+        useHealthDataStore.getState();
       updateHealthData(steps, sleepHours);
+      checkQuestCompletion();
+      refetch();
     };
 
     initializeHealthData();
@@ -113,8 +142,7 @@ function MainScreen({ navigation }) {
         style={styles.backgroundImage}
         resizeMode="cover"
       >
-        <Text>{steps}</Text>
-        <Text>{sleepHours}</Text>
+        <Text>{completedQuestIds}</Text>
         {/* 상단 - 레벨 및 진행 상태 */}
         <View style={styles.header}>
           <View></View>
@@ -163,15 +191,10 @@ function MainScreen({ navigation }) {
           </CustomModal>
 
           <View style={styles.levelContainer}>
-            <CustomText style={styles.levelText}>
-              {mainPetInfo.petLevel}
-            </CustomText>
+            <CustomText style={styles.levelText}>{petLevel}</CustomText>
             <View style={styles.progressBar}>
               <View
-                style={[
-                  styles.progressFill,
-                  { width: `${mainPetInfo.petPercent}%` },
-                ]}
+                style={[styles.progressFill, { width: `${petPercent}%` }]}
               />
             </View>
           </View>
