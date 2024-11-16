@@ -134,14 +134,14 @@ public class AuthServiceImpl implements AuthService {
         log.info("loginWithKakao");
 
         //사용자 정보 가져오기
-        CustomOAuth2User customUserDetails = getUserInfoFromKakao(kakaoAccessToken);
+        SignupResponseDto customUserDetails = getUserInfoFromKakao(kakaoAccessToken);
 
         if (customUserDetails == null) {
             return null; // 오류 처리용으로 null 반환
         }
 
-        String username = customUserDetails.getUsername();
-        Long userId = customUserDetails.getId();
+        String username = customUserDetails.getUserUniqueName();
+        Long userId = customUserDetails.getUserId();
         User loginUser = userRepository.findByUserUniqueName(username);
 
         log.info("redis start");
@@ -157,16 +157,13 @@ public class AuthServiceImpl implements AuthService {
 
         PetBook petBook = petBookService.selectPetBook(loginUser.getPetMainId(), loginUser);
 
+        customUserDetails.setAccessToken(access);
+        customUserDetails.setRefreshToken(refresh);
+        customUserDetails.setPetType(petBook.getPet().getPetType().getValue());
+        customUserDetails.setPetStatus(petBook.getPet().getPetStatus().getValue());
 
-        SignupResponseDto signupResponseDto = SignupResponseDto.builder()
-                .accessToken(access)
-                .refreshToken(refresh)
-                .shouldShowModal(true)
-                .petType(petBook.getPet().getPetType().getValue())
-                .petStatus(petBook.getPet().getPetStatus().getValue())
-                .build();
 
-        return ResponseEntity.ok(signupResponseDto);
+        return ResponseEntity.ok(customUserDetails);
     }
 
     /**
@@ -195,7 +192,7 @@ public class AuthServiceImpl implements AuthService {
     /**
      * 카카오 유저 정보 읽어오기
      */
-    private CustomOAuth2User getUserInfoFromKakao(String accessToken) {
+    private SignupResponseDto getUserInfoFromKakao(String accessToken) {
 
         log.info("AuthService getUserInfoFromKakao");
 
@@ -244,10 +241,13 @@ public class AuthServiceImpl implements AuthService {
                 addPersonalQuests(user);
 
                 log.info("user saved");
-                return new CustomOAuth2User(toUserDTO(user));
+//                return new CustomOAuth2User(toUserDTO(user));
+//                return new SignupResponseDto(toUserDTO(user));
+                return toUserDto(user, true);
             } else {
                 log.info("user exist");
-                return new CustomOAuth2User(toUserDTO(existData));
+//                return new CustomOAuth2User(toUserDTO(existData));
+                return toUserDto(existData, false);
             }
         } catch (Exception e) {
             log.error("AuthService getUserInfoFromKakao error: {}", e.getMessage());
@@ -255,13 +255,22 @@ public class AuthServiceImpl implements AuthService {
         }
     }
 
-    private UserDTO toUserDTO(User user) {
-        return UserDTO.builder()
+    private SignupResponseDto toUserDto(User user, boolean shouldShowModal) {
+        return SignupResponseDto.builder()
                 .userId(user.getId())
                 .userUniqueName(user.getUserUniqueName())
                 .role(String.valueOf(user.getRole()))
+                .shouldShowModal(shouldShowModal)
                 .build();
     }
+
+//    private UserDTO toUserDTO(User user) {
+//        return UserDTO.builder()
+//                .userId(user.getId())
+//                .userUniqueName(user.getUserUniqueName())
+//                .role(String.valueOf(user.getRole()))
+//                .build();
+//    }
 
     public void updateMainPet(Long petBookId, User loginUser) {
         loginUser.updatePetMainId(petBookId);
