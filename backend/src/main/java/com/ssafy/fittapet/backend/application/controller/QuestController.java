@@ -55,7 +55,7 @@ public class QuestController {
 
     @PostMapping("/guild/complete")
     public ResponseEntity<?> completeGuildQuest(@RequestBody QuestCompleteRequestDTO dto,
-                                                @AuthenticationPrincipal CustomOAuth2User customOAuth2User) {
+                                                @AuthenticationPrincipal CustomOAuth2User customOAuth2User) throws CustomException {
 
         log.info("QuestController completeGuildQuest");
         return ResponseEntity.ok(questService.completeGuildQuest(dto, customOAuth2User.getId()));

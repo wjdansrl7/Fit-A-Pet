@@ -5,12 +5,14 @@ import com.ssafy.fittapet.backend.application.service.petbook.PetBookService;
 import com.ssafy.fittapet.backend.common.constant.entity_field.QuestCategory;
 import com.ssafy.fittapet.backend.common.constant.entity_field.QuestType;
 import com.ssafy.fittapet.backend.common.exception.CustomException;
+import com.ssafy.fittapet.backend.domain.dto.map.MapGuildQuestDTO;
 import com.ssafy.fittapet.backend.domain.dto.quest.QuestCompleteRequestDTO;
 import com.ssafy.fittapet.backend.domain.dto.quest.QuestQueryRequestDTO;
 import com.ssafy.fittapet.backend.domain.dto.quest.QuestQueryResponseDTO;
 import com.ssafy.fittapet.backend.domain.dto.quest.QuestResponse;
 import com.ssafy.fittapet.backend.domain.entity.*;
 import com.ssafy.fittapet.backend.domain.repository.auth.UserRepository;
+import com.ssafy.fittapet.backend.domain.repository.map.MapRepository;
 import com.ssafy.fittapet.backend.domain.repository.personal_quest.PersonalQuestRepository;
 import com.ssafy.fittapet.backend.domain.repository.quest.QuestRepository;
 import com.ssafy.fittapet.backend.domain.repository.user_quest.UserQuestStatusRepository;
@@ -24,6 +26,7 @@ import java.util.List;
 import java.util.Map;
 
 import static com.ssafy.fittapet.backend.common.constant.error_code.QuestErrorCode.NOT_AVAILABLE_CATEGORY;
+import static com.ssafy.fittapet.backend.common.constant.error_code.QuestErrorCode.NO_QUEST;
 
 @Service
 @RequiredArgsConstructor
@@ -35,6 +38,7 @@ public class QuestServiceImpl implements QuestService {
     private final UserQuestStatusRepository userQuestStatusRepository;
     private final PetBookService petBookService;
     private final AuthService authService;
+    private final MapRepository mapRepository;
 
     @Override
     public List<Quest> searchGuildQuest(String category) throws CustomException {
@@ -108,34 +112,56 @@ public class QuestServiceImpl implements QuestService {
      * todo 경험치 Long, Integer / select 최소화 / 진화 여부 리턴
      */
     @Override
-    public Map<String, Object> completeGuildQuest(QuestCompleteRequestDTO dto, Long userId) {
+    public Map<String, Object> completeGuildQuest(QuestCompleteRequestDTO dto, Long userId) throws CustomException {
 
-        UserQuestStatus userQuestStatus = userQuestStatusRepository.findByUserQuestStatusWithQuest(dto.getCompleteQuestId())
-                .orElseThrow(() -> new EntityNotFoundException("userQuestStatus not found"));
+//        UserQuestStatus userQuestStatus = userQuestStatusRepository.findByUserQuestStatusWithQuest(dto.getCompleteQuestId())
+//                .orElseThrow(() -> new EntityNotFoundException("userQuestStatus not found"));
+
+        Quest quest = questRepository.findById(dto.getCompleteQuestId()).orElseThrow(()-> new CustomException(NO_QUEST));
 
         // 필요 로직 :: 해당 퀘스트가 이용자가 진행중인 길드퀘스트인지 확인하기.
-        // <Map>에서 해당 이용자의 길드 id들 [list] 반환 (최대 3개)
-        // <GuildQuest>에서 [길드 id들]에 따른 guildQuest들 [list] 반환 (최대 3개)
-        // 해당 [list]에서 questId에 해당하는 값이 있으면 해당 값의 guildQuestId와 userId로
-        // <UserQuestStatus>에서 userQuestStatusId를 찾아 status update.
-
-        // 퀘스트 상태 변경
-        userQuestStatus.updateStatus(true);
-        userQuestStatusRepository.save(userQuestStatus);
-
-        // 퀘스트 보상
-        Integer reward = Math.toIntExact(userQuestStatus.getGuildQuest().getQuest().getQuestReward());
-
-        // 경험치 상승
-        User user = authService.getLoginUser(userId);
-        PetBook petBook = petBookService.selectPetBook(user.getPetMainId(), user);
-
+        // Map, GuildQuest, UserQuestStatus 테이블을 조인 후 user와 quest로 해당하는 값들을 찾음
+        // list로 받은 것은 같은 퀘스트를 갖고 있는 길드들에 가입했을 경우를 위해.
+        // list 안의 userQuestStatus ID를 이용해 기존의 로직 수행.
+        List<MapGuildQuestDTO> list = mapRepository.findAllMGQByUserId(userId, quest);
         Map<String, Object> response = new HashMap<>();
-        response.put("shouldShowModal", petBookService.updateExpAndEvolveCheck(petBook, reward, user));
-        response.put("petType", petBook.getPet().getPetType());
-        response.put("petStatus", petBook.getPet().getPetStatus());
+        for(MapGuildQuestDTO dtoMap : list) {
+            // 퀘스트 상태 변경
+            UserQuestStatus userQuestStatus = userQuestStatusRepository.findById(dtoMap.getUserQuestStatusId()).orElse(null);
+            userQuestStatus.updateStatus(true);
+            userQuestStatusRepository.save(userQuestStatus);
+
+            // 퀘스트 보상
+            Integer reward = Math.toIntExact(userQuestStatus.getGuildQuest().getQuest().getQuestReward());
+
+            // 경험치 상승
+            User user = authService.getLoginUser(userId);
+            PetBook petBook = petBookService.selectPetBook(user.getPetMainId(), user);
+
+            response.put("shouldShowModal", petBookService.updateExpAndEvolveCheck(petBook, reward, user));
+            response.put("petType", petBook.getPet().getPetType());
+            response.put("petStatus", petBook.getPet().getPetStatus());
+        }
 
         return response;
+
+//        // 퀘스트 상태 변경
+//        userQuestStatus.updateStatus(true);
+//        userQuestStatusRepository.save(userQuestStatus);
+//
+//        // 퀘스트 보상
+//        Integer reward = Math.toIntExact(userQuestStatus.getGuildQuest().getQuest().getQuestReward());
+//
+//        // 경험치 상승
+//        User user = authService.getLoginUser(userId);
+//        PetBook petBook = petBookService.selectPetBook(user.getPetMainId(), user);
+//
+//        Map<String, Object> response = new HashMap<>();
+//        response.put("shouldShowModal", petBookService.updateExpAndEvolveCheck(petBook, reward, user));
+//        response.put("petType", petBook.getPet().getPetType());
+//        response.put("petStatus", petBook.getPet().getPetStatus());
+//
+//        return response;
     }
 
     /**
