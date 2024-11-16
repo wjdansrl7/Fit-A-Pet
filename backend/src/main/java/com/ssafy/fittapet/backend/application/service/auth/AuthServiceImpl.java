@@ -160,6 +160,7 @@ public class AuthServiceImpl implements AuthService {
         SignupResponseDto signupResponseDto = SignupResponseDto.builder()
                 .accessToken(access)
                 .refreshToken(refresh)
+                .shouldShowModal(true)
                 .petType(petBook.getPet().getPetType().getValue())
                 .petStatus(petBook.getPet().getPetStatus().getValue())
                 .build();
