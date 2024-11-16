@@ -7,11 +7,8 @@ import lombok.*;
  * 퀘스트 완료 요청
  * todo 불필요한 거 빼기
  */
-@Getter
-@Builder
+@Data
 @NoArgsConstructor
-@AllArgsConstructor
-@ToString
 public class QuestCompleteRequestDTO {
 
     private Long completeQuestId;

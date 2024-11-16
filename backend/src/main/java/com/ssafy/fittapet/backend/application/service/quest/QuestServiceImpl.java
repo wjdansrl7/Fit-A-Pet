@@ -69,7 +69,7 @@ public class QuestServiceImpl implements QuestService {
      * todo 경험치 Long, Integer / select 최소화 / 진화 여부 리턴
      */
     @Override
-    public Long completePersonalQuest(QuestCompleteRequestDTO dto, Long userId) {
+    public Map<String, Object> completePersonalQuest(QuestCompleteRequestDTO dto, Long userId) {
 
         log.info("completePersonalQuest dto {}", dto.toString());
         log.info("QuestService questId {}", dto.getCompleteQuestId());
@@ -78,9 +78,9 @@ public class QuestServiceImpl implements QuestService {
         PersonalQuest personalQuest = personalQuestRepository.findByUserAndQuest(userId, dto.getCompleteQuestId())
                 .orElseThrow(() -> new EntityNotFoundException("personalQuest not found"));
 
-        if (personalQuest.isQuestStatus()) {
-            return 0L;
-        }
+//        if (personalQuest.isQuestStatus()) {
+//            return false;
+//        }
 
         // 퀘스트 상태 변경
         personalQuest.updateStatus(true);
@@ -88,16 +88,19 @@ public class QuestServiceImpl implements QuestService {
 
         // 퀘스트 보상
         Integer reward = Math.toIntExact(personalQuest.getQuest().getQuestReward());
-        log.info("quest reward {}", reward);
 
         // 경험치 상승
         User user = personalQuest.getUser();
         PetBook petBook = petBookService.selectPetBook(user.getPetMainId(), user);
-        petBookService.updateExpAndEvolveCheck(petBook, reward);
 
-        log.info("getReward {}", personalQuest.getQuest().getQuestReward());
+        Map<String, Object> response = new HashMap<>();
+        response.put("shouldShowModal", petBookService.updateExpAndEvolveCheck(petBook, reward, user));
+        response.put("petType", petBook.getPet().getPetType());
+        response.put("petStatus", petBook.getPet().getPetStatus());
 
-        return personalQuest.getQuest().getQuestReward();
+        // 새로운 알 생성 가능 여부 반환
+        return response;
+
     }
 
     /**
@@ -105,7 +108,7 @@ public class QuestServiceImpl implements QuestService {
      * todo 경험치 Long, Integer / select 최소화 / 진화 여부 리턴
      */
     @Override
-    public Long completeGuildQuest(QuestCompleteRequestDTO dto, Long userId) {
+    public Map<String, Object> completeGuildQuest(QuestCompleteRequestDTO dto, Long userId) {
 
         UserQuestStatus userQuestStatus = userQuestStatusRepository.findByUserQuestStatusWithQuest(dto.getCompleteQuestId())
                 .orElseThrow(() -> new EntityNotFoundException("userQuestStatus not found"));
@@ -120,9 +123,13 @@ public class QuestServiceImpl implements QuestService {
         // 경험치 상승
         User user = authService.getLoginUser(userId);
         PetBook petBook = petBookService.selectPetBook(user.getPetMainId(), user);
-        petBookService.updateExpAndEvolveCheck(petBook, reward);
 
-        return userQuestStatus.getGuildQuest().getQuest().getQuestReward();
+        Map<String, Object> response = new HashMap<>();
+        response.put("shouldShowModal", petBookService.updateExpAndEvolveCheck(petBook, reward, user));
+        response.put("petType", petBook.getPet().getPetType());
+        response.put("petStatus", petBook.getPet().getPetStatus());
+
+        return response;
     }
 
     /**
