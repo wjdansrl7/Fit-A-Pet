@@ -113,6 +113,12 @@ public class QuestServiceImpl implements QuestService {
         UserQuestStatus userQuestStatus = userQuestStatusRepository.findByUserQuestStatusWithQuest(dto.getCompleteQuestId())
                 .orElseThrow(() -> new EntityNotFoundException("userQuestStatus not found"));
 
+        // 필요 로직 :: 해당 퀘스트가 이용자가 진행중인 길드퀘스트인지 확인하기.
+        // <Map>에서 해당 이용자의 길드 id들 [list] 반환 (최대 3개)
+        // <GuildQuest>에서 [길드 id들]에 따른 guildQuest들 [list] 반환 (최대 3개)
+        // 해당 [list]에서 questId에 해당하는 값이 있으면 해당 값의 guildQuestId와 userId로
+        // <UserQuestStatus>에서 userQuestStatusId를 찾아 status update.
+
         // 퀘스트 상태 변경
         userQuestStatus.updateStatus(true);
         userQuestStatusRepository.save(userQuestStatus);

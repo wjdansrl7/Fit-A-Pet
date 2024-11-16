@@ -4,7 +4,7 @@
     <option name="autoReloadType" value="NONE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="0cc99188-9c84-4853-b77c-470d2ef6b385" name="Changes" comment="" />
+    <list default="true" id="0cc99188-9c84-4853-b77c-470d2ef6b385" name="Changes" comment="chore: 주석 제거" />
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
@@ -48,6 +48,7 @@
     <servers />
   </component>
   <component name="VcsManagerConfiguration">
-    <option name="LAST_COMMIT_MESSAGE" value="" />
+    <MESSAGE value="chore: 주석 제거" />
+    <option name="LAST_COMMIT_MESSAGE" value="chore: 주석 제거" />
   </component>
 </project>
