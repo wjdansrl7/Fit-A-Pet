@@ -15,6 +15,7 @@ import { useQuery, useMutation } from '@tanstack/react-query';
 import queryClient from '@api/queryClient';
 import { useNavigation } from '@react-navigation/native';
 import useAuthDataStore from '@src/stores/authDataStore';
+import useEggModalDataStore from '@src/stores/eggModalDataStore';
 
 function useKakaoLogin() {
   const { setAuthData } = useAuthDataStore();
@@ -30,6 +31,19 @@ function useKakaoLogin() {
       setEncryptStorage('refreshToken', data.refreshToken);
       setAuthData(true);
       // setEncryptStorage('loginStatus', true);
+      // navigation.navigate('Main');
+      // 알얻는 로직 돌리기
+      const navigateParams = {
+        shouldShowModal: data.shouldShowModal,
+      };
+      // shouldShowModal이 true일 경우에만 newPetType과 newPetStatus 추가
+      if (data.shouldShowModal) {
+        navigateParams.newPetType = data.petType;
+        navigateParams.newPetStatus = data.petStatus;
+      }
+      const { setEggModalData } = useEggModalDataStore.getState();
+      setEggModalData(navigateParams);
+
       navigation.navigate('Main');
     },
     onSettled: () => {
