@@ -14,7 +14,6 @@ import {
   Dimensions,
   ImageBackground,
 } from 'react-native';
-import React, { useCallback, useState, useEffect } from 'react';
 
 import { launchCamera } from 'react-native-image-picker'; //ndk
 const { FoodLensModule } = NativeModules;
@@ -87,9 +86,9 @@ function MainScreen({ navigation }) {
           } else if (response.errorCode) {
             console.error("ImagePicker Error: ", response.errorMessage);
           } else if (response.assets && response.assets[0]) {
-            const imageUri = response.assets[0].uri;
+//             const imageUri = response.assets[0].uri;
             const imageBase64 = response.assets[0].base64;
-            const byteData = { uri: imageUri, type: 'image/jpeg', name: 'photo.jpg' };
+//             const byteData = { uri: imageUri, type: 'image/jpeg', name: 'photo.jpg' };
             // 비동기 함수 호출을 then/catch로 처리
             try {
               FoodLensModule.recognizeFood(imageBase64)
