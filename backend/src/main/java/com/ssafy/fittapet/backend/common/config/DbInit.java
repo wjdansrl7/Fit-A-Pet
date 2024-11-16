@@ -138,7 +138,7 @@ public class DbInit {
 
     private void addPersonalQuests(User user) {
 
-        List<Quest> quests = questRepository.findAll();
+        List<Quest> quests = questRepository.findAllByQuestType(QuestType.PERSONAL);
         List<PersonalQuest> personalQuests = quests.stream()
                 .map(quest ->
                         PersonalQuest.builder()

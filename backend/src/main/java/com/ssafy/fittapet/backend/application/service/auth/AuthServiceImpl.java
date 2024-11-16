@@ -1,6 +1,7 @@
 package com.ssafy.fittapet.backend.application.service.auth;
 
 import com.ssafy.fittapet.backend.application.service.petbook.PetBookService;
+import com.ssafy.fittapet.backend.common.constant.entity_field.QuestType;
 import com.ssafy.fittapet.backend.common.constant.entity_field.Role;
 import com.ssafy.fittapet.backend.common.constant.entity_field.UserTier;
 import com.ssafy.fittapet.backend.common.util.JWTUtil;
@@ -279,7 +280,7 @@ public class AuthServiceImpl implements AuthService {
 
     private void addPersonalQuests(User user) {
 
-        List<Quest> quests = questRepository.findAll();
+        List<Quest> quests = questRepository.findAllByQuestType(QuestType.PERSONAL);
         List<PersonalQuest> personalQuests = quests.stream()
                 .map(quest ->
                         PersonalQuest.builder()
