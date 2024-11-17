@@ -1,4 +1,4 @@
-import { queryClient } from '@src/api/queryClient';
+import queryClient from '@src/api/queryClient';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import {
   getGuildInfo,
@@ -66,6 +66,9 @@ function useByeGuild(guildId) {
     mutationFn: () => byeGuild(guildId),
     onSuccess: () => {
       queryClient.invalidateQueries(['map']);
+      queryClient.invalidateQueries(['guild', 'guildInfo', guildId]);
+      queryClient.invalidateQueries(['guild', 'memberInfo', guildId]);
+      queryClient.invalidateQueries(['guild', 'questInfo', guildId]);
     },
     onError: (error) => {
       console.error('길드탈퇴:', error);

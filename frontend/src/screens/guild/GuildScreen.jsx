@@ -105,6 +105,7 @@ function GuildScreen({ navigation, route }) {
             </TouchableOpacity>
             <CustomText style={styles.memberName}>
               {member ? member.userName : '???'}
+              {member?.questStatus ? ' ✔️' : ''}
             </CustomText>
           </View>
         ))}
