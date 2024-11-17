@@ -20,6 +20,7 @@ import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.HashMap;
 import java.util.List;
@@ -31,6 +32,7 @@ import static com.ssafy.fittapet.backend.common.constant.error_code.QuestErrorCo
 @Service
 @RequiredArgsConstructor
 @Slf4j
+@Transactional
 public class QuestServiceImpl implements QuestService {
     private final QuestRepository questRepository;
     private final PersonalQuestRepository personalQuestRepository;
