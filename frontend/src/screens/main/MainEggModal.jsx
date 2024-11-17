@@ -1,5 +1,5 @@
-import React, { useState } from 'react';
-import { View, TouchableOpacity, TextInput, StyleSheet } from 'react-native';
+import React from 'react';
+import { View, TextInput, Image, StyleSheet } from 'react-native';
 import CustomModal from '@components/CustomModal/CustomModal';
 import CustomText from '@components/CustomText/CustomText';
 import CustomButton from '@components/CustomButton/CustomButton';
@@ -13,14 +13,17 @@ const MainEggModal = ({
   onUpdateNickname,
   onClose,
   setStep,
-  // newPetType,
-  // newPetStatus,
+  newPetImage,
 }) => {
+  if (!newPetImage || !isVisible) {
+    return null;
+  }
   return (
     <CustomModal title="알을 받아봐요!" isVisible={isVisible} onClose={onClose}>
       {step === 1 && (
         <>
           <View style={styles.bodyContainer}>
+            <Image source={newPetImage} style={styles.image} />
             <CustomText style={styles.bodyText}>알이 왔네요!</CustomText>
             <CustomText>이름을 지어주실래요?</CustomText>
           </View>
@@ -34,6 +37,7 @@ const MainEggModal = ({
       {step === 2 && (
         <>
           <View style={styles.bodyContainer}>
+            <Image source={newPetImage} style={styles.image} />
             <CustomText style={styles.bodyText}>좋아요!</CustomText>
             <CustomText style={styles.bodyText}>이름은 뭐로 할까요?</CustomText>
 
@@ -53,6 +57,7 @@ const MainEggModal = ({
       {step === 3 && (
         <>
           <View style={styles.bodyContainer}>
+            <Image source={newPetImage} style={styles.image} />
             <CustomText style={styles.bodyText}>이제 퀘스트를 통해</CustomText>
             <CustomText>당신의 친구를 성장시켜줘요!</CustomText>
           </View>
@@ -66,14 +71,25 @@ const MainEggModal = ({
 };
 
 const styles = StyleSheet.create({
-  bodyContainer: { width: 280, justifyContent: 'center' },
+  image: {
+    width: 150,
+    height: 150,
+    marginBottom: 30,
+    alignSelf: 'center',
+  },
+  bodyContainer: {
+    width: 280,
+    alignContent: 'center',
+    justifyContent: 'center',
+  },
   bodyText: {
+    paddingLeft: 5,
     marginBottom: 5,
   },
   buttonContainer: {
     flexDirection: 'row',
     justifyContent: 'space-around',
-    marginTop: 20,
+    marginTop: 40,
   },
 
   twoButtonContainer: {
@@ -89,6 +105,7 @@ const styles = StyleSheet.create({
     backgroundColor: colors.BACKGROUND_COLOR,
     paddingLeft: 15,
     borderRadius: 20,
+    marginTop: 10,
   },
 });
 

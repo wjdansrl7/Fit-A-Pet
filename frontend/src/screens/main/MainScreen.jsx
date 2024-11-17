@@ -59,7 +59,8 @@ function MainScreen({ navigation }) {
     useEggModalDataStore();
   const [isEggModalVisible, setEggModalVisible] = useState(false); // 에그모달 상태
   const [step, setStep] = useState(1); // 에그모달의 단계 관리
-
+  const newPetImage = petImages[newPetType]?.[newPetStatus] || null;
+  console.log(newPetImage);
   useEffect(() => {
     // 이후 params 변경 감지
     if (shouldShowModal) {
@@ -234,8 +235,7 @@ function MainScreen({ navigation }) {
           onUpdateNickname={handleEggUpdateNickname}
           onClose={handleEggModalClose}
           setStep={setStep}
-          // newPetType={newPetType} // 추가
-          // newPetStatus={newPetStatus}
+          newPetImage={newPetImage}
         />
 
         <Text>{completedQuestIds}</Text>

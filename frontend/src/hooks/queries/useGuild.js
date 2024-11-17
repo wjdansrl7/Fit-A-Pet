@@ -4,7 +4,6 @@ import {
   getGuildInfo,
   getMemberInfo,
   getQuestInfo,
-  // getEnteringCode,
   byeGuild,
   getQuests,
   chooseQuest,
@@ -50,17 +49,6 @@ function useQuestInfo(guildId) {
   });
   return { isSuccess, data, isLoading };
 }
-// function useEnteringCode(guildId) {
-//   const { isSuccess, data, isLoading } = useQuery({
-//     queryKey: ['guild', 'enteringCode', guildId],
-//     queryFn: () => getEnteringCode(guildId),
-//     staleTime: 0,
-//     cacheTime: 0,
-//     refetchOnWindowFocus: true,
-//     refetchOnReconnect: true,
-//   });
-//   return { isSuccess, data, isLoading };
-// }
 
 function useByeGuild(guildId) {
   return useMutation({
@@ -77,7 +65,6 @@ function useByeGuild(guildId) {
   });
 }
 
-// clear
 function useQuests() {
   const { isSuccess, data, isLoading } = useQuery({
     queryKey: ['guild', 'quests'],
@@ -93,7 +80,6 @@ function useQuests() {
 
 function useChooseQuest() {
   const queryClient = useQueryClient();
-
   return useMutation({
     mutationFn: ({ guildId, questId }) => chooseQuest(guildId, questId),
     onSuccess: (_, { guildId }) => {
@@ -124,7 +110,6 @@ export {
   useGuildInfo,
   useMemberInfo,
   useQuestInfo,
-  // useEnteringCode,
   useByeGuild,
   useQuests,
   useChooseQuest,

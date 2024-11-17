@@ -5,7 +5,6 @@ const useEggModalDataStore = create((set) => ({
   newPetType: null,
   newPetStatus: null,
 
-  // 상태 업데이트 함수
   setEggModalData: ({ shouldShowModal, newPetType, newPetStatus }) =>
     set({ shouldShowModal, newPetType, newPetStatus }),
 }));

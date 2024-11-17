@@ -12,7 +12,6 @@ const frames = Object.values(spriteData.frames).map((frame) => ({
 
 const animations = {
   walk: [0, 1, 0],
-  // 적당히 조절 해야할듯, 아님 동물마다 저장을 하던가
 };
 
 <AnimatedSprite

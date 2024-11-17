@@ -1,6 +1,5 @@
-import React, { useRef, useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import { StyleSheet, View, TouchableOpacity, Image } from 'react-native';
-import TreasureBox from '@assets/backgrounds/guild/TreasureBox.png';
 import GuildQuestModal from './GuildQuestModal';
 import GuildInviteModal from './GuildInviteModal';
 import GuildByeModal from './GuildByeModal';
@@ -40,13 +39,13 @@ function GuildScreen({ navigation, route }) {
     .map((_, index) => (memberInfo && memberInfo[index]) || null);
 
   const { data: quests } = useQuests();
+
   const openModal = (modal) => {
-    // Check if the user is the guild leader
     const isGuildLeader = guildInfo?.guildLeaderId === myInfo?.userId;
 
     if (modal === 'quest') {
       if (isGuildLeader) {
-        setActiveModal(modal); // Allow 'quest' modal only for guild leaders
+        setActiveModal(modal);
       } else {
         setActiveModal('leader');
       }
@@ -156,10 +155,9 @@ function GuildScreen({ navigation, route }) {
         byeError={byeError}
         onClose={() => {
           closeModal();
-          setByeError(null); // byeError 상태 초기화
+          setByeError(null);
         }}
         onLeave={() => {
-          // 탈퇴 로직 실행
           leaveGuild(guildId);
         }}
       />
