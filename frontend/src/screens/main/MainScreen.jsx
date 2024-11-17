@@ -60,7 +60,8 @@ function MainScreen({ navigation }) {
   const [isEggModalVisible, setEggModalVisible] = useState(false); // 에그모달 상태
   const [step, setStep] = useState(1); // 에그모달의 단계 관리
   const newPetImage = petImages[newPetType]?.[newPetStatus] || null;
-  console.log(newPetImage);
+  // console.log(newPetImage);
+
   useEffect(() => {
     // 이후 params 변경 감지
     if (shouldShowModal) {
@@ -89,10 +90,9 @@ function MainScreen({ navigation }) {
         useHealthDataStore.getState();
       updateHealthData(steps, sleepHours);
       checkQuestCompletion();
-      refetch();
     };
 
-    initializeHealthData();
+    initializeHealthData().then(() => refetch());
   }, []);
 
   // 닉네임 변경 함수

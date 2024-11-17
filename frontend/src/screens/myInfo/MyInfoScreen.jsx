@@ -12,6 +12,7 @@ import CustomModal from '@components/CustomModal/CustomModal';
 import CustomButton from '@components/CustomButton/CustomButton';
 import { authNavigations } from '@src/constants';
 import useAuth from '@hooks/queries/useAuth';
+import useHealthDataStore from '@src/stores/healthDataStore';
 
 function MyInfoScreen({ navigation }) {
   const [isModalVisible, setModalVisible] = useState(false);
@@ -67,12 +68,13 @@ function MyInfoScreen({ navigation }) {
   const walks = {
     stepCnt: 8000,
   };
+
+  const { steps, sleepHours } = useHealthDataStore();
+
   return (
     <View style={styles.container}>
       {/* 스크린 타이틀 */}
-      <CustomText style={styles.screenTitle}>
-        {userInfo.userName}님의 오늘 기록
-      </CustomText>
+      {/* <CustomText style={styles.screenTitle}>나의 오늘 기록</CustomText> */}
 
       {/* 일일기록 */}
       <View style={styles.screenContainer}>
@@ -173,6 +175,7 @@ function MyInfoScreen({ navigation }) {
             onPress={() => setModalVisible(false)}
           />
         </CustomModal>
+
         {/* 수면 */}
         <View style={styles.categoryContainer}>
           <View style={styles.categoryContainerBody}>
@@ -184,10 +187,11 @@ function MyInfoScreen({ navigation }) {
               />
             </View>
             <CustomText style={styles.defaultInfoText}>
-              수면: {sleeps.sleepTime}시간
+              수면: {sleepHours}시간
             </CustomText>
           </View>
         </View>
+
         {/* 걸음수 */}
         <View style={styles.categoryContainer}>
           <View style={styles.categoryContainerBody}>
@@ -199,7 +203,7 @@ function MyInfoScreen({ navigation }) {
               />
             </View>
             <CustomText style={styles.defaultInfoText}>
-              걸음수: {walks.stepCnt}보
+              걸음수: {steps}보
             </CustomText>
           </View>
         </View>
@@ -228,33 +232,36 @@ function MyInfoScreen({ navigation }) {
 const styles = StyleSheet.create({
   container: {
     gap: 50,
+    // flex: 1,
   },
   screenTitle: {
     textAlign: 'center',
     fontSize: 24,
-    marginTop: 40,
+    // marginTop: 20,
   },
   screenContainer: {
-    gap: 60,
+    marginTop: 30,
+    gap: 30,
   },
   categoryContainer: {
+    marginTop: 20,
     gap: 20,
   },
   categoryContainerBody: {
-    gap: 40,
+    gap: 30,
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'center',
   },
   imageContainer: {
     width: Dimensions.get('screen').width / 3,
-    // backgroundColor: colors.TAG_RED,
+    height: Dimensions.get('screen').width / 3,
     alignItems: 'center',
     justifyContent: 'center',
   },
   image: {
     width: '100%',
-    // height: '100%',
+    height: '100%',
   },
   dietsCheckImageContainer: {
     gap: 17,
