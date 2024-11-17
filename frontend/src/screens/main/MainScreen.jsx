@@ -67,8 +67,6 @@ function MainScreen({ navigation }) {
     if (shouldShowModal) {
       console.log('shouldShowModal is true');
       setEggModalVisible(true);
-    } else {
-      setEggModalVisible(false);
     }
   }, [shouldShowModal]);
 
@@ -137,14 +135,19 @@ function MainScreen({ navigation }) {
           try {
             FoodLensModule.recognizeFood(imageBase64)
               .then((result) => {
-                console.log(result);
+                console.log(`자장자장: ${result}`); // result 구조 확인
+
+                // JSON 문자열을 객체로 변환
+                const parsedResult = JSON.parse(result);
+
                 const transformedResult = {
-                  calorie: Number(result.energy), // energy → calorie (converted to Number)
-                  carbo: Number(result.carbohydrate), // carbohydrate → carbo (converted to Number)
-                  protein: Number(result.protein), // protein (converted to Number)
-                  fat: Number(result.fat), // fat (converted to Number)
+                  calorie: parsedResult.energy ?? 0, // energy → calorie (fallback to 0 if undefined)
+                  carbo: parsedResult.carbohydrate ?? 0, // carbohydrate → carbo (fallback to 0 if undefined)
+                  protein: parsedResult.protein ?? 0, // 그대로
+                  fat: parsedResult.fat ?? 0, // 그대로
                 };
-                console.log(transformedResult);
+
+                console.log('보낼게', transformedResult);
                 // 변환된 데이터로 저장 함수 호출
                 saveDailyDiet(transformedResult)
                   .then(() => {
@@ -227,7 +230,7 @@ function MainScreen({ navigation }) {
 
   const handleEggModalClose = async () => {
     setEggModalVisible(false);
-
+    console.log('egg모달닫아');
     // Zustand 상태 업데이트
     setEggModalData({ shouldShowModal: false });
 

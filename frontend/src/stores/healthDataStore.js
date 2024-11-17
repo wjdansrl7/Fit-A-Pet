@@ -3,7 +3,7 @@ import { personalQuest, totalQuest } from '@constants/quest';
 import axios from 'axios';
 import axiosInstance from '@api/axios';
 import useEggModalDataStore from './eggModalDataStore';
-
+import queryClient from '@api/queryClient';
 const useHealthDataStore = create((set, get) => ({
   steps: 0,
   sleepHours: 0,
@@ -96,13 +96,19 @@ const useHealthDataStore = create((set, get) => ({
       console.log(`퀘스트 ID ${questId} 완료 전송 성공:`, response.data);
       const { setEggModalData } = useEggModalDataStore.getState();
       const { petStatus, petType, shouldShowModal } = response.data;
-
+      console.log(shouldShowModal, '받음?');
+      console.log(response.data, '이거');
       if (shouldShowModal) {
+        console.log('알받기,성공');
+        console.log('shouldShowModal:', shouldShowModal);
+        console.log('newPetType:', petType);
+        console.log('newPetStatus:', petStatus);
         setEggModalData({
           shouldShowModal,
           newPetType: petType,
           newPetStatus: petStatus,
         });
+        queryClient.invalidateQueries(['mainPet']);
       }
     } catch (error) {
       console.error(
