@@ -84,9 +84,11 @@ public class QuestServiceImpl implements QuestService {
         PersonalQuest personalQuest = personalQuestRepository.findByUserAndQuest(userId, dto.getCompleteQuestId())
                 .orElseThrow(() -> new EntityNotFoundException("personalQuest not found"));
 
-//        if (personalQuest.isQuestStatus()) {
-//            return false;
-//        }
+        Map<String, Object> response = new HashMap<>();
+
+        if (personalQuest.isQuestStatus()) {
+            return response;
+        }
 
         // 퀘스트 상태 변경
         personalQuest.updateStatus(true);
@@ -99,7 +101,6 @@ public class QuestServiceImpl implements QuestService {
         User user = personalQuest.getUser();
         PetBook petBook = petBookService.findPetBookById(user.getPetMainId(), user);
 
-        Map<String, Object> response = new HashMap<>();
         response.put("shouldShowModal", petBookService.processQuestCompletion(petBook, reward, user));
         response.put("petType", petBook.getPet().getPetType());
         response.put("petStatus", petBook.getPet().getPetStatus());
