@@ -37,6 +37,7 @@ import { fetchHealthData } from '@api/healthData';
 import useHealthDataStore from '@src/stores/healthDataStore';
 import MainEggModal from './MainEggModal';
 import useEggModalDataStore from '@src/stores/eggModalDataStore';
+import { saveDailyDiet } from '@api/healthDataApi';
 function MainScreen({ navigation }) {
   const [isModalVisible, setModalVisible] = useState(false);
   const [petNickname, setPetNickname] = useState('');
@@ -136,11 +137,30 @@ function MainScreen({ navigation }) {
           try {
             FoodLensModule.recognizeFood(imageBase64)
               .then((result) => {
-                console.log('Recognition Result:', result);
-                Alert.alert(
-                  'Recognition Successful',
-                  `Detected food: ${result}`
-                );
+                console.log(result);
+                const transformedResult = {
+                  calorie: Number(result.energy), // energy → calorie (converted to Number)
+                  carbo: Number(result.carbohydrate), // carbohydrate → carbo (converted to Number)
+                  protein: Number(result.protein), // protein (converted to Number)
+                  fat: Number(result.fat), // fat (converted to Number)
+                };
+                console.log(transformedResult);
+                // 변환된 데이터로 저장 함수 호출
+                saveDailyDiet(transformedResult)
+                  .then(() => {
+                    console.log('Diet saved successfully:', result);
+                    Alert.alert(
+                      'Recognition Successful',
+                      `Detected food and saved: ${JSON.stringify(result)}`
+                    );
+                  })
+                  .catch((error) => {
+                    console.error('Save Error:', error);
+                    Alert.alert(
+                      'Save Error',
+                      'Food recognized but failed to save the data.'
+                    );
+                  });
               })
               .catch((error) => {
                 console.error('Recognition Error:', error);
