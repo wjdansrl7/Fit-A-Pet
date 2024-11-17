@@ -1,5 +1,7 @@
 package com.ssafy.fittapet.backend.common.config.security;
 
+import com.ssafy.fittapet.backend.application.service.blacklist.BlacklistService;
+import com.ssafy.fittapet.backend.application.service.refresh.RefreshService;
 import com.ssafy.fittapet.backend.common.filter.CustomLogoutFilter;
 import com.ssafy.fittapet.backend.common.filter.JWTFilter;
 import com.ssafy.fittapet.backend.common.util.JWTUtil;
@@ -28,8 +30,8 @@ public class SecurityConfig {
 //    @Value("${frontend.server.url}")
 //    private String url;
 
-    private final RefreshRepository refreshRepository;
-    private final BlacklistRepository blacklistRepository;
+    private final RefreshService refreshService;
+    private final BlacklistService blacklistService;
     private final JWTUtil jwtUtil;
 
     @Bean
@@ -70,7 +72,7 @@ public class SecurityConfig {
 
         //LogoutFilter 등록
         http
-                .addFilterBefore(new CustomLogoutFilter(jwtUtil, blacklistRepository, refreshRepository), LogoutFilter.class);
+                .addFilterBefore(new CustomLogoutFilter(jwtUtil, blacklistService, refreshService), LogoutFilter.class);
 
         //oauth2
 //        http

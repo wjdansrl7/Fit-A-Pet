@@ -9,16 +9,12 @@ import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
 
-/**
- * 인증된 사용자 정보 저장용
- * SecurityContextHolder 등록한 후 접근
- */
 public class CustomOAuth2User implements OAuth2User, UserDetails {
 
-    private final UserDTO userDTO;
+    private final UserDto userDTO;
 
-    public CustomOAuth2User(UserDTO userDTO) {
-        this.userDTO = userDTO;
+    public CustomOAuth2User(UserDto userDto) {
+        this.userDTO = userDto;
     }
 
     @Override
@@ -27,6 +23,7 @@ public class CustomOAuth2User implements OAuth2User, UserDetails {
         Map<String, Object> attributes = new HashMap<>();
         attributes.put("id", userDTO.getUserId());
         attributes.put("username", userDTO.getUserUniqueName());
+        attributes.put("name", userDTO.getUserName());
         attributes.put("role", userDTO.getRole());
 
         return attributes;
@@ -46,21 +43,21 @@ public class CustomOAuth2User implements OAuth2User, UserDetails {
         return "";
     }
 
+    public Long getId() {
+        return userDTO.getUserId();
+    }
+
     @Override
     public String getUsername() {
         return userDTO.getUserUniqueName();
     }
 
-    public Long getId(){
-        return userDTO.getUserId();
-    }
-
     @Override
     public String getName() {
-        return userDTO.getUserUniqueName();
+        return userDTO.getUserName();
     }
 
-    public String getRole(){
+    public String getRole() {
         return userDTO.getRole();
     }
 }

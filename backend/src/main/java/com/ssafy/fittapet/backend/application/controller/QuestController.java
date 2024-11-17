@@ -4,8 +4,7 @@ import com.ssafy.fittapet.backend.application.service.auth.AuthService;
 import com.ssafy.fittapet.backend.application.service.quest.QuestService;
 import com.ssafy.fittapet.backend.common.exception.CustomException;
 import com.ssafy.fittapet.backend.domain.dto.auth.CustomOAuth2User;
-import com.ssafy.fittapet.backend.domain.dto.quest.QuestCompleteRequestDTO;
-import com.ssafy.fittapet.backend.domain.dto.quest.QuestQueryRequestDTO;
+import com.ssafy.fittapet.backend.domain.dto.quest.QuestCompleteRequest;
 import com.ssafy.fittapet.backend.domain.dto.quest.QuestResponse;
 import com.ssafy.fittapet.backend.domain.entity.Quest;
 import lombok.RequiredArgsConstructor;
@@ -40,24 +39,15 @@ public class QuestController {
         return new ResponseEntity<>(myQuestResponse, HttpStatus.OK);
     }
 
-    @GetMapping("/query")
-    public ResponseEntity<?> queryQuest(@RequestBody QuestQueryRequestDTO dto) {
-        return ResponseEntity.ok(questService.queryQuest(dto));
-    }
-
     @PostMapping("/personal/complete")
-    public ResponseEntity<?> completePersonalQuest(@RequestBody QuestCompleteRequestDTO dto,
+    public ResponseEntity<?> completePersonalQuest(@RequestBody QuestCompleteRequest dto,
                                                    @AuthenticationPrincipal CustomOAuth2User customOAuth2User) {
-
-        log.info("QuestController completePersonalQuest");
         return ResponseEntity.ok(questService.completePersonalQuest(dto, customOAuth2User.getId()));
     }
 
     @PostMapping("/guild/complete")
-    public ResponseEntity<?> completeGuildQuest(@RequestBody QuestCompleteRequestDTO dto,
+    public ResponseEntity<?> completeGuildQuest(@RequestBody QuestCompleteRequest dto,
                                                 @AuthenticationPrincipal CustomOAuth2User customOAuth2User) throws CustomException {
-
-        log.info("QuestController completeGuildQuest");
         return ResponseEntity.ok(questService.completeGuildQuest(dto, customOAuth2User.getId()));
     }
 }
