@@ -7,7 +7,7 @@ import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.util.List;
 
-public interface QuestRepository extends JpaRepository<Quest, Long>, QuestRepositoryCustom {
+public interface QuestRepository extends JpaRepository<Quest, Long> {
     List<Quest> findAllByQuestType(QuestType questType);
 
     List<Quest> findAllByQuestTypeAndQuestCategory(QuestType questType, QuestCategory questCategory);

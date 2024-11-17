@@ -5,9 +5,7 @@ import com.ssafy.fittapet.backend.application.service.petbook.PetBookService;
 import com.ssafy.fittapet.backend.common.constant.entity_field.QuestCategory;
 import com.ssafy.fittapet.backend.common.constant.entity_field.QuestType;
 import com.ssafy.fittapet.backend.common.exception.CustomException;
-import com.ssafy.fittapet.backend.domain.dto.quest.QuestCompleteRequestDTO;
-import com.ssafy.fittapet.backend.domain.dto.quest.QuestQueryRequestDTO;
-import com.ssafy.fittapet.backend.domain.dto.quest.QuestQueryResponseDTO;
+import com.ssafy.fittapet.backend.domain.dto.quest.QuestCompleteRequest;
 import com.ssafy.fittapet.backend.domain.dto.quest.QuestResponse;
 import com.ssafy.fittapet.backend.domain.entity.*;
 import com.ssafy.fittapet.backend.domain.repository.auth.UserRepository;
@@ -16,8 +14,8 @@ import com.ssafy.fittapet.backend.domain.repository.quest.QuestRepository;
 import com.ssafy.fittapet.backend.domain.repository.user_quest.UserQuestStatusRepository;
 import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.HashMap;
 import java.util.List;
@@ -27,8 +25,9 @@ import static com.ssafy.fittapet.backend.common.constant.error_code.QuestErrorCo
 
 @Service
 @RequiredArgsConstructor
-@Slf4j
+@Transactional
 public class QuestServiceImpl implements QuestService {
+
     private final QuestRepository questRepository;
     private final PersonalQuestRepository personalQuestRepository;
     private final UserRepository userRepository;
@@ -64,16 +63,8 @@ public class QuestServiceImpl implements QuestService {
         return response;
     }
 
-    /**
-     * 개인 퀘스트 완료
-     * todo 경험치 Long, Integer / select 최소화 / 진화 여부 리턴
-     */
     @Override
-    public Long completePersonalQuest(QuestCompleteRequestDTO dto, Long userId) {
-
-        log.info("completePersonalQuest dto {}", dto.toString());
-        log.info("QuestService questId {}", dto.getCompleteQuestId());
-        log.info("QuestService userId {}", userId);
+    public Long completePersonalQuest(QuestCompleteRequest dto, Long userId) {
 
         PersonalQuest personalQuest = personalQuestRepository.findByUserAndQuest(userId, dto.getCompleteQuestId())
                 .orElseThrow(() -> new EntityNotFoundException("personalQuest not found"));
@@ -82,54 +73,33 @@ public class QuestServiceImpl implements QuestService {
             return 0L;
         }
 
-        // 퀘스트 상태 변경
         personalQuest.updateStatus(true);
         personalQuestRepository.save(personalQuest);
 
-        // 퀘스트 보상
         Integer reward = Math.toIntExact(personalQuest.getQuest().getQuestReward());
-        log.info("quest reward {}", reward);
 
-        // 경험치 상승
         User user = personalQuest.getUser();
         PetBook petBook = petBookService.selectPetBook(user.getPetMainId(), user);
         petBookService.updateExpAndEvolveCheck(petBook, reward);
 
-        log.info("getReward {}", personalQuest.getQuest().getQuestReward());
-
         return personalQuest.getQuest().getQuestReward();
     }
 
-    /**
-     * 길드 퀘스트 완료
-     * todo 경험치 Long, Integer / select 최소화 / 진화 여부 리턴
-     */
     @Override
-    public Long completeGuildQuest(QuestCompleteRequestDTO dto, Long userId) {
+    public Long completeGuildQuest(QuestCompleteRequest dto, Long userId) {
 
         UserQuestStatus userQuestStatus = userQuestStatusRepository.findByUserQuestStatusWithQuest(dto.getCompleteQuestId())
                 .orElseThrow(() -> new EntityNotFoundException("userQuestStatus not found"));
 
-        // 퀘스트 상태 변경
         userQuestStatus.updateStatus(true);
         userQuestStatusRepository.save(userQuestStatus);
 
-        // 퀘스트 보상
         Integer reward = Math.toIntExact(userQuestStatus.getGuildQuest().getQuest().getQuestReward());
 
-        // 경험치 상승
         User user = authService.getLoginUser(userId);
         PetBook petBook = petBookService.selectPetBook(user.getPetMainId(), user);
         petBookService.updateExpAndEvolveCheck(petBook, reward);
 
         return userQuestStatus.getGuildQuest().getQuest().getQuestReward();
-    }
-
-    /**
-     * 카테고리 기반 쿼리 리턴
-     */
-    @Override
-    public List<QuestQueryResponseDTO> queryQuest(QuestQueryRequestDTO dto) {
-        return questRepository.findByCategory(dto.getQuestCategory());
     }
 }
