@@ -156,7 +156,7 @@ public class AuthServiceImpl implements AuthService {
         //refresh update
         addRefreshEntity(userId, refresh, refreshExpiredMs);
 
-        PetBook petBook = petBookService.selectPetBook(loginUser.getPetMainId(), loginUser);
+        PetBook petBook = petBookService.findPetBookById(loginUser.getPetMainId(), loginUser);
 
         customUserDetails.setAccessToken(access);
         customUserDetails.setRefreshToken(refresh);
