@@ -72,7 +72,7 @@ function useByeGuild(guildId) {
       queryClient.invalidateQueries(['guild', 'questInfo', guildId]);
     },
     onError: (error) => {
-      console.error('길드탈퇴:', error);
+      throw error;
     },
   });
 }

@@ -68,8 +68,9 @@ function GuildScreen({ navigation, route }) {
         navigation.navigate('Map');
       },
       onError: (error) => {
-        console.log(error);
-        if (error.code === 406) {
+        console.log(error.code, error.message);
+        if (error.response?.status === 406) {
+          console.log('에러걸림');
           setByeError('leader');
         }
       },
