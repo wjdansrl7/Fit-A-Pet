@@ -81,19 +81,6 @@ function MainScreen({ navigation }) {
     }
   }, [mainPetInfo]);
 
-  // 임시 더미 데이터
-  // const mainPetInfo = {
-  //   petBookId: 1,
-  //   petNickname: '뭉기',
-  //   petType: '벨루가',
-  //   petStatus: '알',
-  //   petExp: 1500,
-  //   isMain: true,
-  //   petPercent: 97,
-  //   createdAt: '2024년 10월 31일',
-  //   petLevel: 1,
-  // };
-
   // 헬스 데이터 업데이트
   useEffect(() => {
     const initializeHealthData = async () => {
