@@ -58,7 +58,7 @@ public class GuildCustomRepositoryImpl implements GuildCustomRepository {
         QUserQuestStatus userQuestStatus = QUserQuestStatus.userQuestStatus;
 
         return queryFactory
-                .selectDistinct(new QGuildMemberInfoResponse(
+                .select(new QGuildMemberInfoResponse(
                         map.user.id,
                         map.user.userName,
                         petBook.pet.id,
