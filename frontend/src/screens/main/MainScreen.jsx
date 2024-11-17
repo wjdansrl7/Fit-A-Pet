@@ -37,6 +37,7 @@ import { fetchHealthData } from '@api/healthData';
 import useHealthDataStore from '@src/stores/healthDataStore';
 import MainEggModal from './MainEggModal';
 import useEggModalDataStore from '@src/stores/eggModalDataStore';
+import { saveDailyDiet } from '@api/healthDataApi';
 function MainScreen({ navigation }) {
   const [isModalVisible, setModalVisible] = useState(false);
   const [petNickname, setPetNickname] = useState('');
@@ -67,8 +68,6 @@ function MainScreen({ navigation }) {
     if (shouldShowModal) {
       console.log('shouldShowModal is true');
       setEggModalVisible(true);
-    } else {
-      setEggModalVisible(false);
     }
   }, [shouldShowModal]);
 
@@ -123,11 +122,35 @@ function MainScreen({ navigation }) {
           try {
             FoodLensModule.recognizeFood(imageBase64)
               .then((result) => {
-                console.log('Recognition Result:', result);
-                Alert.alert(
-                  'Recognition Successful',
-                  `Detected food: ${result}`
-                );
+                console.log(`자장자장: ${result}`); // result 구조 확인
+
+                // JSON 문자열을 객체로 변환
+                const parsedResult = JSON.parse(result);
+
+                const transformedResult = {
+                  calorie: parsedResult.energy ?? 0, // energy → calorie (fallback to 0 if undefined)
+                  carbo: parsedResult.carbohydrate ?? 0, // carbohydrate → carbo (fallback to 0 if undefined)
+                  protein: parsedResult.protein ?? 0, // 그대로
+                  fat: parsedResult.fat ?? 0, // 그대로
+                };
+
+                console.log('보낼게', transformedResult);
+                // 변환된 데이터로 저장 함수 호출
+                saveDailyDiet(transformedResult)
+                  .then(() => {
+                    console.log('Diet saved successfully:', result);
+                    Alert.alert(
+                      'Recognition Successful',
+                      `Detected food and saved: ${JSON.stringify(result)}`
+                    );
+                  })
+                  .catch((error) => {
+                    console.error('Save Error:', error);
+                    Alert.alert(
+                      'Save Error',
+                      'Food recognized but failed to save the data.'
+                    );
+                  });
               })
               .catch((error) => {
                 console.error('Recognition Error:', error);
@@ -194,7 +217,7 @@ function MainScreen({ navigation }) {
 
   const handleEggModalClose = async () => {
     setEggModalVisible(false);
-
+    console.log('egg모달닫아');
     // Zustand 상태 업데이트
     setEggModalData({ shouldShowModal: false });
 
