@@ -1,8 +1,6 @@
 package com.ssafy.fittapet.backend.application.service.auth;
 
-import com.ssafy.fittapet.backend.application.service.blacklist.BlacklistService;
 import com.ssafy.fittapet.backend.application.service.petbook.PetBookService;
-import com.ssafy.fittapet.backend.application.service.refresh.RefreshService;
 import com.ssafy.fittapet.backend.application.service.user.UserService;
 import com.ssafy.fittapet.backend.common.constant.entity_field.QuestType;
 import com.ssafy.fittapet.backend.common.constant.entity_field.Role;
@@ -10,10 +8,11 @@ import com.ssafy.fittapet.backend.common.constant.entity_field.UserTier;
 import com.ssafy.fittapet.backend.common.util.JWTUtil;
 import com.ssafy.fittapet.backend.domain.dto.auth.*;
 import com.ssafy.fittapet.backend.domain.entity.*;
+import com.ssafy.fittapet.backend.domain.repository.auth.BlacklistRepository;
+import com.ssafy.fittapet.backend.domain.repository.auth.RefreshRepository;
 import com.ssafy.fittapet.backend.domain.repository.auth.UserRepository;
 import com.ssafy.fittapet.backend.domain.repository.personal_quest.PersonalQuestRepository;
 import com.ssafy.fittapet.backend.domain.repository.quest.QuestRepository;
-import jakarta.persistence.EntityNotFoundException;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
@@ -34,8 +33,10 @@ public class AuthServiceImpl implements AuthService {
 
     private final JWTUtil jwtUtil;
 
-    private final RefreshService refreshService;
-    private final BlacklistService blacklistService;
+//    private final RefreshService refreshService;
+//    private final BlacklistService blacklistService;
+    private final BlacklistRepository blacklistRepository;
+    private final RefreshRepository refreshRepository;
     private final UserService userService;
 
     private final UserRepository userRepository;
@@ -64,7 +65,8 @@ public class AuthServiceImpl implements AuthService {
             return new ResponseEntity<>("refreshToken is null", HttpStatus.BAD_REQUEST);
         }
 
-        if (blacklistService.existsById(refresh)) {
+//        if (blacklistService.existsById(refresh)) {
+        if (blacklistRepository.existsById(refresh)) {
             return new ResponseEntity<>("refreshToken is blacklisted", HttpStatus.BAD_REQUEST);
         }
 
@@ -78,7 +80,8 @@ public class AuthServiceImpl implements AuthService {
         }
 
         String userUniqueName = jwtUtil.getUsername(refresh);
-        Optional<RefreshToken> optionalRefreshToken = refreshService.findRefreshTokenById(userUniqueName);
+//        Optional<RefreshToken> optionalRefreshToken = refreshService.findRefreshTokenById(userUniqueName);
+        Optional<RefreshToken> optionalRefreshToken = refreshRepository.findById(userUniqueName);
         if (optionalRefreshToken.isPresent()) {
             RefreshToken savedRefreshToken = optionalRefreshToken.get();
             if (!savedRefreshToken.getToken().equals(refresh)) {
@@ -144,7 +147,8 @@ public class AuthServiceImpl implements AuthService {
                 .expiration(expiredMs)
                 .build();
 
-        refreshService.saveRefreshToken(refreshToken);
+//        refreshService.saveRefreshToken(refreshToken);
+        refreshRepository.save(refreshToken);
     }
 
     private SignupResponseDto getUserInfoFromKakao(String accessToken) {

@@ -1,11 +1,10 @@
 package com.ssafy.fittapet.backend.common.filter;
 
-import com.ssafy.fittapet.backend.application.service.blacklist.BlacklistService;
-import com.ssafy.fittapet.backend.application.service.refresh.RefreshService;
 import com.ssafy.fittapet.backend.common.util.JWTUtil;
 import com.ssafy.fittapet.backend.domain.entity.Blacklist;
 import com.ssafy.fittapet.backend.domain.entity.RefreshToken;
-import io.jsonwebtoken.ExpiredJwtException;
+import com.ssafy.fittapet.backend.domain.repository.auth.BlacklistRepository;
+import com.ssafy.fittapet.backend.domain.repository.auth.RefreshRepository;
 import jakarta.servlet.*;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
@@ -19,17 +18,22 @@ import java.util.Optional;
 public class CustomLogoutFilter extends GenericFilter {
 
     private final JWTUtil jwtUtil;
-    private final BlacklistService blacklistService;
-    private final RefreshService refreshService;
+//    private final BlacklistService blacklistService;
+//    private final RefreshService refreshService;
+    private final BlacklistRepository blacklistRepository;
+    private final RefreshRepository refreshRepository;
 
     @Value("${refresh-token.milli-second}")
     private Long refreshExpiredMs;
 
-    public CustomLogoutFilter(JWTUtil jwtUtil, BlacklistService blacklistService, RefreshService refreshService) {
+    public CustomLogoutFilter(JWTUtil jwtUtil, BlacklistRepository blacklistRepository, RefreshRepository refreshRepository) {
         this.jwtUtil = jwtUtil;
-        this.blacklistService = blacklistService;
-        this.refreshService = refreshService;
+//        this.blacklistService = blacklistService;
+//        this.refreshService = refreshService;
+        this.blacklistRepository = blacklistRepository;
+        this.refreshRepository = refreshRepository;
     }
+
 
     @Override
     public void doFilter(ServletRequest request, ServletResponse response, FilterChain chain) throws IOException, ServletException {
@@ -81,7 +85,8 @@ public class CustomLogoutFilter extends GenericFilter {
         }
 
         String userUniqueName = jwtUtil.getUsername(refresh);
-        Optional<RefreshToken> optionalRefreshToken = refreshService.findRefreshTokenById(userUniqueName);
+//        Optional<RefreshToken> optionalRefreshToken = refreshService.findRefreshTokenById(userUniqueName);
+        Optional<RefreshToken> optionalRefreshToken = refreshRepository.findById(userUniqueName);
         if (optionalRefreshToken.isPresent()) {
 
             RefreshToken savedRefreshToken = optionalRefreshToken.get();
@@ -107,8 +112,10 @@ public class CustomLogoutFilter extends GenericFilter {
                 .expiration(refreshExpiredMs)
                 .build();
 
-        refreshService.deleteRefreshTokenById(userUniqueName);
-        blacklistService.saveBlacklist(blacklist);
+//        refreshService.deleteRefreshTokenById(userUniqueName);
+//        blacklistService.saveBlacklist(blacklist);
+        refreshRepository.deleteById(userUniqueName);
+        blacklistRepository.save(blacklist);
 
         HttpSession session = request.getSession(false);
         if (session != null) {
