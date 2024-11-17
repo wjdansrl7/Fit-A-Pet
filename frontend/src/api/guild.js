@@ -34,7 +34,11 @@ const chooseQuest = async (guildId, questId) => {
   const { data } = await axiosInstance.put(
     `guilds/${guildId}/quests/${questId}`
   );
-  console.log('asdasdasdadsdas', data);
+  return data;
+};
+
+const getMyInfo = async () => {
+  const { data } = await axiosInstance.get(`/auth/info`);
   return data;
 };
 
@@ -46,4 +50,5 @@ export {
   byeGuild,
   getQuests,
   chooseQuest,
+  getMyInfo,
 };

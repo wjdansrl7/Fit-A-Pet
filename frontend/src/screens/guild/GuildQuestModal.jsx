@@ -22,7 +22,6 @@ const GuildQuestModal = ({ isVisible, onClose, onSetQuest, quests }) => {
       onClose();
     }
   };
-
   return (
     <CustomModal
       title="퀘스트 목록"
@@ -54,7 +53,7 @@ const GuildQuestModal = ({ isVisible, onClose, onSetQuest, quests }) => {
         {filteredQuests.map((quest) => (
           <TouchableOpacity
             activeOpacity={0.8}
-            key={quest.questId}
+            key={quest.id}
             style={[
               styles.questFrameContainer,
               selectedQuest === quest
