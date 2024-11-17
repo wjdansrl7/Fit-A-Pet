@@ -159,7 +159,10 @@ function QuestScreen() {
                 <CustomText style={styles.questLabel}>그룹 퀘스트</CustomText>
               </View>
               {data.guildQuest.map((quest, index) => (
-                <QuestGroupFrame key={index} quest={quest} />
+                <View style={{ position: 'relative' }}>
+                  <QuestGroupFrame key={index} quest={quest} />
+                  <View></View>
+                </View>
               ))}
             </View>
           </View>

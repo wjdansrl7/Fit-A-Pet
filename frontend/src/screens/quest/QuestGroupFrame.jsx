@@ -5,7 +5,7 @@ import CustomText from '@components/CustomText/CustomText';
 
 function QuestGroupFrame({ quest }) {
   return (
-    <View style={styles.questContainer}>
+    <View style={[styles.questContainer, { opacity: 0.4 }]}>
       {/* 퀘스트 카드 Header */}
       <View style={styles.questHeader}>
         <View>

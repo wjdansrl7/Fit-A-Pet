@@ -41,7 +41,7 @@ function QuestPersonalFrame({ quests, seg }) {
               {quest.questStatus ? (
                 <View style={styles.rewardCircleCompleted}>
                   <CustomText style={styles.questNameCompleted}>
-                    COMPLETED
+                    COMPLETE
                   </CustomText>
                 </View>
               ) : (
@@ -52,9 +52,20 @@ function QuestPersonalFrame({ quests, seg }) {
                 </View>
               )}
               <CustomText
-                style={[styles.questName, { backgroundColor: colors.TAG_BLUE }]}
+                numberOfLines={1}
+                style={[
+                  styles.questName,
+                  {
+                    fontSize: 15,
+                    width: Dimensions.get('screen').width / 5, // 텍스트가 들어갈 최대 너비
+                    textAlign: 'center',
+                    // overflow: 'hidden',
+                    // textOverflow: 'ellipsis', // 잘린 텍스트에 '...' 추가
+                    // whiteSpace: 'nowrap',
+                  },
+                ]}
               >
-                {quest.questContent}
+                12,000보{/* {quest.questContent} */}
               </CustomText>
             </View>
           ))}
@@ -114,7 +125,6 @@ const styles = StyleSheet.create({
   },
   questNameCompleted: {
     fontSize: 12,
-    color: '#868E96',
     color: colors.MAIN_ORANGE,
   },
   imageContainer: {
