@@ -10,7 +10,7 @@ public interface AuthService {
 
     ResponseEntity<?> loginWithKakao(String kakaoAccessToken);
 
-    User getLoginUser(Long userId);
+    User getLoginUser(String username);
 
     void updateMainPet(Long petBookId, User loginUser);
 }

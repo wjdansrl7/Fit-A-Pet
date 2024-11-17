@@ -42,12 +42,12 @@ public class QuestController {
     @PostMapping("/personal/complete")
     public ResponseEntity<?> completePersonalQuest(@RequestBody QuestCompleteRequest dto,
                                                    @AuthenticationPrincipal CustomOAuth2User customOAuth2User) {
-        return ResponseEntity.ok(questService.completePersonalQuest(dto, customOAuth2User.getId()));
+        return ResponseEntity.ok(questService.completePersonalQuest(dto, customOAuth2User.getUsername()));
     }
 
     @PostMapping("/guild/complete")
     public ResponseEntity<?> completeGuildQuest(@RequestBody QuestCompleteRequest dto,
                                                 @AuthenticationPrincipal CustomOAuth2User customOAuth2User) throws CustomException {
-        return ResponseEntity.ok(questService.completeGuildQuest(dto, customOAuth2User.getId()));
+        return ResponseEntity.ok(questService.completeGuildQuest(dto, customOAuth2User.getUsername()));
     }
 }

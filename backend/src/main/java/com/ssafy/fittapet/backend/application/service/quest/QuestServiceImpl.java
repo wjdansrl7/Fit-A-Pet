@@ -68,9 +68,11 @@ public class QuestServiceImpl implements QuestService {
     }
 
     @Override
-    public Map<String, Object> completePersonalQuest(QuestCompleteRequest dto, Long userId) {
+    public Map<String, Object> completePersonalQuest(QuestCompleteRequest dto, String username) {
 
-        PersonalQuest personalQuest = personalQuestRepository.findByUserAndQuest(userId, dto.getCompleteQuestId())
+        User tempUser = userRepository.findByUserUniqueName(username);
+
+        PersonalQuest personalQuest = personalQuestRepository.findByUserAndQuest(tempUser.getId(), dto.getCompleteQuestId())
                 .orElseThrow(() -> new EntityNotFoundException("personalQuest not found"));
 
         personalQuest.updateStatus(true);
@@ -92,20 +94,21 @@ public class QuestServiceImpl implements QuestService {
     }
 
     @Override
-    public Map<String, Object> completeGuildQuest(QuestCompleteRequest dto, Long userId) throws CustomException {
+    public Map<String, Object> completeGuildQuest(QuestCompleteRequest dto, String username) throws CustomException {
 
 //        UserQuestStatus userQuestStatus = userQuestStatusRepository.findByUserQuestStatusWithQuest(dto.getCompleteQuestId())
 //                .orElseThrow(() -> new EntityNotFoundException("userQuestStatus not found"));
 
-        Quest quest = questRepository.findById(dto.getCompleteQuestId()).orElseThrow(()-> new CustomException(NO_QUEST));
+        Quest quest = questRepository.findById(dto.getCompleteQuestId()).orElseThrow(() -> new CustomException(NO_QUEST));
 
         // 필요 로직 :: 해당 퀘스트가 이용자가 진행중인 길드퀘스트인지 확인하기.
         // Map, GuildQuest, UserQuestStatus 테이블을 조인 후 user와 quest로 해당하는 값들을 찾음
         // list로 받은 것은 같은 퀘스트를 갖고 있는 길드들에 가입했을 경우를 위해.
         // list 안의 userQuestStatus ID를 이용해 기존의 로직 수행.
-        List<MapGuildQuestDTO> list = mapRepository.findAllMGQByUserId(userId, quest);
+        User user2 = userRepository.findByUserUniqueName(username);
+        List<MapGuildQuestDTO> list = mapRepository.findAllMGQByUserId(user2.getId(), quest);
         Map<String, Object> response = new HashMap<>();
-        for(MapGuildQuestDTO dtoMap : list) {
+        for (MapGuildQuestDTO dtoMap : list) {
             // 퀘스트 상태 변경
             UserQuestStatus userQuestStatus = userQuestStatusRepository.findById(dtoMap.getUserQuestStatusId()).orElse(null);
             userQuestStatus.updateStatus(true);
@@ -115,7 +118,8 @@ public class QuestServiceImpl implements QuestService {
             Integer reward = Math.toIntExact(userQuestStatus.getGuildQuest().getQuest().getQuestReward());
 
             // 경험치 상승
-            User user = authService.getLoginUser(userId);
+//            User user = authService.getLoginUser(userId);
+            User user = authService.getLoginUser(username);
             PetBook petBook = petBookService.findPetBookById(user.getPetMainId(), user);
 
             response.put("shouldShowModal", petBookService.processQuestCompletion(petBook, reward, user));

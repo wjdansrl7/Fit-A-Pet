@@ -131,9 +131,9 @@ public class AuthServiceImpl implements AuthService {
         return ResponseEntity.ok(signupResponseDto);
     }
 
-    public User getLoginUser(Long userId) {
-        return userRepository.findById(userId)
-                .orElseThrow(() -> new RuntimeException("user not found"));
+    public User getLoginUser(String username) {
+        return userRepository.findByUserUniqueName(username);
+//                .orElseThrow(() -> new RuntimeException("user not found"));
     }
 
     private void addRefreshEntity(String userUniqueName, String refresh, Long expiredMs) {
@@ -236,9 +236,9 @@ public class AuthServiceImpl implements AuthService {
         personalQuestRepository.saveAll(personalQuests);
     }
 
-    public UserDto getInfo(Long userId) {
-        User user = userRepository.findById(userId)
-                .orElseThrow(() -> new EntityNotFoundException("User Not Found"));
+    public UserDto getInfo(String username) {
+        User user = userRepository.findByUserUniqueName(username);
+//                .orElseThrow(() -> new EntityNotFoundException("User Not Found"));
 
         return toUserDTO(user);
     }

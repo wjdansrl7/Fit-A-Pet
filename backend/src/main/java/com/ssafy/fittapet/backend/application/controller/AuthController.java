@@ -29,6 +29,6 @@ public class AuthController {
 
     @GetMapping("/info")
     public ResponseEntity<?> getInfo(@AuthenticationPrincipal CustomOAuth2User customOAuth2User) {
-        return ResponseEntity.ok(authService.getInfo(customOAuth2User.getId()));
+        return ResponseEntity.ok(authService.getInfo(customOAuth2User.getUsername()));
     }
 }
