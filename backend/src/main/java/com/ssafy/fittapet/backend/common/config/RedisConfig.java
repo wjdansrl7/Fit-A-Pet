@@ -35,7 +35,7 @@ public class RedisConfig {
     }
 
     @Bean
-    public RedisTemplate<String, Object> redisTemplate(RedisConnectionFactory connectionFactory) {
+    public RedisTemplate<String, String> redisTemplate(RedisConnectionFactory connectionFactory) {
         // 임시 jedis docker desktop에서 다운 받은 jedis 사용
 //        RedisTemplate<String, Object> template = new RedisTemplate<>();
 //        template.setConnectionFactory(redisConnectionFactory());

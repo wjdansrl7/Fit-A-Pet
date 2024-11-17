@@ -31,7 +31,7 @@ public class MapController {
             @RequestBody GuildRequest guildRequest,
             @AuthenticationPrincipal CustomOAuth2User customOAuth2User
     ) throws CustomException {
-        mapService.createGuild(guildRequest, customOAuth2User.getId());
+        mapService.createGuild(guildRequest, customOAuth2User.getUsername());
         return new ResponseEntity<>(HttpStatus.OK);
     }
 
