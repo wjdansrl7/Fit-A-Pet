@@ -8,7 +8,7 @@ import lombok.Builder;
 import lombok.Data;
 
 @Data
-public class PetBookResponseDto {
+public class PetBookResponse {
 
     private Long petBookId;
     private String petNickname;
@@ -18,13 +18,11 @@ public class PetBookResponseDto {
     private Integer petLevel;
     private boolean isMain;
 
-//    private LocalDateTime createdAt;
     @JsonFormat(pattern = "yyyy-MM-dd")
     private String createdAt;
-
     @Builder
-    public PetBookResponseDto(Long petBookId, String petNickname, PetType petType,
-            PetStatus petStatus, Integer petPercent, Integer petLevel, LocalDateTime createdAt, boolean isMain) {
+    public PetBookResponse(Long petBookId, String petNickname, PetType petType,
+                           PetStatus petStatus, Integer petPercent, Integer petLevel, LocalDateTime createdAt, boolean isMain) {
         this.petBookId = petBookId;
         this.petNickname = petNickname;
         this.petType = (petType != null) ? petType.getValue() : null;

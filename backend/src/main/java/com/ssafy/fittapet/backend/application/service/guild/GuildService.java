@@ -9,7 +9,7 @@ import java.util.List;
 
 public interface GuildService {
 
-    String getEnteringCode(Long guildId);
+    String getEnteringCode(Long guildId, Long userId);
 
     GuildInfoResponse getGuildInfo(Long guildId) throws CustomException;
 

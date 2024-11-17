@@ -2,12 +2,14 @@ package com.ssafy.fittapet.backend.application.controller;
 
 import com.ssafy.fittapet.backend.application.service.guild.GuildService;
 import com.ssafy.fittapet.backend.common.exception.CustomException;
+import com.ssafy.fittapet.backend.domain.dto.auth.CustomOAuth2User;
 import com.ssafy.fittapet.backend.domain.dto.guild.GuildInfoResponse;
 import com.ssafy.fittapet.backend.domain.dto.guild.GuildMemberInfoResponse;
 import com.ssafy.fittapet.backend.domain.dto.guild.GuildQuestInfoResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -20,9 +22,10 @@ public class GuildController {
 
     @GetMapping(path = "/{guildId}/entering-code")
     public ResponseEntity<?> getEnteringCode(
+            @AuthenticationPrincipal CustomOAuth2User customOAuth2User,
             @PathVariable Long guildId
     ){
-        String enteringCode = guildService.getEnteringCode(guildId);
+        String enteringCode = guildService.getEnteringCode(guildId, customOAuth2User.getId());
         return new ResponseEntity<>(enteringCode, HttpStatus.OK);
     }
 

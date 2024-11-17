@@ -69,17 +69,6 @@ public class DbInit {
 
             if (personalQuestRepository.count() == 0) {
                 /* 개인 퀘스트 더미데이터 생성 */
-//                List<Quest> personalQuests = questRepository.findAllByQuestType(QuestType.PERSONAL);
-//                User user = userRepository.findById(1L).orElse(null);
-//
-//                for(Quest quest : personalQuests) {
-//                    PersonalQuest personalQuest = PersonalQuest.builder()
-//                            .quest(quest)
-//                            .user(user)
-//                            .questStatus(quest.getId() % 3 != 0)
-//                            .build();
-//                    personalQuestRepository.save(personalQuest);
-//                }
                 addPersonalQuests(user1);
                 addPersonalQuests(user2);
                 addPersonalQuests(user3);
@@ -138,13 +127,13 @@ public class DbInit {
 
     private void addPersonalQuests(User user) {
 
-        List<Quest> quests = questRepository.findAll();
+        List<Quest> quests = questRepository.findAllByQuestType(QuestType.PERSONAL);
         List<PersonalQuest> personalQuests = quests.stream()
                 .map(quest ->
                         PersonalQuest.builder()
                                 .user(user)
                                 .quest(quest)
-                                .questStatus(false)
+                                .questStatus(quest.getId()/3 <= 4? true : false)
                                 .build()
                 )
                 .toList();

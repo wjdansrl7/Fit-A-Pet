@@ -14,7 +14,8 @@ public interface QuestService {
 
     Map<String, List<QuestResponse>> getMyQuestList(Long userId);
 
-    Long completePersonalQuest(QuestCompleteRequest dto, Long userId);
+    Map<String, Object> completePersonalQuest(QuestCompleteRequest dto, Long userId);
 
-    Long completeGuildQuest(QuestCompleteRequest dto, Long userId);
+    Map<String, Object> completeGuildQuest(QuestCompleteRequest dto, Long userId) throws CustomException;
+
 }

@@ -58,19 +58,17 @@ public class GuildCustomRepositoryImpl implements GuildCustomRepository {
         QUserQuestStatus userQuestStatus = QUserQuestStatus.userQuestStatus;
 
         return queryFactory
-                .select(new QGuildMemberInfoResponse(
-                        user.id,
-                        user.userName,
+                .selectDistinct(new QGuildMemberInfoResponse(
+                        map.user.id,
+                        map.user.userName,
                         petBook.pet.id,
                         userQuestStatus.questStatus
                 ))
                 .from(map)
-                .join(map.guild, guild)
-                .join(map.user, user)
-                .leftJoin(petBook).on(petBook.user.eq(user))
-                .leftJoin(userQuestStatus).on(userQuestStatus.guildQuest.guild.eq(guild))
-                .where(guild.id.eq(guildId)
-                        .and(petBook.id.eq(user.petMainId)))
+                .leftJoin(petBook).on(petBook.user.eq(map.user))
+                .leftJoin(userQuestStatus).on(userQuestStatus.user.eq(map.user))
+                .where(map.guild.id.eq(guildId)
+                        .and(petBook.id.eq(map.user.petMainId)))
                 .fetch();
     }
 }

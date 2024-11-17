@@ -14,7 +14,6 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @AllArgsConstructor
 public class Pet extends BaseEntity{
-
     @Builder
     public Pet(PetType petType, PetStatus petStatus, Integer evolutionLevel) {
         this.petStatus = petStatus;
@@ -33,5 +32,5 @@ public class Pet extends BaseEntity{
     @Enumerated(EnumType.STRING)
     private PetType petType;
 
-    private Integer evolutionLevel; // 진화 단계별로 고정된 레벨
+    private Integer evolutionLevel;
 }

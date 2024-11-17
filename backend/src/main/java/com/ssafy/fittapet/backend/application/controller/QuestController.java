@@ -1,5 +1,6 @@
 package com.ssafy.fittapet.backend.application.controller;
 
+import com.ssafy.fittapet.backend.application.service.auth.AuthService;
 import com.ssafy.fittapet.backend.application.service.quest.QuestService;
 import com.ssafy.fittapet.backend.common.exception.CustomException;
 import com.ssafy.fittapet.backend.domain.dto.auth.CustomOAuth2User;
@@ -22,6 +23,7 @@ import java.util.Map;
 @Slf4j
 public class QuestController {
     private final QuestService questService;
+    private final AuthService authService;
 
     @GetMapping(path = "/guilds")
     public ResponseEntity<?> searchGuildQuest(
@@ -45,7 +47,7 @@ public class QuestController {
 
     @PostMapping("/guild/complete")
     public ResponseEntity<?> completeGuildQuest(@RequestBody QuestCompleteRequest dto,
-                                                @AuthenticationPrincipal CustomOAuth2User customOAuth2User) {
+                                                @AuthenticationPrincipal CustomOAuth2User customOAuth2User) throws CustomException {
         return ResponseEntity.ok(questService.completeGuildQuest(dto, customOAuth2User.getId()));
     }
 }

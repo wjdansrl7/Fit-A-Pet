@@ -42,6 +42,7 @@ public class MapServiceImpl implements MapService {
     }
 
     @Override
+    @Transactional
     public void createGuild(GuildRequest guildRequest, Long userId) throws CustomException {
         // 1. todo : 로그인한 유저 id
 //        Long userId = 1L;
@@ -60,14 +61,16 @@ public class MapServiceImpl implements MapService {
                 build();
         guild = guildRepository.save(guild);
         // 5. 맵 db에 정보 저장
-        mapRepository.save(Map.builder().
+        Map map = Map.builder().
                 user(user).
                 guild(guild).
                 guildPosition(guildRequest.getGuildPosition()).
-                build());
+                build();
+        mapRepository.save(map);
     }
 
     @Override
+    @Transactional
     public Boolean joinGuild(GuildJoinRequest guildJoinRequest, Long userId) throws Exception {
 
             // todo : 요청자 정보 받아오기

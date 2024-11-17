@@ -1,20 +1,18 @@
 package com.ssafy.fittapet.backend.application.service.auth;
 
 import com.ssafy.fittapet.backend.application.service.blacklist.BlacklistService;
+import com.ssafy.fittapet.backend.application.service.petbook.PetBookService;
 import com.ssafy.fittapet.backend.application.service.refresh.RefreshService;
 import com.ssafy.fittapet.backend.application.service.user.UserService;
+import com.ssafy.fittapet.backend.common.constant.entity_field.QuestType;
 import com.ssafy.fittapet.backend.common.constant.entity_field.Role;
 import com.ssafy.fittapet.backend.common.constant.entity_field.UserTier;
 import com.ssafy.fittapet.backend.common.util.JWTUtil;
 import com.ssafy.fittapet.backend.domain.dto.auth.*;
-import com.ssafy.fittapet.backend.domain.entity.PersonalQuest;
-import com.ssafy.fittapet.backend.domain.entity.Quest;
-import com.ssafy.fittapet.backend.domain.entity.RefreshToken;
-import com.ssafy.fittapet.backend.domain.entity.User;
+import com.ssafy.fittapet.backend.domain.entity.*;
 import com.ssafy.fittapet.backend.domain.repository.auth.UserRepository;
 import com.ssafy.fittapet.backend.domain.repository.personal_quest.PersonalQuestRepository;
 import com.ssafy.fittapet.backend.domain.repository.quest.QuestRepository;
-import io.jsonwebtoken.ExpiredJwtException;
 import jakarta.persistence.EntityNotFoundException;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
@@ -43,6 +41,7 @@ public class AuthServiceImpl implements AuthService {
     private final UserRepository userRepository;
     private final QuestRepository questRepository;
     private final PersonalQuestRepository personalQuestRepository;
+    private final PetBookService petBookService;
 
     @Value("${access-token.milli-second}")
     private Long accessExpiredMs;
@@ -107,25 +106,29 @@ public class AuthServiceImpl implements AuthService {
 
     public ResponseEntity<?> loginWithKakao(String kakaoAccessToken) {
 
-        CustomOAuth2User customUserDetails = getUserInfoFromKakao(kakaoAccessToken);
+        SignupResponseDto signupResponseDto = getUserInfoFromKakao(kakaoAccessToken);
 
-        if (customUserDetails == null) {
+        if (signupResponseDto == null) {
             return null;
         }
 
-        String username = customUserDetails.getUsername();
+        String username = signupResponseDto.getUserUniqueName();
+        User loginUser = userRepository.findByUserUniqueName(username);
 
         String access = jwtUtil.createJwt("access", username, String.valueOf(Role.USER), accessExpiredMs);
         String refresh = jwtUtil.createJwt("refresh", username, String.valueOf(Role.USER), refreshExpiredMs);
 
         addRefreshEntity(username, refresh, refreshExpiredMs);
 
-        TokenResponse tokens = TokenResponse.builder()
-                .accessToken(access)
-                .refreshToken(refresh)
-                .build();
+        PetBook petBook = petBookService.findPetBookById(loginUser.getPetMainId(), loginUser);
 
-        return ResponseEntity.ok(tokens);
+        signupResponseDto.setAccessToken(access);
+        signupResponseDto.setRefreshToken(refresh);
+        signupResponseDto.setPetType(petBook.getPet().getPetType().getValue());
+        signupResponseDto.setPetStatus(petBook.getPet().getPetStatus().getValue());
+
+
+        return ResponseEntity.ok(signupResponseDto);
     }
 
     public User getLoginUser(Long userId) {
@@ -144,7 +147,7 @@ public class AuthServiceImpl implements AuthService {
         refreshService.saveRefreshToken(refreshToken);
     }
 
-    private CustomOAuth2User getUserInfoFromKakao(String accessToken) {
+    private SignupResponseDto getUserInfoFromKakao(String accessToken) {
 
         try {
             RestTemplate restTemplate = new RestTemplate();
@@ -180,11 +183,13 @@ public class AuthServiceImpl implements AuthService {
 
                 userRepository.save(user);
 
+                petBookService.createPetBook(user);
+
                 addPersonalQuests(user);
 
-                return new CustomOAuth2User(toUserDTO(user));
+                return toSignupResponseDto(toUserDTO(user), true);
             } else {
-                return new CustomOAuth2User(existData);
+                return toSignupResponseDto(existData, false);
             }
         } catch (Exception e) {
             return null;
@@ -201,6 +206,15 @@ public class AuthServiceImpl implements AuthService {
                 .build();
     }
 
+    private SignupResponseDto toSignupResponseDto(UserDto user, boolean shouldShowModal) {
+        return SignupResponseDto.builder()
+                .userId(user.getUserId())
+                .userUniqueName(user.getUserUniqueName())
+                .role(String.valueOf(user.getRole()))
+                .shouldShowModal(shouldShowModal)
+                .build();
+    }
+
     public void updateMainPet(Long petBookId, User loginUser) {
         loginUser.updatePetMainId(petBookId);
         userRepository.save(loginUser);
@@ -208,7 +222,7 @@ public class AuthServiceImpl implements AuthService {
 
     private void addPersonalQuests(User user) {
 
-        List<Quest> quests = questRepository.findAll();
+        List<Quest> quests = questRepository.findAllByQuestType(QuestType.PERSONAL);
         List<PersonalQuest> personalQuests = quests.stream()
                 .map(quest ->
                         PersonalQuest.builder()

@@ -50,6 +50,6 @@ public class MapController {
             @AuthenticationPrincipal CustomOAuth2User customOAuth2User
     ) throws CustomException {
         mapService.leaveGuild(guildId, customOAuth2User.getId());
-        return new ResponseEntity<>(HttpStatus.OK);
+        return new ResponseEntity<>(guildId, HttpStatus.OK);
     }
 }

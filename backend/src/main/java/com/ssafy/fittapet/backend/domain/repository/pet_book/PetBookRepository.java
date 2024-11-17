@@ -1,6 +1,5 @@
 package com.ssafy.fittapet.backend.domain.repository.pet_book;
 
-import com.ssafy.fittapet.backend.common.constant.entity_field.PetStatus;
 import com.ssafy.fittapet.backend.domain.entity.PetBook;
 import com.ssafy.fittapet.backend.domain.entity.User;
 import java.util.List;
