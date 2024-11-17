@@ -61,7 +61,7 @@ const fetchStepData = async (startTime, endTime) => {
     // const [stepRecords] = stepResponse.records;
 
     const stepRecords = {
-      count: 10000,
+      count: 3000,
       endTime: '2024-11-13T14:59:59.999Z',
       metadata: {
         clientRecordId: null,
@@ -106,7 +106,7 @@ const fetchSleepData = async (sleepStartTime, endTime) => {
       },
       notes: null,
       stages: [],
-      startTime: '2024-11-13T13:00:00Z',
+      startTime: '2024-11-13T18:00:00Z',
       title: null,
     };
 
