@@ -2,6 +2,7 @@ import { create } from 'zustand';
 import { personalQuest, totalQuest } from '@constants/quest';
 import axios from 'axios';
 import axiosInstance from '@api/axios';
+import useEggModalDataStore from './eggModalDataStore';
 
 const useHealthDataStore = create((set, get) => ({
   steps: 0,
@@ -92,8 +93,15 @@ const useHealthDataStore = create((set, get) => ({
       const response = await axiosInstance.post('/quests/personal/complete', {
         completeQuestId: questId,
       });
-
       console.log(`퀘스트 ID ${questId} 완료 전송 성공:`, response.data);
+      const { setEggModalData } = useEggModalDataStore.getState();
+      const { petStatus, petType, shouldShowModal } = response.data;
+
+      setEggModalData({
+        shouldShowModal,
+        newPetType: petType,
+        newPetStatus: petStatus,
+      });
     } catch (error) {
       console.error(
         `퀘스트 ID ${questId} 완료 전송 실패:`,
