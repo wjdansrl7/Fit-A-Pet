@@ -6,12 +6,11 @@ import org.springframework.http.ResponseEntity;
 
 public interface AuthService {
 
-    ResponseEntity<?> reissueToken(HttpServletRequest request);
+    ResponseEntity<?> reissueTokens(HttpServletRequest request);
 
     ResponseEntity<?> loginWithKakao(String kakaoAccessToken);
 
     User getLoginUser(Long userId);
 
     void updateMainPet(Long petBookId, User loginUser);
-
 }
