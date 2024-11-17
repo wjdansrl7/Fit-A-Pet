@@ -18,7 +18,6 @@ public class PetDataInitializer {
     @Bean
     CommandLineRunner initDatabase(PetBookRepository petBookRepository, PetRepository petRepository, UserRepository userRepository) {
         return args -> {
-            // 데이터가 있는지 확인하여 없을 경우에만 초기 데이터 삽입
             if (petRepository.count() == 0) {
                 List<Pet> pets = List.of(
                         Pet.builder().petType(PetType.BELUGA).petStatus(PetStatus.EGG).evolutionLevel(10).build(),

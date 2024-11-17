@@ -14,17 +14,12 @@ import org.springframework.transaction.annotation.Transactional;
 @RequiredArgsConstructor
 @Transactional
 public class HealthServiceImpl implements HealthService {
-
     private final HealthRepository healthRepository;
-
-
     @Override
-    public Health createSleepTimeCurrentTime(Integer sleepTime, User loginUser) {
-        // 현재 날짜에 해당하는 health 정보 찾기
+    public Health saveSleepTimeCurrentTime(Integer sleepTime, User loginUser) {
         Health currentHealth = healthRepository.findByUserAndCreatedAt(loginUser,
                 LocalDateTime.now());
 
-        // 생성된 활동 데이터가 없다면 생성
         if (currentHealth == null) {
             Health health = Health.builder().
                     user(loginUser)
@@ -37,12 +32,10 @@ public class HealthServiceImpl implements HealthService {
     }
 
     @Override
-    public Health createStepCntCurrentTime(Integer stepCnt, User loginUser) {
-        // 현재 날짜에 해당하는 health 정보 찾기
+    public Health saveStepCntCurrentTime(Integer stepCnt, User loginUser) {
         Health currentHealth = healthRepository.findByUserAndCreatedAt(loginUser,
                 LocalDateTime.now());
 
-        // 생성된 활동 데이터가 없다면 생성
         if (currentHealth == null) {
             Health health = Health.builder().
                     user(loginUser)
@@ -50,13 +43,11 @@ public class HealthServiceImpl implements HealthService {
                     .build();
             return healthRepository.save(health);
         }
-
         currentHealth.updateStepCnt(stepCnt);
         return currentHealth;
     }
-
     @Override
-    public Health getHealthCurrentTime(User loginUser) {
+    public Health findHealthCurrentTime(User loginUser) {
         return healthRepository.findByUserAndCreatedAt(loginUser, LocalDateTime.now());
     }
 }

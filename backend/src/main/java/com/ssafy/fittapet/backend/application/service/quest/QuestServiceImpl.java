@@ -97,10 +97,10 @@ public class QuestServiceImpl implements QuestService {
 
         // 경험치 상승
         User user = personalQuest.getUser();
-        PetBook petBook = petBookService.selectPetBook(user.getPetMainId(), user);
+        PetBook petBook = petBookService.findPetBookById(user.getPetMainId(), user);
 
         Map<String, Object> response = new HashMap<>();
-        response.put("shouldShowModal", petBookService.updateExpAndEvolveCheck(petBook, reward, user));
+        response.put("shouldShowModal", petBookService.processQuestCompletion(petBook, reward, user));
         response.put("petType", petBook.getPet().getPetType());
         response.put("petStatus", petBook.getPet().getPetStatus());
 
@@ -138,9 +138,9 @@ public class QuestServiceImpl implements QuestService {
 
             // 경험치 상승
             User user = authService.getLoginUser(userId);
-            PetBook petBook = petBookService.selectPetBook(user.getPetMainId(), user);
+            PetBook petBook = petBookService.findPetBookById(user.getPetMainId(), user);
 
-            response.put("shouldShowModal", petBookService.updateExpAndEvolveCheck(petBook, reward, user));
+            response.put("shouldShowModal", petBookService.processQuestCompletion(petBook, reward, user));
             response.put("petType", petBook.getPet().getPetType());
             response.put("petStatus", petBook.getPet().getPetStatus());
         }
