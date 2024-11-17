@@ -22,7 +22,7 @@ public class MapController {
 
     @GetMapping
     public ResponseEntity<?> getMap(@AuthenticationPrincipal CustomOAuth2User customOAuth2User) {
-        List<MapResponse> map = mapService.getAll(customOAuth2User.getId());
+        List<MapResponse> map = mapService.getAll(customOAuth2User.getUsername());
         return new ResponseEntity<>(map, HttpStatus.OK);
     }
 
@@ -31,7 +31,7 @@ public class MapController {
             @RequestBody GuildRequest guildRequest,
             @AuthenticationPrincipal CustomOAuth2User customOAuth2User
     ) throws CustomException {
-        mapService.createGuild(guildRequest, customOAuth2User.getId());
+        mapService.createGuild(guildRequest, customOAuth2User.getUsername());
         return new ResponseEntity<>(HttpStatus.OK);
     }
 
@@ -40,7 +40,7 @@ public class MapController {
             @RequestBody GuildJoinRequest guildJoinRequest,
             @AuthenticationPrincipal CustomOAuth2User customOAuth2User
     ) throws Exception {
-        boolean joined = mapService.joinGuild(guildJoinRequest, customOAuth2User.getId());
+        boolean joined = mapService.joinGuild(guildJoinRequest, customOAuth2User.getUsername());
         return new ResponseEntity<>(joined, HttpStatus.OK);
     }
 
@@ -49,7 +49,7 @@ public class MapController {
             @PathVariable Long guildId,
             @AuthenticationPrincipal CustomOAuth2User customOAuth2User
     ) throws CustomException {
-        mapService.leaveGuild(guildId, customOAuth2User.getId());
+        mapService.leaveGuild(guildId, customOAuth2User.getUsername());
         return new ResponseEntity<>(guildId, HttpStatus.OK);
     }
 }

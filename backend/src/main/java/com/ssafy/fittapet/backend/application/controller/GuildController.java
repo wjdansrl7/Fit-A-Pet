@@ -25,7 +25,7 @@ public class GuildController {
             @AuthenticationPrincipal CustomOAuth2User customOAuth2User,
             @PathVariable Long guildId
     ){
-        String enteringCode = guildService.getEnteringCode(guildId, customOAuth2User.getId());
+        String enteringCode = guildService.getEnteringCode(guildId, customOAuth2User.getUsername());
         return new ResponseEntity<>(enteringCode, HttpStatus.OK);
     }
 

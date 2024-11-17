@@ -22,6 +22,8 @@ public class DietServiceImpl implements DietService{
 
     @Override
     public void createDietData(HealthDietRequest healthDietRequest, User user) {
+        log.info("FoodLens Data input :: "+ healthDietRequest.getCalorie().toString());
+
         Diet diet = Diet.builder().
                 user(user).
                 healthDietRequest(healthDietRequest).

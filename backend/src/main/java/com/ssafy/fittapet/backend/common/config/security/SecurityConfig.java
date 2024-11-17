@@ -6,7 +6,6 @@ import com.ssafy.fittapet.backend.common.util.JWTUtil;
 import com.ssafy.fittapet.backend.domain.repository.auth.BlacklistRepository;
 import com.ssafy.fittapet.backend.domain.repository.auth.RefreshRepository;
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
@@ -28,12 +27,12 @@ public class SecurityConfig {
 //    @Value("${frontend.server.url}")
 //    private String url;
 
-    private final RefreshRepository refreshRepository;
-    private final BlacklistRepository blacklistRepository;
+//    private final RefreshService refreshService;
+//    private final BlacklistService blacklistService;
     private final JWTUtil jwtUtil;
 
     @Bean
-    public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
+    public SecurityFilterChain filterChain(HttpSecurity http, BlacklistRepository blacklistRepository, RefreshRepository refreshRepository) throws Exception {
 
         http
                 .cors(corsCustomizer -> corsCustomizer.configurationSource(request -> {
@@ -70,6 +69,7 @@ public class SecurityConfig {
 
         //LogoutFilter 등록
         http
+//                .addFilterBefore(new CustomLogoutFilter(jwtUtil, blacklistService, refreshService), LogoutFilter.class);
                 .addFilterBefore(new CustomLogoutFilter(jwtUtil, blacklistRepository, refreshRepository), LogoutFilter.class);
 
         //oauth2

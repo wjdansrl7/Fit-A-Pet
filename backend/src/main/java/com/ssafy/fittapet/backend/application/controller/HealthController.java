@@ -30,7 +30,7 @@ public class HealthController {
     @PostMapping("/walk")
     public ResponseEntity<?> createStepCnt(@AuthenticationPrincipal CustomOAuth2User customOAuth2User,
             @RequestBody HealthStepRequest healthStepDto) {
-        User loginUser = authService.getLoginUser(customOAuth2User.getId());
+        User loginUser = authService.getLoginUser(customOAuth2User.getUsername());
 
         Health stepCntCurrentTime = healthService.saveStepCntCurrentTime(
                 healthStepDto.getStepCnt(), loginUser);
@@ -41,7 +41,7 @@ public class HealthController {
     @PostMapping("/sleep")
     public ResponseEntity<?> createSleepTime(@AuthenticationPrincipal CustomOAuth2User customOAuth2User,
             @RequestBody HealthSleepRequest healthSleepDto) {
-        User loginUser = authService.getLoginUser(customOAuth2User.getId());
+        User loginUser = authService.getLoginUser(customOAuth2User.getUsername());
         Health sleepTimeCurrentTime = healthService.saveSleepTimeCurrentTime(
                 healthSleepDto.getSleepTime(), loginUser);
 
@@ -50,7 +50,7 @@ public class HealthController {
 
     @GetMapping("/walk")
     public ResponseEntity<?> getStepCntCurrentTime(@AuthenticationPrincipal CustomOAuth2User customOAuth2User) {
-        User loginUser = authService.getLoginUser(customOAuth2User.getId());
+        User loginUser = authService.getLoginUser(customOAuth2User.getUsername());
         Health healthCurrentTime = healthService.findHealthCurrentTime(loginUser);
 
         return new ResponseEntity<>(healthCurrentTime.getStepCnt(), HttpStatus.OK);
@@ -59,7 +59,7 @@ public class HealthController {
 
     @GetMapping("/sleep")
     public ResponseEntity<?> getSleepTimeCurrentTime(@AuthenticationPrincipal CustomOAuth2User customOAuth2User) {
-        User loginUser = authService.getLoginUser(customOAuth2User.getId());
+        User loginUser = authService.getLoginUser(customOAuth2User.getUsername());
         Health healthCurrentTime = healthService.findHealthCurrentTime(loginUser);
 
         return new ResponseEntity<>(healthCurrentTime.getSleepTime(), HttpStatus.OK);
