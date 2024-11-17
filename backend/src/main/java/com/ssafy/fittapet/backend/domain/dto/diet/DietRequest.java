@@ -3,7 +3,7 @@ package com.ssafy.fittapet.backend.domain.dto.diet;
 import lombok.Data;
 
 @Data
-public class DietRequestDto {
+public class DietRequest {
     private Integer calorie;
     private NutrientDto sodium;
     private NutrientDto carbo;
