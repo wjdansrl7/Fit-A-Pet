@@ -3,9 +3,11 @@ package com.ssafy.fittapet.backend.domain.entity;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
 import lombok.Builder;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 @Entity
+@Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class Map {
     @Id
@@ -18,16 +20,16 @@ public class Map {
     private User user;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "group_id")
-    private Group group;
+    @JoinColumn(name = "guild_id")
+    private Guild guild;
 
     @Column
-    private Long groupPosition;
+    private Long guildPosition;
 
     @Builder
-    public Map(User user, Group group, Long groupPosition) {
+    public Map(User user, Guild guild, Long guildPosition) {
         this.user = user;
-        this.group = group;
-        this.groupPosition = groupPosition;
+        this.guild = guild;
+        this.guildPosition = guildPosition;
     }
 }

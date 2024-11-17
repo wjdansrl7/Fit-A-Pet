@@ -13,8 +13,8 @@ public class QMapResponse extends ConstructorExpression<MapResponse> {
 
     private static final long serialVersionUID = 1483435218L;
 
-    public QMapResponse(com.querydsl.core.types.Expression<Long> groupId, com.querydsl.core.types.Expression<String> groupName, com.querydsl.core.types.Expression<Long> groupPosition) {
-        super(MapResponse.class, new Class<?>[]{long.class, String.class, long.class}, groupId, groupName, groupPosition);
+    public QMapResponse(com.querydsl.core.types.Expression<Long> guildId, com.querydsl.core.types.Expression<String> guildName, com.querydsl.core.types.Expression<Long> guildPosition) {
+        super(MapResponse.class, new Class<?>[]{long.class, String.class, long.class}, guildId, guildName, guildPosition);
     }
 
 }

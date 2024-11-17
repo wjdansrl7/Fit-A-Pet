@@ -2,19 +2,21 @@ package com.ssafy.fittapet.backend.domain.dto.map;
 
 import com.querydsl.core.annotations.QueryProjection;
 import lombok.Builder;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 @NoArgsConstructor
+@Getter
 public class MapResponse {
-    private Long groupId;
-    private String groupName;
-    private Long groupPosition;
+    private Long guildId;
+    private String guildName;
+    private Long guildPosition;
 
     @Builder
     @QueryProjection
-    public MapResponse(Long groupId, String groupName, Long groupPosition) {
-        this.groupId = groupId;
-        this.groupName = groupName;
-        this.groupPosition = groupPosition;
+    public MapResponse(Long guildId, String guildName, Long guildPosition) {
+        this.guildId = guildId;
+        this.guildName = guildName;
+        this.guildPosition = guildPosition;
     }
 }

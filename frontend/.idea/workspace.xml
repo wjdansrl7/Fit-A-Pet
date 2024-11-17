@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="AutoImportSettings">
+    <option name="autoReloadType" value="NONE" />
+  </component>
+  <component name="ChangeListManager">
+    <list default="true" id="0cc99188-9c84-4853-b77c-470d2ef6b385" name="Changes" comment="chore: 주석 제거">
+      <change afterPath="$PROJECT_DIR$/../backend/src/main/java/com/ssafy/fittapet/backend/domain/dto/diet/DietResponse.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../backend/src/main/generated/com/ssafy/fittapet/backend/domain/dto/guild/QGuildInfoResponse.java" beforeDir="false" afterPath="$PROJECT_DIR$/../backend/src/main/generated/com/ssafy/fittapet/backend/domain/dto/guild/QGuildInfoResponse.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../backend/src/main/generated/com/ssafy/fittapet/backend/domain/dto/guild/QGuildMemberInfoResponse.java" beforeDir="false" afterPath="$PROJECT_DIR$/../backend/src/main/generated/com/ssafy/fittapet/backend/domain/dto/guild/QGuildMemberInfoResponse.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../backend/src/main/generated/com/ssafy/fittapet/backend/domain/dto/guild/QGuildQuestInfoResponse.java" beforeDir="false" afterPath="$PROJECT_DIR$/../backend/src/main/generated/com/ssafy/fittapet/backend/domain/dto/guild/QGuildQuestInfoResponse.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../backend/src/main/generated/com/ssafy/fittapet/backend/domain/dto/map/QMapGuildQuestDTO.java" beforeDir="false" afterPath="$PROJECT_DIR$/../backend/src/main/generated/com/ssafy/fittapet/backend/domain/dto/map/QMapGuildQuestDTO.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../backend/src/main/generated/com/ssafy/fittapet/backend/domain/dto/map/QMapResponse.java" beforeDir="false" afterPath="$PROJECT_DIR$/../backend/src/main/generated/com/ssafy/fittapet/backend/domain/dto/map/QMapResponse.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../backend/src/main/generated/com/ssafy/fittapet/backend/domain/dto/quest/QQuestQueryResponseDTO.java" beforeDir="false" afterPath="$PROJECT_DIR$/../backend/src/main/generated/com/ssafy/fittapet/backend/domain/dto/quest/QQuestQueryResponseDTO.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../backend/src/main/generated/com/ssafy/fittapet/backend/domain/dto/quest/QQuestResponse.java" beforeDir="false" afterPath="$PROJECT_DIR$/../backend/src/main/generated/com/ssafy/fittapet/backend/domain/dto/quest/QQuestResponse.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../backend/src/main/java/com/ssafy/fittapet/backend/application/controller/DietController.java" beforeDir="false" afterPath="$PROJECT_DIR$/../backend/src/main/java/com/ssafy/fittapet/backend/application/controller/DietController.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../backend/src/main/java/com/ssafy/fittapet/backend/application/service/diet/DietService.java" beforeDir="false" afterPath="$PROJECT_DIR$/../backend/src/main/java/com/ssafy/fittapet/backend/application/service/diet/DietService.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../backend/src/main/java/com/ssafy/fittapet/backend/application/service/diet/DietServiceImpl.java" beforeDir="false" afterPath="$PROJECT_DIR$/../backend/src/main/java/com/ssafy/fittapet/backend/application/service/diet/DietServiceImpl.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../backend/src/main/java/com/ssafy/fittapet/backend/application/service/health/HealthService.java" beforeDir="false" afterPath="$PROJECT_DIR$/../backend/src/main/java/com/ssafy/fittapet/backend/application/service/health/HealthService.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../backend/src/main/java/com/ssafy/fittapet/backend/domain/dto/diet/DietResponseDto.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../backend/src/main/java/com/ssafy/fittapet/backend/domain/entity/Diet.java" beforeDir="false" afterPath="$PROJECT_DIR$/../backend/src/main/java/com/ssafy/fittapet/backend/domain/entity/Diet.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../backend/src/main/java/com/ssafy/fittapet/backend/domain/repository/diet/DietRepository.java" beforeDir="false" afterPath="$PROJECT_DIR$/../backend/src/main/java/com/ssafy/fittapet/backend/domain/repository/diet/DietRepository.java" afterDir="false" />
+    </list>
+    <option name="SHOW_DIALOG" value="false" />
+    <option name="HIGHLIGHT_CONFLICTS" value="true" />
+    <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
+    <option name="LAST_RESOLUTION" value="IGNORE" />
+  </component>
+  <component name="ClangdSettings">
+    <option name="formatViaClangd" value="false" />
+  </component>
+  <component name="Git.Settings">
+    <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$/.." />
+  </component>
+  <component name="ProjectColorInfo">{
+  &quot;associatedIndex&quot;: 6
+}</component>
+  <component name="ProjectId" id="2oh51Le3ds5j9BU7p1P5bSEDHRt" />
+  <component name="ProjectViewState">
+    <option name="hideEmptyMiddlePackages" value="true" />
+    <option name="showLibraryContents" value="true" />
+  </component>
+  <component name="PropertiesComponent">{
+  &quot;keyToString&quot;: {
+    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.cidr.known.project.marker&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.readMode.enableVisualFormatting&quot;: &quot;true&quot;,
+    &quot;cf.first.check.clang-format&quot;: &quot;false&quot;,
+    &quot;cidr.known.project.marker&quot;: &quot;true&quot;,
+    &quot;git-widget-placeholder&quot;: &quot;develop-be&quot;,
+    &quot;kotlin-language-version-configured&quot;: &quot;true&quot;,
+    &quot;settings.editor.selected.configurable&quot;: &quot;preferences.keymap&quot;
+  }
+}</component>
+  <component name="SpellCheckerSettings" RuntimeDictionaries="0" Folders="0" CustomDictionaries="0" DefaultDictionary="application-level" UseSingleDictionary="true" transferred="true" />
+  <component name="TaskManager">
+    <task active="true" id="Default" summary="Default task">
+      <changelist id="0cc99188-9c84-4853-b77c-470d2ef6b385" name="Changes" comment="" />
+      <created>1731308751387</created>
+      <option name="number" value="Default" />
+      <option name="presentableId" value="Default" />
+      <updated>1731308751387</updated>
+    </task>
+    <servers />
+  </component>
+  <component name="VcsManagerConfiguration">
+    <MESSAGE value="chore: 주석 제거" />
+    <option name="LAST_COMMIT_MESSAGE" value="chore: 주석 제거" />
+  </component>
+</project>

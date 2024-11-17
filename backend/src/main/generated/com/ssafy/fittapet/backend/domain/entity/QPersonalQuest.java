@@ -26,6 +26,8 @@ public class QPersonalQuest extends EntityPathBase<PersonalQuest> {
 
     public final QQuest quest;
 
+    public final BooleanPath questStatus = createBoolean("questStatus");
+
     public final QUser user;
 
     public QPersonalQuest(String variable) {
