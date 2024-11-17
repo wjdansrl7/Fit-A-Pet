@@ -15,6 +15,8 @@ import com.ssafy.fittapet.backend.domain.repository.personal_quest.PersonalQuest
 import com.ssafy.fittapet.backend.domain.repository.quest.QuestRepository;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.http.*;
@@ -31,6 +33,7 @@ import java.util.Optional;
 @Transactional
 public class AuthServiceImpl implements AuthService {
 
+    private static final Logger log = LoggerFactory.getLogger(AuthServiceImpl.class);
     private final JWTUtil jwtUtil;
 
 //    private final RefreshService refreshService;
@@ -167,6 +170,7 @@ public class AuthServiceImpl implements AuthService {
             Map<String, Object> attributes = response.getBody();
 
             if (attributes == null) {
+                log.info("Attributes is null");
                 return null;
             }
 
@@ -196,6 +200,7 @@ public class AuthServiceImpl implements AuthService {
                 return toSignupResponseDto(existData, false);
             }
         } catch (Exception e) {
+            log.info("Try Catch");
             return null;
         }
     }
