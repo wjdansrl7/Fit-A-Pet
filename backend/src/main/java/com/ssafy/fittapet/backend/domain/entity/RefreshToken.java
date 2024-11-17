@@ -12,7 +12,7 @@ import org.springframework.data.redis.core.TimeToLive;
 public class RefreshToken {
 
     @Id
-    private Long userId;
+    private String userUniqueName;
     private String token;
 
     @TimeToLive

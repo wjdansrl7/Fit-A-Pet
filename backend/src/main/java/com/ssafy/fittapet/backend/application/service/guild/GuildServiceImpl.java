@@ -8,6 +8,7 @@ import com.ssafy.fittapet.backend.domain.dto.guild.GuildInfoResponse;
 import com.ssafy.fittapet.backend.domain.dto.guild.GuildMemberInfoResponse;
 import com.ssafy.fittapet.backend.domain.dto.guild.GuildQuestInfoResponse;
 import com.ssafy.fittapet.backend.domain.entity.*;
+import com.ssafy.fittapet.backend.domain.repository.auth.UserRepository;
 import com.ssafy.fittapet.backend.domain.repository.guild.GuildRepository;
 import com.ssafy.fittapet.backend.domain.repository.guild_quest.GuildQuestRepository;
 import com.ssafy.fittapet.backend.domain.repository.map.MapRepository;
@@ -31,15 +32,17 @@ public class GuildServiceImpl implements GuildService {
     private final QuestValidator questValidator;
     private final UserQuestStatusRepository userQuestStatusRepository;
     private final MapRepository mapRepository;
+    private final UserRepository userRepository;
 
 
     @Override
-    public String getEnteringCode(Long guildId, Long userId) {
+    public String getEnteringCode(Long guildId, String username) {
         // 생성날짜 + 그룹 id로 인코딩된 코드 받아오기
+        User tempUser = userRepository.findByUserUniqueName(username);
         try {
             Optional<Guild> guild = guildRepository.findById(guildId);
             if(guild.isEmpty() || guild == null) throw new CustomException(NO_GUILD);
-            if(!guildValidator.isGuildLeader(guildId, userId)) throw new CustomException(NOT_GUILD_LEADER);
+            if(!guildValidator.isGuildLeader(guildId, tempUser.getId())) throw new CustomException(NOT_GUILD_LEADER);
             return EnteringCodeUtil.encrypt(guildId);
         } catch (Exception e) {
             throw new RuntimeException(e);

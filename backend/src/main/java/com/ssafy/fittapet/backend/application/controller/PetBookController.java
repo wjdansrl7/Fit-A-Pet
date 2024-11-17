@@ -35,7 +35,7 @@ public class PetBookController {
 
     @GetMapping
     public ResponseEntity<?> getAllPetBooks(@AuthenticationPrincipal CustomOAuth2User customOAuth2User) {
-        User loginUser = authService.getLoginUser(customOAuth2User.getId());
+        User loginUser = authService.getLoginUser(customOAuth2User.getUsername());
 
         List<PetBook> petBooks = petBookService.findAllPetBooks(loginUser);
         List<PetBookResponse> petBookResponseDtos = new ArrayList<>();
@@ -61,7 +61,7 @@ public class PetBookController {
     @GetMapping("/level")
     public ResponseEntity<?> getPetMainStatus(@AuthenticationPrincipal CustomOAuth2User customOAuth2User) {
 
-        User loginUser = authService.getLoginUser(customOAuth2User.getId());
+        User loginUser = authService.getLoginUser(customOAuth2User.getUsername());
         Long petMainId = loginUser.getPetMainId();
 
         PetBook petBook = petBookService.findPetBookById(petMainId, loginUser);
@@ -77,7 +77,7 @@ public class PetBookController {
 
     @GetMapping("/{petBook-id}")
     public ResponseEntity<?> getPetBook(@PathVariable("petBook-id") Long petBookId, @AuthenticationPrincipal CustomOAuth2User customOAuth2User) {
-        User loginUser = authService.getLoginUser(customOAuth2User.getId());
+        User loginUser = authService.getLoginUser(customOAuth2User.getUsername());
         PetBook petBook = petBookService.findPetBookById(petBookId, loginUser);
         boolean isMain = loginUser.getPetMainId().equals(petBook.getId());
 
@@ -97,7 +97,7 @@ public class PetBookController {
 
     @GetMapping("/main")
     public ResponseEntity<?> getMainPet(@AuthenticationPrincipal CustomOAuth2User customOAuth2User) {
-        User loginUser = authService.getLoginUser(customOAuth2User.getId());
+        User loginUser = authService.getLoginUser(customOAuth2User.getUsername());
 
         PetBook petBook = petBookService.findPetBookById(loginUser.getPetMainId(), loginUser);
 
@@ -116,7 +116,7 @@ public class PetBookController {
     @PostMapping("/main/{petBookId}")
     public ResponseEntity<?> updateMainPet(@PathVariable("petBookId") Long petBookId,
                                            @AuthenticationPrincipal CustomOAuth2User customOAuth2User) {
-        User loginUser = authService.getLoginUser(customOAuth2User.getId());
+        User loginUser = authService.getLoginUser(customOAuth2User.getUsername());
         loginUser.updatePetMainId(petBookId);
         authService.updateMainPet(petBookId, loginUser);
 
@@ -128,7 +128,7 @@ public class PetBookController {
     public ResponseEntity<?> createPetNickname(@PathVariable("petBookId") Long petBookId,
                                                @RequestBody PetNicknameRequest petNicknameRequestDto,
                                                @AuthenticationPrincipal CustomOAuth2User customOAuth2User) {
-        User loginUser = authService.getLoginUser(customOAuth2User.getId());
+        User loginUser = authService.getLoginUser(customOAuth2User.getUsername());
         PetBook petBook = petBookService.findPetBookById(petBookId, loginUser);
         petBookService.updatePetNickname(petNicknameRequestDto.getPetNickname(), petBook);
 

@@ -26,7 +26,7 @@ public class DietController {
             @RequestBody HealthDietRequest healthDietRequest,
             @AuthenticationPrincipal CustomOAuth2User customOAuth2User
     ){
-        User loginUser = authService.getLoginUser(customOAuth2User.getId());
+        User loginUser = authService.getLoginUser(customOAuth2User.getUsername());
         dietService.createDietData(healthDietRequest, loginUser);
 
         return new ResponseEntity<>(HttpStatus.CREATED);
@@ -36,7 +36,8 @@ public class DietController {
     public ResponseEntity<?> getDietInfo(
             @AuthenticationPrincipal CustomOAuth2User customOAuth2User
     ) {
-        User loginUser = authService.getLoginUser(customOAuth2User.getId());
+//        User loginUser = authService.getLoginUser(customOAuth2User.getId());
+        User loginUser = authService.getLoginUser(customOAuth2User.getUsername());
         DietResponse dietCurrentTime = dietService.getDailyDietData(loginUser);
 
         return new ResponseEntity<>(dietCurrentTime, HttpStatus.OK);
