@@ -97,11 +97,13 @@ const useHealthDataStore = create((set, get) => ({
       const { setEggModalData } = useEggModalDataStore.getState();
       const { petStatus, petType, shouldShowModal } = response.data;
 
-      setEggModalData({
-        shouldShowModal,
-        newPetType: petType,
-        newPetStatus: petStatus,
-      });
+      if (shouldShowModal) {
+        setEggModalData({
+          shouldShowModal,
+          newPetType: petType,
+          newPetStatus: petStatus,
+        });
+      }
     } catch (error) {
       console.error(
         `퀘스트 ID ${questId} 완료 전송 실패:`,
