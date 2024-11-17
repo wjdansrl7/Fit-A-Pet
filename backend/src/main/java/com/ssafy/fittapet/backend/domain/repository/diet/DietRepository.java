@@ -5,7 +5,7 @@ import com.ssafy.fittapet.backend.domain.entity.User;
 import java.time.LocalDateTime;
 import org.springframework.data.repository.CrudRepository;
 
-public interface DietRepository extends CrudRepository<Diet, Long> {
+public interface DietRepository extends CrudRepository<Diet, Long>, DietCustomRepository {
 
     Diet findByUserAndCreatedAt(User user, LocalDateTime createdAt);
 }

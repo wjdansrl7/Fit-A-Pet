@@ -13,5 +13,4 @@ public interface HealthService {
 
     // 헬스 데이터 관련 데이터 조회
     Health getHealthCurrentTime(User loginUser);
-
 }
