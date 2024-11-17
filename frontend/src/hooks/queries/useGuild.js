@@ -8,6 +8,7 @@ import {
   byeGuild,
   getQuests,
   chooseQuest,
+  getMyInfo,
 } from '@api/guild';
 
 // clear
@@ -106,6 +107,19 @@ function useChooseQuest() {
   });
 }
 
+function useMyInfo() {
+  const { isSuccess, data, isLoading } = useQuery({
+    queryKey: ['myInfo'],
+    queryFn: getMyInfo,
+    staleTime: 0,
+    // staleTime: 1000 * 60 * 60 * 12,
+    // cacheTime: 1000 * 60 * 60 * 24,
+    refetchOnWindowFocus: true,
+    refetchOnReconnect: true,
+  });
+  return { isSuccess, data, isLoading };
+}
+
 export {
   useGuildInfo,
   useMemberInfo,
@@ -114,4 +128,5 @@ export {
   useByeGuild,
   useQuests,
   useChooseQuest,
+  useMyInfo,
 };
