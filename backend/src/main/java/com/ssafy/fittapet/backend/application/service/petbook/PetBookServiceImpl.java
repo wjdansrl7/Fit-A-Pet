@@ -5,6 +5,7 @@ import com.ssafy.fittapet.backend.application.service.pet.PetService;
 import com.ssafy.fittapet.backend.domain.entity.Pet;
 import com.ssafy.fittapet.backend.domain.entity.PetBook;
 import com.ssafy.fittapet.backend.domain.entity.User;
+import com.ssafy.fittapet.backend.domain.repository.auth.UserRepository;
 import com.ssafy.fittapet.backend.domain.repository.pet_book.PetBookRepository;
 import java.util.List;
 import java.util.Optional;
@@ -24,8 +25,9 @@ import static com.ssafy.fittapet.backend.common.constant.entity_field.PetStatus.
 public class PetBookServiceImpl implements PetBookService{
 
     private final PetBookRepository petBookRepository;
-    private final AuthService authService;
+//    private final AuthService authService;
     private final PetService petService;
+    private final UserRepository userRepository;
     private final Random random = new Random();
 
     @Override
@@ -49,7 +51,9 @@ public class PetBookServiceImpl implements PetBookService{
 
         petBookRepository.save(petBook);
 
-        authService.updateMainPet(petBook.getId(), loginUser);
+//        authService.updateMainPet(petBook.getId(), loginUser);
+        loginUser.updatePetMainId(petBook.getId());
+        userRepository.save(loginUser);
 
         return petBook;
     }
