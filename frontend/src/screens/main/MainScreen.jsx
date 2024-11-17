@@ -35,28 +35,74 @@ import { useMainPetInfo, useUpdateNickname } from '@hooks/queries/usePet';
 import AnimatedSprite from '@components/AnimatedSprite/AnimatedSprite';
 import { fetchHealthData } from '@api/healthData';
 import useHealthDataStore from '@src/stores/healthDataStore';
-
+import MainEggModal from './MainEggModal';
+import useEggModalDataStore from '@src/stores/eggModalDataStore';
 function MainScreen({ navigation }) {
   const [isModalVisible, setModalVisible] = useState(false);
   const [petNickname, setPetNickname] = useState('');
+  const [petLevel, setPetLevel] = useState(0);
+  const [petPercent, setPetPercent] = useState(0);
   const [petBookId, setPetBookId] = useState('');
-  const { data: mainPetInfo, isLoading, isError, error } = useMainPetInfo();
+
+  const {
+    data: mainPetInfo,
+    isLoading,
+    isError,
+    error,
+    refetch,
+  } = useMainPetInfo();
+
   const { mutate } = useUpdateNickname();
-  const { steps, sleepHours, updateHealthData } = useHealthDataStore();
+  const { steps, sleepHours, completedQuestIds } = useHealthDataStore();
+
+  const { shouldShowModal, newPetType, newPetStatus, setEggModalData } =
+    useEggModalDataStore();
+  const [isEggModalVisible, setEggModalVisible] = useState(false); // 에그모달 상태
+  const [step, setStep] = useState(1); // 에그모달의 단계 관리
+  const newPetImage = petImages[newPetType]?.[newPetStatus] || null;
+  console.log(newPetImage);
+  useEffect(() => {
+    // 이후 params 변경 감지
+    if (shouldShowModal) {
+      console.log('shouldShowModal is true');
+      setEggModalVisible(true);
+    } else {
+      setEggModalVisible(false);
+    }
+  }, [shouldShowModal]);
 
   // 메인펫 정보가 바뀌면 업데이트
   useEffect(() => {
     if (mainPetInfo) {
       setPetNickname(mainPetInfo.petNickname);
       setPetBookId(mainPetInfo.petBookId);
+      setPetLevel(mainPetInfo.petLevel);
+      setPetPercent(mainPetInfo.petPercent);
     }
   }, [mainPetInfo]);
+
+  // 임시 더미 데이터
+  // const mainPetInfo = {
+  //   petBookId: 1,
+  //   petNickname: '뭉기',
+  //   petType: '벨루가',
+  //   petStatus: '알',
+  //   petExp: 1500,
+  //   isMain: true,
+  //   petPercent: 97,
+  //   createdAt: '2024년 10월 31일',
+  //   petLevel: 1,
+  // };
 
   // 헬스 데이터 업데이트
   useEffect(() => {
     const initializeHealthData = async () => {
       const { steps, sleepHours } = await fetchHealthData();
+      const { updateHealthData, checkQuestCompletion } =
+        useHealthDataStore.getState();
       updateHealthData(steps, sleepHours);
+      checkQuestCompletion();
+      refetch();
     };
 
     initializeHealthData();
@@ -74,44 +120,43 @@ function MainScreen({ navigation }) {
 
   // 영양정보 함수 (사진촬영 + 푸드렌즈)
   const handleFoodRecognition = () => {
-      launchCamera(
-        {
-          mediaType: 'photo',
-          quality: 1,
-          includeBase64: true
-        },
-        (response) => {
-          if (response.didCancel) {
-            console.log("User cancelled image picker");
-          } else if (response.errorCode) {
-            console.error("ImagePicker Error: ", response.errorMessage);
-          } else if (response.assets && response.assets[0]) {
-            const imageBase64 = response.assets[0].base64;
-            try {
-              FoodLensModule.recognizeFood(imageBase64)
-                .then((result) => {
-                  console.log("Recognition Result:", result);
-                  Alert.alert("Recognition Successful", `Detected food: ${result}`);
-                })
-                .catch((error) => {
-                  console.error("Recognition Error:", error);
-                  Alert.alert("Recognition Error", "Failed to recognize food.");
-                });
-            } catch (error) {
-              console.error("Native Module Error:", error);
-              Alert.alert("Error", "Failed to process the image.");
-            }
+    launchCamera(
+      {
+        mediaType: 'photo',
+        quality: 1,
+        includeBase64: true,
+      },
+      (response) => {
+        if (response.didCancel) {
+          console.log('User cancelled image picker');
+        } else if (response.errorCode) {
+          console.error('ImagePicker Error: ', response.errorMessage);
+        } else if (response.assets && response.assets[0]) {
+          const imageBase64 = response.assets[0].base64;
+          try {
+            FoodLensModule.recognizeFood(imageBase64)
+              .then((result) => {
+                console.log('Recognition Result:', result);
+                Alert.alert(
+                  'Recognition Successful',
+                  `Detected food: ${result}`
+                );
+              })
+              .catch((error) => {
+                console.error('Recognition Error:', error);
+                Alert.alert('Recognition Error', 'Failed to recognize food.');
+              });
+          } catch (error) {
+            console.error('Native Module Error:', error);
+            Alert.alert('Error', 'Failed to process the image.');
           }
         }
-      );
-    };
-
+      }
+    );
+  };
 
   if (isLoading) {
     return <ActivityIndicator size="large" color={colors.MAIN_GREEN} />;
-  }
-  if (isError) {
-    return <Text>Error occurred: {error.message}</Text>;
   }
 
   // const petImage =
@@ -119,7 +164,7 @@ function MainScreen({ navigation }) {
   //   petImages[mainPetInfo.petType]?.[mainPetInfo.petStatus] || null;
 
   const petSpriteImage =
-    petSpriteImages[mainPetInfo.petType]?.[mainPetInfo.petStatus] || null;
+    petSpriteImages[mainPetInfo?.petType]?.[mainPetInfo?.petStatus] || null;
 
   const petSpriteData = require('@assets/pets/sprite/sprite.json');
 
@@ -146,6 +191,31 @@ function MainScreen({ navigation }) {
     // 적당히 조절 해야할듯, 아님 동물마다 저장을 하던가
   };
 
+  // 펫북아이디 아니라 회원가입 및 주는 팻 id 값으로 하기
+  const handleEggUpdateNickname = async () => {
+    if (petNickname.trim()) {
+      try {
+        mutate({ petBookId, newNickname: petNickname.trim() });
+        setStep(3); // Step3로 이동
+      } catch (error) {
+        console.error('닉네임 업데이트 실패:', error);
+      }
+    } else {
+      Alert.alert('Error', '닉네임을 입력해주세요!');
+    }
+  };
+
+  const handleEggModalClose = async () => {
+    setEggModalVisible(false);
+
+    // Zustand 상태 업데이트
+    setEggModalData({ shouldShowModal: false });
+
+    setTimeout(() => {
+      setStep(1);
+    }, 300); // 300ms 딜레이
+  };
+
   return (
     <View style={styles.container}>
       <ImageBackground
@@ -153,8 +223,19 @@ function MainScreen({ navigation }) {
         style={styles.backgroundImage}
         resizeMode="cover"
       >
-        <Text>{steps}</Text>
-        <Text>{sleepHours}</Text>
+        {/* 닉네임은 새걸 받아온걸로 하기 */}
+        <MainEggModal
+          isVisible={isEggModalVisible}
+          step={step}
+          petNickname={petNickname}
+          setPetNickname={setPetNickname}
+          onUpdateNickname={handleEggUpdateNickname}
+          onClose={handleEggModalClose}
+          setStep={setStep}
+          newPetImage={newPetImage}
+        />
+
+        <Text>{completedQuestIds}</Text>
         {/* 상단 - 레벨 및 진행 상태 */}
         <View style={styles.header}>
           <View></View>
@@ -203,15 +284,10 @@ function MainScreen({ navigation }) {
           </CustomModal>
 
           <View style={styles.levelContainer}>
-            <CustomText style={styles.levelText}>
-              {mainPetInfo.petLevel}
-            </CustomText>
+            <CustomText style={styles.levelText}>{petLevel}</CustomText>
             <View style={styles.progressBar}>
               <View
-                style={[
-                  styles.progressFill,
-                  { width: `${mainPetInfo.petPercent}%` },
-                ]}
+                style={[styles.progressFill, { width: `${petPercent}%` }]}
               />
             </View>
           </View>
@@ -221,11 +297,11 @@ function MainScreen({ navigation }) {
         <View style={styles.rightMenu}>
           {/* 푸드렌즈 카메라 */}
           <Pressable onPress={handleFoodRecognition}>
-              <MenuButton
-                title={'식단기록'}
-                icon={FoodLensIcon}
-                isBlack={isDayTime}
-              ></MenuButton>
+            <MenuButton
+              title={'식단기록'}
+              icon={FoodLensIcon}
+              isBlack={isDayTime}
+            ></MenuButton>
           </Pressable>
           {/* 퀘스트 모아보기 페이지로 이동 */}
 

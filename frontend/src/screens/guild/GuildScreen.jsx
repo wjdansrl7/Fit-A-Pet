@@ -1,10 +1,9 @@
-import React, { useRef, useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import { StyleSheet, View, TouchableOpacity, Image } from 'react-native';
-import TreasureBox from '@assets/backgrounds/guild/TreasureBox.png';
 import GuildQuestModal from './GuildQuestModal';
 import GuildInviteModal from './GuildInviteModal';
 import GuildByeModal from './GuildByeModal';
-
+import CustomModal from '@components/CustomModal/CustomModal';
 import CustomText from '@components/CustomText/CustomText';
 import CustomButton from '@components/CustomButton/CustomButton';
 import { petIdImages } from '@constants/petImage';
@@ -16,6 +15,7 @@ import {
   useQuests,
   useByeGuild,
   useChooseQuest,
+  useMyInfo,
 } from '@hooks/queries/useGuild';
 
 function GuildScreen({ navigation, route }) {
@@ -25,10 +25,12 @@ function GuildScreen({ navigation, route }) {
   const { data: guildInfo } = useGuildInfo(guildId);
   const { data: memberInfo } = useMemberInfo(guildId);
   const { data: questInfo } = useQuestInfo(guildId);
+  const { data: myInfo } = useMyInfo();
   const { mutate: byeGuild } = useByeGuild(guildId);
   console.log('길드정보', guildInfo);
   console.log('멤버', memberInfo);
-  const [quest, setQuest] = useState(questInfo);
+  console.log('퀘스트', questInfo);
+  console.log('내정보', myInfo);
 
   const guildName = guildInfo?.guildName;
   const { mutate: chooseQuest } = useChooseQuest();
@@ -37,21 +39,27 @@ function GuildScreen({ navigation, route }) {
     .map((_, index) => (memberInfo && memberInfo[index]) || null);
 
   const { data: quests } = useQuests();
-  const openModal = (modal) => setActiveModal(modal);
+
+  const openModal = (modal) => {
+    const isGuildLeader = guildInfo?.guildLeaderId === myInfo?.userId;
+
+    if (modal === 'quest') {
+      if (isGuildLeader) {
+        setActiveModal(modal);
+      } else {
+        setActiveModal('leader');
+      }
+    } else {
+      setActiveModal(modal);
+    }
+  };
   const closeModal = () => setActiveModal(null);
 
   const refetchQuest = (newQuest) => {
-    const formattedQuest = {
-      guildQuestContent: newQuest.questContent,
-      guildQuestId: newQuest.id,
-      guildQuestName: newQuest.questName,
-    };
-    setQuest(formattedQuest);
     chooseQuest({ guildId, questId: newQuest.id });
   };
 
-  const [byeError, setByeError] = useState(null); // 에러 상태 추가
-  console.log(guildId);
+  const [byeError, setByeError] = useState(null);
   const leaveGuild = (guildId) => {
     byeGuild(guildId, {
       onSuccess: () => {
@@ -59,8 +67,11 @@ function GuildScreen({ navigation, route }) {
         navigation.navigate('Map');
       },
       onError: (error) => {
-        console.log(error);
-        setByeError('leader');
+        console.log(error.code, error.message);
+        if (error.response?.status === 406) {
+          console.log('에러걸림');
+          setByeError('leader');
+        }
       },
     });
   };
@@ -83,7 +94,7 @@ function GuildScreen({ navigation, route }) {
         onPress={() => openModal('quest')}
       >
         <CustomText>
-          {quest?.guildQuestContent || '일일 퀘스트를 설정해주세요'}
+          {questInfo?.guildQuestContent || '일일 퀘스트를 설정해주세요'}
         </CustomText>
       </TouchableOpacity>
       <View style={styles.memberContainer}>
@@ -105,6 +116,7 @@ function GuildScreen({ navigation, route }) {
             </TouchableOpacity>
             <CustomText style={styles.memberName}>
               {member ? member.userName : '???'}
+              {member?.questStatus ? ' ✔️' : ''}
             </CustomText>
           </View>
         ))}
@@ -115,6 +127,13 @@ function GuildScreen({ navigation, route }) {
         onPress={() => openModal('leave')}
         title="그룹 탈퇴하기"
       />
+      <CustomModal isVisible={activeModal === 'leader'} title={'길드장의 권리'}>
+        <CustomText style={styles.leaderModalBody}>
+          아아 이건 길드장의 권리다
+        </CustomText>
+        <CustomButton title={'그래'} onPress={closeModal} style={[]} />
+      </CustomModal>
+
       <GuildQuestModal
         isVisible={activeModal === 'quest'}
         onClose={closeModal}
@@ -136,10 +155,9 @@ function GuildScreen({ navigation, route }) {
         byeError={byeError}
         onClose={() => {
           closeModal();
-          setByeError(null); // byeError 상태 초기화
+          setByeError(null);
         }}
         onLeave={() => {
-          // 탈퇴 로직 실행
           leaveGuild(guildId);
         }}
       />
@@ -212,7 +230,7 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
   },
   petImage: {
-    marginTop: 10,
+    marginTop: 15,
     width: 80,
     height: 80,
   },
@@ -223,6 +241,10 @@ const styles = StyleSheet.create({
   placeholderText: {
     fontSize: 24,
     color: '#aaa',
+  },
+  leaderModalBody: {
+    alignItems: 'center',
+    marginBottom: 20,
   },
   byeContainer: {
     marginTop: 30,

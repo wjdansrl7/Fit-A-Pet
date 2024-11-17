@@ -18,7 +18,6 @@ const GuildByeModal = ({
         <CustomText>정말로 나가실 건가요?</CustomText>
       </View>
 
-      {/* error가 null이 아닐 때만 에러 메시지 표시 */}
       {byeError && (
         <CustomText style={styles.errorText}>
           길드장은 나갈 수 없습니다.
@@ -45,8 +44,8 @@ const styles = StyleSheet.create({
     paddingHorizontal: 20,
   },
   errorText: {
-    color: colors.MAIN_ORANGE, // 에러 텍스트 색상 설정
-    marginTop: 10, // 필요시 여백 추가
+    color: colors.MAIN_ORANGE,
+    marginTop: 10,
   },
 });
 
