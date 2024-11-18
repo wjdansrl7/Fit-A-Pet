@@ -47,7 +47,7 @@ function QuestPersonalFrame({ quests, seg }) {
               ) : (
                 <View style={[styles[`rewardCircle${seg}`]]}>
                   <CustomText style={styles.questName}>
-                    {/* {' '} */}+{quest.questReward}
+                    +{quest.questReward}
                   </CustomText>
                 </View>
               )}
@@ -69,28 +69,6 @@ function QuestPersonalFrame({ quests, seg }) {
               </CustomText>
             </View>
           ))}
-          {/* <View style={styles.rewardContainer2}>
-            <View style={[styles[`rewardCircle${quest.questCategory}`]]}>
-              <CustomText style={styles.questName}>
-                {' '}
-                {quest.questReward}
-              </CustomText>
-            </View>
-            <CustomText style={styles.questName}>
-              {quest.questLevel2}
-            </CustomText>
-          </View>
-          <View style={styles.rewardContainer2}>
-            <View style={[styles[`rewardCircle${quest.questCategory}`]]}>
-              <CustomText style={styles.questName}>
-                {' '}
-                {quest.questReward}
-              </CustomText>
-            </View>
-            <CustomText style={styles.questName}>
-              {quest.questLevel3}
-            </CustomText>
-          </View> */}
         </View>
       </View>
     </View>

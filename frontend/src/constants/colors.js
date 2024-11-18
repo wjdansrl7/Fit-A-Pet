@@ -2,6 +2,7 @@ const colors = {
   WHITE: '#fff',
   BLACK: '#000000',
   BACKGROUND_COLOR: '#F4F4F4',
+  QUEST_COMPLETE: 'rgb(244, 244, 244, 0.4)',
   MODAL_COLOR: '#F4F4F4',
   MAIN_GREEN: '#009F58',
   MAIN_ORANGE: '#E2573D',
