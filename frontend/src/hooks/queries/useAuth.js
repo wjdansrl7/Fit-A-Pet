@@ -109,6 +109,7 @@ function usePostLogout() {
       // console.log('로그아웃_refreshToken', getEncryptStorage('refreshToken'));
       // console.log('로그아웃_loginStatus', getEncryptStorage('loginStatus'));
       navigation.navigate('AuthHome');
+      queryClient.clear();
       resetEggModalData();
       resetHealthData();
     },

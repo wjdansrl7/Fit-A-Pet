@@ -65,9 +65,7 @@ function MainScreen({ navigation }) {
     useEggModalDataStore();
   const [isEggModalVisible, setEggModalVisible] = useState(false); // 에그모달 상태
   const [step, setStep] = useState(1); // 에그모달의 단계 관리
-  console.log('새 펫타입, 상태', newPetType, newPetStatus);
   const newPetImage = petImages[newPetType]?.[newPetStatus] || null;
-  console.log('새 펫 받은 거', newPetImage);
   // 메인펫 정보가 바뀌면 업데이트
   useEffect(() => {
     if (mainPetInfo) {
@@ -92,9 +90,7 @@ function MainScreen({ navigation }) {
           updateDietData(dailyDiet);
           console.log('sdk', steps, sleepHours, dailyDiet);
           await checkQuestCompletion();
-        } catch (error) {
-          console.error('헬스 데이터 초기화 중 오류:', error.message);
-        }
+        } catch (error) {}
       };
 
       // 데이터 초기화 호출
@@ -191,7 +187,8 @@ function MainScreen({ navigation }) {
   //   petImages[mainPetInfo.petType]?.[mainPetInfo.petStatus] || null;
 
   const petSpriteImage =
-    petSpriteImages[mainPetInfo?.petType]?.[mainPetInfo?.petStatus] || null;
+    petSpriteImages[mainPetInfo?.petType]?.[mainPetInfo?.petStatus] ||
+    require('@assets/pets/beluga_egg.png');
 
   const petSpriteData = require('@assets/pets/sprite/sprite.json');
 
@@ -267,7 +264,7 @@ function MainScreen({ navigation }) {
         {/* 상단 - 레벨 및 진행 상태 */}
         <View style={styles.header}>
           <CustomText style={styles.petName}>
-            {mainPetInfo.petNickname}
+            {mainPetInfo?.petNickname}
           </CustomText>
 
           {/* 펫 닉네임 수정 */}
@@ -287,7 +284,7 @@ function MainScreen({ navigation }) {
             title="닉네임 수정"
             onClose={
               () => {
-                setPetNickname(mainPetInfo.petNickname);
+                setPetNickname(mainPetInfo?.petNickname);
                 setModalVisible(false);
               } // 모달을 닫는 함수
             }
