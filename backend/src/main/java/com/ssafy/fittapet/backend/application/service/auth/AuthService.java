@@ -14,4 +14,5 @@ public interface AuthService {
 
     void updateMainPet(Long petBookId, User loginUser);
 
+
 }

@@ -20,6 +20,7 @@ import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.HashMap;
 import java.util.List;
@@ -31,6 +32,7 @@ import static com.ssafy.fittapet.backend.common.constant.error_code.QuestErrorCo
 @Service
 @RequiredArgsConstructor
 @Slf4j
+@Transactional
 public class QuestServiceImpl implements QuestService {
     private final QuestRepository questRepository;
     private final PersonalQuestRepository personalQuestRepository;
@@ -82,9 +84,11 @@ public class QuestServiceImpl implements QuestService {
         PersonalQuest personalQuest = personalQuestRepository.findByUserAndQuest(userId, dto.getCompleteQuestId())
                 .orElseThrow(() -> new EntityNotFoundException("personalQuest not found"));
 
-//        if (personalQuest.isQuestStatus()) {
-//            return false;
-//        }
+        Map<String, Object> response = new HashMap<>();
+
+        if (personalQuest.isQuestStatus()) {
+            return response;
+        }
 
         // 퀘스트 상태 변경
         personalQuest.updateStatus(true);
@@ -95,10 +99,9 @@ public class QuestServiceImpl implements QuestService {
 
         // 경험치 상승
         User user = personalQuest.getUser();
-        PetBook petBook = petBookService.selectPetBook(user.getPetMainId(), user);
+        PetBook petBook = petBookService.findPetBookById(user.getPetMainId(), user);
 
-        Map<String, Object> response = new HashMap<>();
-        response.put("shouldShowModal", petBookService.updateExpAndEvolveCheck(petBook, reward, user));
+        response.put("shouldShowModal", petBookService.processQuestCompletion(petBook, reward, user));
         response.put("petType", petBook.getPet().getPetType());
         response.put("petStatus", petBook.getPet().getPetStatus());
 
@@ -136,9 +139,9 @@ public class QuestServiceImpl implements QuestService {
 
             // 경험치 상승
             User user = authService.getLoginUser(userId);
-            PetBook petBook = petBookService.selectPetBook(user.getPetMainId(), user);
+            PetBook petBook = petBookService.findPetBookById(user.getPetMainId(), user);
 
-            response.put("shouldShowModal", petBookService.updateExpAndEvolveCheck(petBook, reward, user));
+            response.put("shouldShowModal", petBookService.processQuestCompletion(petBook, reward, user));
             response.put("petType", petBook.getPet().getPetType());
             response.put("petStatus", petBook.getPet().getPetStatus());
         }
