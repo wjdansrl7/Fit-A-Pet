@@ -15,6 +15,7 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
+@Builder
 @Entity
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
@@ -32,32 +33,66 @@ public class Diet extends BaseEntity {
 
     private Double calorie;
     private Double protein;
+    private Double proteinRatio;
     private Double fat;
+    private Double fatRatio;
     private Double carbo;
+    private Double carboRatio;
 
     private Double sodium;
+    private Double sodiumRatio;
     private Double sugar;
+    private Double sugarRatio;
 
     @Column(name = "trans_fat")
     private Double transFat;
+    private Double transFatRatio;
 
     @Column(name = "saturated_fat")
     private Double saturatedFat;
+    private Double saturatedFatRatio;
+
     private Double cholesterol;
+    private Double cholesterolRatio;
+
+//    @Builder
+//    public Diet(HealthDietRequest healthDietRequest, User user) {
+//        this.user = user;
+//        this.calorie = healthDietRequest.getCalorie();
+//        this.protein = healthDietRequest.getProtein();
+//        this.fat = healthDietRequest.getFat();
+//        this.carbo = healthDietRequest.getCarbo();
+//        this.sodium = healthDietRequest.getSodium();
+//        this.sugar = healthDietRequest.getSugar();
+//        this.transFat = healthDietRequest.getTransFat();
+//        this.saturatedFat = healthDietRequest.getSaturatedFat();
+//        this.cholesterol = healthDietRequest.getCholesterol();
+//    }
 
     @Builder
-    public Diet(HealthDietRequest healthDietRequest, User user) {
-        this.user = user;
-        this.calorie = healthDietRequest.getCalorie();
-        this.protein = healthDietRequest.getProtein();
-        this.fat = healthDietRequest.getFat();
-        this.carbo = healthDietRequest.getCarbo();
-        this.sodium = healthDietRequest.getSodium();
-        this.sugar = healthDietRequest.getSugar();
-        this.transFat = healthDietRequest.getTransFat();
-        this.saturatedFat = healthDietRequest.getSaturatedFat();
-        this.cholesterol = healthDietRequest.getCholesterol();
+    public static Diet fromRequest(HealthDietRequest healthDietRequest, User user) {
+        return Diet.builder()
+                .user(user)
+                .calorie(healthDietRequest.getCalorie())
+                .protein(healthDietRequest.getProtein())
+                .proteinRatio(Math.round((healthDietRequest.getProtein() / 60) * 100 * 10) / 10.0)
+                .fat(healthDietRequest.getFat())
+                .fatRatio(Math.round((healthDietRequest.getFat() / 50) * 100 * 10) / 10.0)
+                .carbo(healthDietRequest.getCarbo())
+                .carboRatio( Math.round((healthDietRequest.getCarbo() / 328) * 100 * 10) / 10.0)
+                .sodium(healthDietRequest.getSodium())
+                .sodiumRatio(Math.round((healthDietRequest.getSodium() / 2000) * 100 * 10) / 10.0)
+                .sugar(healthDietRequest.getSugar())
+                .sugarRatio(Math.round((healthDietRequest.getSugar() / 100) * 100 * 10) / 10.0)
+                .transFat(healthDietRequest.getTransFat())
+                .transFatRatio( Math.round((healthDietRequest.getTransFat() / 15) * 100 * 10) / 10.0)
+                .saturatedFat(healthDietRequest.getSaturatedFat())
+                .saturatedFatRatio(Math.round((healthDietRequest.getSaturatedFat() / 2.2) * 100 * 10) / 10.0)
+                .cholesterol(healthDietRequest.getCholesterol())
+                .cholesterolRatio(Math.round((healthDietRequest.getCholesterol() / 300) * 100 * 10) / 10.0)
+                .build();
     }
+
 
 //    @Builder
 //    public Diet(User user, Integer calorie, Nutrient sodium, Nutrient carbo,

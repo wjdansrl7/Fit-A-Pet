@@ -20,13 +20,21 @@ public class DietServiceImpl implements DietService{
     private final DietRepository dietRepository;
 
     @Override
-    public void createDietData(HealthDietRequest healthDietRequest, User user) {
-        Diet diet = Diet.builder().
-                user(user).
-                healthDietRequest(healthDietRequest).
-                build();
+    public Long createDietData(HealthDietRequest healthDietRequest, User user) {
+
+//        Diet diet = Diet.builder().
+//                user(user)
+//                .healthDietRequest(healthDietRequest).
+//                build();
+//        if (dietRepository.findByUser(user) != null) {
+//
+//        }
+        Diet diet = Diet.fromRequest(healthDietRequest, user);
 
         dietRepository.save(diet);
+//        log.info(diet.getCalorie().toString());
+
+        return diet.getId();
     }
 
     @Override
