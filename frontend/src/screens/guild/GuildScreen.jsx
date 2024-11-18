@@ -43,7 +43,7 @@ function GuildScreen({ navigation, route }) {
   const openModal = (modal) => {
     const isGuildLeader = guildInfo?.guildLeaderId === myInfo?.userId;
 
-    if (modal === 'quest') {
+    if (modal === 'quest' || modal === 'invite') {
       if (isGuildLeader) {
         setActiveModal(modal);
       } else {
