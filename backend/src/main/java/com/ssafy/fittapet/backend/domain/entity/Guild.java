@@ -27,4 +27,8 @@ public class Guild extends BaseEntity {
         this.guildName = guildName;
         this.guildLeader = guildLeader;
     }
+
+    public void updateLeader(User user) {
+        this.guildLeader = user;
+    }
 }
