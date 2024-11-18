@@ -28,7 +28,7 @@ const petImages = {
 
 const petSpriteImages = {
   벨루가: {
-    알: require('@assets/pets/sprite/beluga_3_sprite.png'),
+    알: require('@assets/pets/sprite/beluga_egg_sprite.png'),
     준성체: require('@assets/pets/sprite/lion_2_sprite.png'),
     성체: require('@assets/pets/sprite/beluga_3_sprite.png'),
   },

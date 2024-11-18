@@ -13,11 +13,6 @@ const createGuild = async (guildCreateInfo) => {
   return data;
 };
 
-const guildJoinInfo = {
-  guildPostion: 1,
-  enteringCode: 'ssafy',
-};
-
 const joinGuild = async (guildJoinInfo) => {
   const { data } = await axiosInstance.post(`/maps/join-guild`, guildJoinInfo);
   return data;

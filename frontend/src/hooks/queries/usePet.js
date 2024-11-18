@@ -21,11 +21,11 @@ const fetchMainPetInfo = async () => {
   return response.data;
 };
 export const useMainPetInfo = () => {
-  const { data, isError, isLoading, error } = useQuery({
+  const { data, isError, isLoading, error, refetch } = useQuery({
     queryKey: ['mainPet'],
     queryFn: fetchMainPetInfo,
   });
-  return { data, isError, isLoading, error };
+  return { data, isError, isLoading, error, refetch };
 };
 
 // 메인 펫 닉네임 변경

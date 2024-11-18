@@ -1,4 +1,3 @@
-import { queryClient } from '@src/api/queryClient';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { getMapInfo, createGuild, joinGuild } from '@api/map';
 
@@ -17,19 +16,18 @@ function useMapInfo() {
 }
 
 function useCreateGuild() {
-  const queryClient = useQueryClient(); // useQueryClient로 queryClient 접근
-
+  const queryClient = useQueryClient();
   return useMutation({
     mutationFn: async (guildCreateInfo) => {
       try {
         await createGuild(guildCreateInfo);
-        queryClient.invalidateQueries(['map']); // 성공 시 map 쿼리 무효화
+        queryClient.invalidateQueries(['map']);
         return 'success';
       } catch (error) {
         if (error.response && error.response.status === 406) {
-          return 'duplicate'; // 중복 오류 반환
+          return 'duplicate';
         } else {
-          return 'error'; // 일반 오류 반환
+          return 'error';
         }
       }
     },
@@ -37,12 +35,12 @@ function useCreateGuild() {
 }
 
 function useJoinGuild() {
-  const queryClient = useQueryClient(); // useQueryClient로 queryClient 접근
+  const queryClient = useQueryClient();
   return useMutation({
     mutationFn: async (guildJoinInfo) => {
       try {
         await joinGuild(guildJoinInfo);
-        queryClient.invalidateQueries(['map']); // 성공 시 map 쿼리 무효화
+        queryClient.invalidateQueries(['map']);
         return 'success';
       } catch (error) {
         if (error.response && error.response.status === 406) {

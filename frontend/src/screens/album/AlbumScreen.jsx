@@ -11,8 +11,9 @@ import AlbumDetailModal from './AlbumDetailModal';
 import { usePetAlbumList } from '@hooks/queries/usePet';
 import { colors } from '@constants/colors';
 import HealthData from './HealthData.jsx';
-import { fetchHealthData } from './healthData.js';
 import useHealthDataStore from '@src/stores/healthDataStore';
+
+const albumIndex = ['벨루가', '친칠라', '사자', '족제비', '범고래'];
 
 function AlbumScreen() {
   const [selectedPet, setSelectedPet] = useState(null);
@@ -20,16 +21,7 @@ function AlbumScreen() {
 
   const { data: petAlbumList, isLoading, isError, error } = usePetAlbumList();
 
-  const { steps, sleepHours, updateHealthData } = useHealthDataStore();
-
-  useEffect(() => {
-    const initializeHealthData = async () => {
-      const { steps, sleepHours } = await fetchHealthData();
-      updateHealthData(steps, sleepHours);
-    };
-
-    initializeHealthData();
-  }, []);
+  const { steps, sleepHours } = useHealthDataStore();
 
   const openModal = (pet) => {
     setSelectedPet(pet);
@@ -48,16 +40,17 @@ function AlbumScreen() {
     return <Text>Error occurred: {error.message}</Text>;
   }
 
-  const petGrid = Array.from({ length: 6 }).map((_, index) => {
-    const pet = petAlbumList.find((p) => p.petBookId === index + 1); // 해당 petId로 위치 확인
-    return pet ? pet : { petId: index + 1 }; // 데이터가 없으면 기본값
+  const petGrid = Array.from({ length: 8 }).map((_, index) => {
+    const pet = petAlbumList.find(
+      (p) => albumIndex.indexOf(p.petType) === index
+    ); // 해당 petType으로 위치 확인
+    return pet ? pet : { petId: index }; // 데이터가 없으면 기본값
   });
+
+  console.log(petAlbumList);
 
   return (
     <ScrollView contentContainerStyle={styles.container}>
-      <HealthData />
-      <Text>걸음: {steps}</Text>
-      <Text>수면: {sleepHours}</Text>
       <View style={styles.grid}>
         {petGrid.map((pet, index) => (
           <AlbumFrame
@@ -88,7 +81,8 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     flexWrap: 'wrap',
     justifyContent: 'space-between',
-    // gap: 20,
+    gap: 20,
+    marginVertical: 20,
   },
 });
 5;
