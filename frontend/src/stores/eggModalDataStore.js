@@ -13,6 +13,13 @@ const useEggModalDataStore = create((set) => ({
       newPetType: newPetType ?? state.newPetType,
       newPetStatus: newPetStatus ?? state.newPetStatus,
     })),
+
+  resetStore: () =>
+    set({
+      shouldShowModal: false,
+      newPetType: null,
+      newPetStatus: null,
+    }),
 }));
 
 export default useEggModalDataStore;

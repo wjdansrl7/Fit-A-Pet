@@ -121,6 +121,14 @@ const useHealthDataStore = create((set, get) => ({
       console.error('순차요청 퀘스트 완료 전송 실패:', error.message);
     }
   },
+
+  resetStore: () =>
+    set({
+      steps: 0,
+      sleepHours: 0,
+      dietData: {},
+      completedQuestIds: [],
+    }),
 }));
 
 export default useHealthDataStore;
