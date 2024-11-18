@@ -114,21 +114,26 @@ function MainScreen({ navigation }) {
           try {
             FoodLensModule.recognizeFood(imageBase64)
               .then((result) => {
-//                 console.log(`자장자장: ${result}`); // result 구조 확인
-//
-//                 // JSON 문자열을 객체로 변환
-//                 const parsedResult = JSON.parse(result);
-//
-//                 const transformedResult = {
-//                   calorie: parsedResult.energy ?? 0, // energy → calorie (fallback to 0 if undefined)
-//                   carbo: parsedResult.carbohydrate ?? 0, // carbohydrate → carbo (fallback to 0 if undefined)
-//                   protein: parsedResult.protein ?? 0, // 그대로
-//                   fat: parsedResult.fat ?? 0, // 그대로
-//                 };
-//
-//                 console.log('보낼게', transformedResult);
+                console.log(`자장자장: ${result}`); // result 구조 확인
+
+                // JSON 문자열을 객체로 변환
+                const parsedResult = JSON.parse(result);
+
+                const transformedResult = {
+                  calorie: parsedResult.energy ?? 0, // energy → calorie (fallback to 0 if undefined)
+                  carbo: parsedResult.carbohydrate ?? 0, // carbohydrate → carbo (fallback to 0 if undefined)
+                  protein: parsedResult.protein ?? 0, // 그대로
+                  fat: parsedResult.fat ?? 0, // 그대로
+                  sugar: parsedResult.sugar ?? 0,
+                  sodium: parsedResult.sodium ?? 0,
+                  transFat: parsedResult.transFat ?? 0,
+                  saturatedFat: parsedResult.saturatedFat ?? 0,
+                  cholesterol: parsedResult.cholesterol ?? 0,
+                };
+
+                console.log('보낼게', transformedResult);
                 // 변환된 데이터로 저장 함수 호출
-                saveDailyDiet(result)
+                saveDailyDiet(transformedResult)
                   .then(() => {
                     console.log('Diet saved successfully:', result);
                     Alert.alert(
