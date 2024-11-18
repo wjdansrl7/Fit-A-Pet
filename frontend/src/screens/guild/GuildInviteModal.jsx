@@ -45,7 +45,6 @@ const GuildInviteModal = ({ guildId, isVisible, onClose }) => {
         </TouchableOpacity>
       </View>
 
-      {/* 복사 완료 커스텀 알림 모달 */}
       <CustomModal
         title="복사 완료!"
         isVisible={isAlertVisible}

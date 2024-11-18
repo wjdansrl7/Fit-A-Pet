@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useRef, useState, useEffect } from 'react';
 import {
   StyleSheet,
   View,
@@ -8,7 +8,7 @@ import {
 } from 'react-native';
 import CustomText from '@components/CustomText/CustomText';
 
-import map2x from '@assets/backgrounds/map/map2x.webp';
+import map from '@assets/backgrounds/map/map.png';
 import ActiveHouse from '@assets/backgrounds/map/ActiveHouse.png';
 import InActiveHouse from '@assets/backgrounds/map/InActiveHouse.png';
 import MapModal from '@screens/map/MapModal';
@@ -18,6 +18,7 @@ import {
   useCreateGuild,
   useJoinGuild,
 } from '@hooks/queries/useMap';
+
 function MapScreen({ navigation }) {
   const [isModalVisible, setModalVisible] = useState(false);
   const [modalViewState, setModalViewState] = useState('init');
@@ -28,8 +29,8 @@ function MapScreen({ navigation }) {
   const { mutateAsync: joinGuildAsync } = useJoinGuild();
 
   const housePosition = {
-    1: { top: 120, right: 20 },
-    2: { top: 380, left: 40 },
+    1: { top: 80, right: 20 },
+    2: { bottom: 200, left: 40 },
     3: { bottom: 150, right: 20 },
   };
 
@@ -107,7 +108,7 @@ function MapScreen({ navigation }) {
   return (
     <View style={styles.container}>
       <ImageBackground
-        source={map2x}
+        source={map}
         style={styles.backgroundImage}
         resizeMode="cover"
       >
@@ -166,7 +167,7 @@ const styles = StyleSheet.create({
   houseName: {
     marginTop: 5,
     color: colors.WHITE,
-    fontSize: 16,
+    fontSize: 20,
   },
 });
 
