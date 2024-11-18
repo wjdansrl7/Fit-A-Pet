@@ -13,6 +13,7 @@ import com.ssafy.fittapet.backend.domain.repository.guild_quest.GuildQuestReposi
 import com.ssafy.fittapet.backend.domain.repository.map.MapRepository;
 import com.ssafy.fittapet.backend.domain.repository.user_quest.UserQuestStatusRepository;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -23,6 +24,7 @@ import static com.ssafy.fittapet.backend.common.constant.error_code.QuestErrorCo
 
 @Service
 @RequiredArgsConstructor
+@Slf4j
 public class GuildServiceImpl implements GuildService {
     private final GuildRepository guildRepository;
     private final GuildQuestRepository guildQuestRepository;
@@ -97,8 +99,9 @@ public class GuildServiceImpl implements GuildService {
     public List<GuildMemberInfoResponse> getMemberInfo(Long guildId) throws CustomException {
         // todo : 길드원 validation
         Guild guild = guildValidator.isExist(guildId).orElseThrow(() -> new CustomException(NO_GUILD));
-
-        return guildRepository.findAllMemberByGuild(guild.getId());
+        List<GuildMemberInfoResponse> temp = guildRepository.findAllMemberByGuild(guild.getId());
+        temp.forEach(x -> log.info("who {}", x.getUserId()));
+        return temp;
     }
 
     @Override

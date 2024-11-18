@@ -11,4 +11,6 @@ public interface UserQuestStatusRepository extends JpaRepository<UserQuestStatus
     void deleteByUserIdAndGuildQuestId(Long userId, Long guildQuestId);
 
     List<UserQuestStatus> findByGuildQuest(GuildQuest guildQuest);
+
+    void deleteByGuildQuestId(Long guildQuestId);
 }

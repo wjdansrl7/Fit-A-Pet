@@ -1,5 +1,7 @@
 package com.ssafy.fittapet.backend.domain.repository.guild;
 
+import com.querydsl.core.types.dsl.BooleanExpression;
+import com.querydsl.core.types.dsl.Expressions;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import com.ssafy.fittapet.backend.domain.dto.guild.GuildInfoResponse;
 import com.ssafy.fittapet.backend.domain.dto.guild.GuildMemberInfoResponse;
@@ -69,7 +71,8 @@ public class GuildCustomRepositoryImpl implements GuildCustomRepository {
                 .leftJoin(userQuestStatus).on(userQuestStatus.user.eq(map.user))
                 .where(map.guild.id.eq(guildId)
                         .and(petBook.id.eq(map.user.petMainId))
-                        .and((userQuestStatus.guildQuest.guild.id).eq(guildId)))
+                )
+//                        .and(userQuestStatus.guildQuest.guild.id.eq(guildId)))
                 .fetch();
     }
 }
