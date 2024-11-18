@@ -60,17 +60,9 @@ function MainScreen({ navigation }) {
     useEggModalDataStore();
   const [isEggModalVisible, setEggModalVisible] = useState(false); // 에그모달 상태
   const [step, setStep] = useState(1); // 에그모달의 단계 관리
+  console.log('새 펫타입, 상태', newPetType, newPetStatus);
   const newPetImage = petImages[newPetType]?.[newPetStatus] || null;
-  // console.log(newPetImage);
-
-  useEffect(() => {
-    // 이후 params 변경 감지
-    if (shouldShowModal) {
-      console.log('shouldShowModal is true');
-      setEggModalVisible(true);
-    }
-  }, [shouldShowModal]);
-
+  console.log('새 펫 받은 거', newPetImage);
   // 메인펫 정보가 바뀌면 업데이트
   useEffect(() => {
     if (mainPetInfo) {
@@ -216,8 +208,6 @@ function MainScreen({ navigation }) {
   };
 
   const handleEggModalClose = async () => {
-    setEggModalVisible(false);
-    console.log('egg모달닫아');
     // Zustand 상태 업데이트
     setEggModalData({ shouldShowModal: false });
 
@@ -235,7 +225,7 @@ function MainScreen({ navigation }) {
       >
         {/* 닉네임은 새걸 받아온걸로 하기 */}
         <MainEggModal
-          isVisible={isEggModalVisible}
+          isVisible={shouldShowModal}
           step={step}
           petNickname={petNickname}
           setPetNickname={setPetNickname}
