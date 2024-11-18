@@ -75,7 +75,7 @@ function QuestGroupFrame({ quest }) {
         </View>
       </View>
       {/* <View style={{ position: 'absolute' }}> */}
-      {!quest.questStatus && layout.width > 0 && layout.height > 0 && (
+      {quest.questStatus && layout.width > 0 && layout.height > 0 && (
         <View
           style={[
             styles.questCompleteTextContainer,
@@ -98,7 +98,7 @@ function QuestGroupFrame({ quest }) {
 }
 
 const styles = StyleSheet.create({
-  questContainertrue: {
+  questContainerfalse: {
     backgroundColor: colors.BACKGROUND_COLOR,
     // backgroundColor: colors.BACKGROUND_COLOR,
     borderRadius: 5,
@@ -106,7 +106,7 @@ const styles = StyleSheet.create({
     gap: 14,
     padding: 10,
   },
-  questContainerfalse: {
+  questContainertrue: {
     backgroundColor: colors.BACKGROUND_COLOR,
     opacity: 0.4,
     borderRadius: 5,
