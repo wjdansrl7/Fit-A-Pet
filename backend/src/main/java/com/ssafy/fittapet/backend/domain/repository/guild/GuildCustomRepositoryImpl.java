@@ -71,7 +71,8 @@ public class GuildCustomRepositoryImpl implements GuildCustomRepository {
                 .leftJoin(userQuestStatus).on(userQuestStatus.user.eq(map.user))
                 .where(map.guild.id.eq(guildId)
                         .and(petBook.id.eq(map.user.petMainId))
-                        .and(userQuestStatus.guildQuest.guild.id.eq(guildId)))
+                )
+//                        .and(userQuestStatus.guildQuest.guild.id.eq(guildId)))
                 .fetch();
     }
 }
