@@ -46,7 +46,7 @@ public class PetBookServiceImpl implements PetBookService{
                 .user(loginUser)
                 .pet(randomEggPet)
                 .petExp(0)
-                .petNickname(randomEggPet.getPetType().toString())
+                .petNickname(randomEggPet.getPetType().getValue())
                 .build();
 
         petBookRepository.save(petBook);
@@ -73,8 +73,7 @@ public class PetBookServiceImpl implements PetBookService{
         petBook.levelUp(expGained);
 
         if (petBook.getPetLevel() >= 30 && !petBook.isIssueEgg()) {
-//            this.createPetBook(loginUser);
-            PetBook newPetBook = this.createPetBook(loginUser);
+            this.createPetBook(loginUser);
             petBook.updateIssueEgg(true);
             petBookRepository.save(petBook);
             return true;
