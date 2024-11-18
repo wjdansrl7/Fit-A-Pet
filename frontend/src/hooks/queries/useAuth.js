@@ -40,9 +40,9 @@ function useKakaoLogin() {
       if (data.shouldShowModal) {
         navigateParams.newPetType = data.petType;
         navigateParams.newPetStatus = data.petStatus;
+        const { setEggModalData } = useEggModalDataStore.getState();
+        setEggModalData(navigateParams);
       }
-      const { setEggModalData } = useEggModalDataStore.getState();
-      setEggModalData(navigateParams);
 
       navigation.navigate('Main');
     },
