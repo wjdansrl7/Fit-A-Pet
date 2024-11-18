@@ -33,9 +33,6 @@ public class UserQuestStatus {
         this.user = user;
     }
 
-    /**
-     * 상태 업데이트
-     */
     public void updateStatus(boolean check){
         this.questStatus = check;
     }

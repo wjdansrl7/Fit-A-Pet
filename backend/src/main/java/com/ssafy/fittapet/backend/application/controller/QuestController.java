@@ -21,7 +21,6 @@ import java.util.Map;
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/quests")
-@Slf4j
 public class QuestController {
     private final QuestService questService;
     private final AuthService authService;
@@ -48,16 +47,12 @@ public class QuestController {
     @PostMapping("/personal/complete")
     public ResponseEntity<?> completePersonalQuest(@RequestBody QuestCompleteRequestDTO dto,
                                                    @AuthenticationPrincipal CustomOAuth2User customOAuth2User) {
-
-        log.info("QuestController completePersonalQuest");
         return ResponseEntity.ok(questService.completePersonalQuest(dto, customOAuth2User.getId()));
     }
 
     @PostMapping("/guild/complete")
     public ResponseEntity<?> completeGuildQuest(@RequestBody QuestCompleteRequestDTO dto,
                                                 @AuthenticationPrincipal CustomOAuth2User customOAuth2User) throws CustomException {
-
-        log.info("QuestController completeGuildQuest");
         return ResponseEntity.ok(questService.completeGuildQuest(dto, customOAuth2User.getId()));
     }
 }
