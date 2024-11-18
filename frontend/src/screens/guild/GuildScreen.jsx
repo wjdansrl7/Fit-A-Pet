@@ -142,7 +142,7 @@ function GuildScreen({ navigation, route }) {
           refetchQuest(newQuest);
           closeModal();
         }}
-        quests={quests}
+        quests={quests || []}
       />
       <GuildInviteModal
         guildId={guildId}
