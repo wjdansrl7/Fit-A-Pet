@@ -19,11 +19,11 @@ import { launchCamera } from 'react-native-image-picker'; //ndk
 const { FoodLensModule } = NativeModules;
 
 import MenuButton from './MenuButton';
-import AlbumIcon from '@assets/icons/도감_icon.png';
-import MapIcon from '@assets/icons/지도_icon.png';
-import MyInfoIcon from '@assets/icons/나의기록_icon.png';
-import QuestIcon from '@assets/icons/퀘스트_icon.png';
-import FoodLensIcon from '@assets/icons/식단기록_icon.png';
+import AlbumIcon from '@assets/icons/album_icon.png';
+import MapIcon from '@assets/icons/map_icon.png';
+import MyInfoIcon from '@assets/icons/my_info_icon.png';
+import QuestIcon from '@assets/icons/quest_icon.png';
+import FoodLensIcon from '@assets/icons/food_lens_icon.png';
 
 import CustomText from '@components/CustomText/CustomText';
 import CustomModal from '@components/CustomModal/CustomModal';
@@ -60,17 +60,9 @@ function MainScreen({ navigation }) {
     useEggModalDataStore();
   const [isEggModalVisible, setEggModalVisible] = useState(false); // 에그모달 상태
   const [step, setStep] = useState(1); // 에그모달의 단계 관리
+  console.log('새 펫타입, 상태', newPetType, newPetStatus);
   const newPetImage = petImages[newPetType]?.[newPetStatus] || null;
-  // console.log(newPetImage);
-
-  useEffect(() => {
-    // 이후 params 변경 감지
-    if (shouldShowModal) {
-      console.log('shouldShowModal is true');
-      setEggModalVisible(true);
-    }
-  }, [shouldShowModal]);
-
+  console.log('새 펫 받은 거', newPetImage);
   // 메인펫 정보가 바뀌면 업데이트
   useEffect(() => {
     if (mainPetInfo) {
@@ -132,6 +124,11 @@ function MainScreen({ navigation }) {
                   carbo: parsedResult.carbohydrate ?? 0, // carbohydrate → carbo (fallback to 0 if undefined)
                   protein: parsedResult.protein ?? 0, // 그대로
                   fat: parsedResult.fat ?? 0, // 그대로
+                  sugar: parsedResult.sugar ?? 0,
+                  sodium: parsedResult.sodium ?? 0,
+                  transFat: parsedResult.transFat ?? 0,
+                  saturatedFat: parsedResult.saturatedFat ?? 0,
+                  cholesterol: parsedResult.cholesterol ?? 0,
                 };
 
                 console.log('보낼게', transformedResult);
@@ -141,7 +138,7 @@ function MainScreen({ navigation }) {
                     console.log('Diet saved successfully:', result);
                     Alert.alert(
                       'Recognition Successful',
-                      `Detected food and saved: ${JSON.stringify(result)}`
+//                       `Detected food and saved: ${JSON.stringify(result)}`
                     );
                   })
                   .catch((error) => {
@@ -216,8 +213,6 @@ function MainScreen({ navigation }) {
   };
 
   const handleEggModalClose = async () => {
-    setEggModalVisible(false);
-    console.log('egg모달닫아');
     // Zustand 상태 업데이트
     setEggModalData({ shouldShowModal: false });
 
@@ -235,7 +230,7 @@ function MainScreen({ navigation }) {
       >
         {/* 닉네임은 새걸 받아온걸로 하기 */}
         <MainEggModal
-          isVisible={isEggModalVisible}
+          isVisible={shouldShowModal}
           step={step}
           petNickname={petNickname}
           setPetNickname={setPetNickname}

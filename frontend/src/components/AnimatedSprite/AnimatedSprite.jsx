@@ -39,7 +39,8 @@ const AnimatedSprite = forwardRef((props, ref) => {
         console.warn(`Invalid animation name: ${animationName}`);
         return;
       }
-      currentAnimationName.value = animationName;
+      currentAnimationName.set(animationName);
+      frameIndex.set(0); // 상태 초기화
       const selectedFramesIndices = animations[animationName] ?? [];
       frameIndex.value = withRepeat(
         withTiming(selectedFramesIndices.length - 1, {
@@ -59,7 +60,7 @@ const AnimatedSprite = forwardRef((props, ref) => {
       startAnimation: (animationName, loop = false, customFrameRate = 10) => {
         ToggleAnimation(animationName, loop, customFrameRate);
       },
-      getCurrentAnimationName: () => currentAnimationName.value,
+      getCurrentAnimationName: () => currentAnimationName.get(),
     }),
     [ToggleAnimation, currentAnimationName]
   );
@@ -72,9 +73,9 @@ const AnimatedSprite = forwardRef((props, ref) => {
 
   const animatedStyle = useAnimatedStyle(() => {
     const selectedFrames =
-      animations[currentAnimationName.value]?.map((index) => frames[index]) ??
+      animations[currentAnimationName.get()]?.map((index) => frames[index]) ??
       [];
-    const frame = selectedFrames[Math.floor(frameIndex.value)];
+    const frame = selectedFrames[Math.floor(frameIndex.get())];
     if (!frame) {
       return {};
     }

@@ -64,16 +64,21 @@ class FoodLensModule(reactContext: ReactApplicationContext) : ReactContextBaseJa
                         return
                     }
 
-                    // Extract the first candidate's carbohydrate, protein, fat, and energy values
                     val candidate = result.foods.firstOrNull()?.candidates?.firstOrNull()
                     if (candidate != null) {
                         val nutritionData = JSONObject().apply {
-                            put("foodName", candidate.fullFoodName)
-                            put("carbohydrate", candidate.carbohydrate)
-                            put("protein", candidate.protein)
-                            put("fat", candidate.fat)
-                            put("energy", candidate.energy)
+                            put("foodName", candidate.fullFoodName) // 음식 이름
+                            put("carbohydrate", candidate.carbohydrate) // 탄수화물
+                            put("protein", candidate.protein) // 프로틴
+                            put("fat", candidate.fat) // 지방
+                            put("energy", candidate.energy) // 열량(칼로리)
+                            put("sodium", candidate.sodium) // 나트륨
+                            put("sugar", candidate.totalSugars) // 당
+                            put("transFat", candidate.transFattyAcid) // 트랜스지방
+                            put("saturatedFat", candidate.saturatedFattyAcid) // 포화지방
+                            put("cholesterol", candidate.cholesterol) // 콜레스트롤
                         }
+
                         promise.resolve(nutritionData.toString())
                     } else {
                         promise.reject("Recognition Error", "No nutrition data available")

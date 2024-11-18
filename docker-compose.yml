@@ -1,0 +1,62 @@
+version: "3"
+services:
+  mysql:
+    image: mysql:latest
+    container_name: mysql
+    environment:
+      TZ: Asia/Seoul
+      MYSQL_ROOT_PASSWORD: root
+      MYSQL_DATABASE: fitapet
+    ports:
+      - "3306:3306"
+    networks:
+      - app-network
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "localhost"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    volumes:
+      - ./mysql_data:/var/lib/mysql
+  redis:
+    image: redis:latest
+    container_name: redis
+    ports:
+      - "6379:6379"
+    networks:
+      - app-network
+    volumes:
+      - ./redis_data:/data # Redis 데이터를 영구 저장할 볼륨 설정
+    command: ["redis-server", "--appendonly", "yes"] # Redis 데이터 영구 저장을 위한 설정
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  backend:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+    container_name: backend
+    environment:
+      TZ: Asia/Seoul
+      SPRING_DATASOURCE_URL: jdbc:mysql://mysql:3306/fitapet
+      SPRING_DATASOURCE_USERNAME: root
+      SPRING_DATASOURCE_PASSWORD: Ssafy@1119
+      REDIS_HOST: redis
+      REDIS_PORT: 6379
+    depends_on:
+      mysql:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+    ports:
+      - "8082:8080"
+    networks:
+      - app-network
+
+networks:
+  app-network:
+    driver: bridge
+    external: true

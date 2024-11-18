@@ -32,7 +32,19 @@ public class QUser extends EntityPathBase<User> {
     //inherited
     public final DateTimePath<java.time.LocalDateTime> modifiedAt = _super.modifiedAt;
 
-    public final StringPath userNickname = createString("userNickname");
+    public final NumberPath<Long> petMainId = createNumber("petMainId", Long.class);
+
+    public final StringPath provider = createString("provider");
+
+    public final StringPath providerId = createString("providerId");
+
+    public final EnumPath<com.ssafy.fittapet.backend.common.constant.entity_field.Role> role = createEnum("role", com.ssafy.fittapet.backend.common.constant.entity_field.Role.class);
+
+    public final StringPath userName = createString("userName");
+
+    public final EnumPath<com.ssafy.fittapet.backend.common.constant.entity_field.UserTier> userTier = createEnum("userTier", com.ssafy.fittapet.backend.common.constant.entity_field.UserTier.class);
+
+    public final StringPath userUniqueName = createString("userUniqueName");
 
     public QUser(String variable) {
         super(User.class, forVariable(variable));
