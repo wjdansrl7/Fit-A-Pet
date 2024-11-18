@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 
 import {
   View,
@@ -14,6 +14,7 @@ import {
   Dimensions,
   ImageBackground,
 } from 'react-native';
+import { useFocusEffect } from '@react-navigation/native';
 
 import { launchCamera } from 'react-native-image-picker'; //ndk
 const { FoodLensModule } = NativeModules;
@@ -74,17 +75,38 @@ function MainScreen({ navigation }) {
   }, [mainPetInfo]);
 
   // 헬스 데이터 업데이트
-  useEffect(() => {
-    const initializeHealthData = async () => {
-      const { steps, sleepHours } = await fetchHealthData();
-      const { updateHealthData, checkQuestCompletion } =
-        useHealthDataStore.getState();
-      updateHealthData(steps, sleepHours);
-      checkQuestCompletion();
-    };
+  useFocusEffect(
+    useCallback(() => {
+      const initializeHealthData = async () => {
+        try {
+          // 헬스 데이터를 가져옴
+          const { steps, sleepHours } = await fetchHealthData();
+          console.log('헬스 데이터 가져옴:', { steps, sleepHours });
 
-    initializeHealthData().then(() => refetch());
-  }, []);
+          // zustand store에서 상태 업데이트 및 퀘스트 완료 체크
+          const { updateHealthData, checkQuestCompletion } =
+            useHealthDataStore.getState();
+
+          // 헬스 데이터 업데이트
+          updateHealthData(steps, sleepHours);
+
+          // 퀘스트 완료 여부 체크 및 백엔드 전송
+          await checkQuestCompletion();
+
+          console.log('퀘스트 완료 체크 및 전송 완료');
+        } catch (error) {
+          console.error('헬스 데이터 초기화 중 오류:', error.message);
+        }
+      };
+
+      // 데이터 초기화 호출
+      initializeHealthData();
+
+      return () => {
+        console.log('스크린 포커스 해제됨');
+      };
+    }, [])
+  );
 
   // 닉네임 변경 함수
   const handleUpdateNickname = () => {
@@ -137,8 +159,8 @@ function MainScreen({ navigation }) {
                   .then(() => {
                     console.log('Diet saved successfully:', result);
                     Alert.alert(
-                      'Recognition Successful',
-//                       `Detected food and saved: ${JSON.stringify(result)}`
+                      'Recognition Successful'
+                      //                       `Detected food and saved: ${JSON.stringify(result)}`
                     );
                   })
                   .catch((error) => {

@@ -17,7 +17,6 @@ const useHealthDataStore = create((set, get) => ({
   checkQuestCompletion: async () => {
     const { steps, sleepHours, completedQuestIds } = get();
 
-    // 걷기와 수면 퀘스트를 분리하여 완료 여부 체크
     const walkQuests = totalQuest.filter((quest) => quest.category === 'WALK');
     const sleepQuests = totalQuest.filter(
       (quest) => quest.category === 'SLEEP'
@@ -31,17 +30,21 @@ const useHealthDataStore = create((set, get) => ({
       .filter((quest) => sleepHours >= quest.goal)
       .map((quest) => quest.id);
 
-    // 새로운 완료 퀘스트 ID 필터링
     const newCompletedIds = [
       ...completedWalkQuestIds,
       ...completedSleepQuestIds,
     ].filter((id) => !completedQuestIds.includes(id));
 
+    console.log('새로 완료된 퀘스트 ID:', newCompletedIds);
+
     if (newCompletedIds.length > 0) {
       set((state) => ({
         completedQuestIds: [...state.completedQuestIds, ...newCompletedIds],
       }));
+
       await get().completeQuestsSequentially(newCompletedIds);
+    } else {
+      console.log('새로 완료된 퀘스트 없음');
     }
   },
 
