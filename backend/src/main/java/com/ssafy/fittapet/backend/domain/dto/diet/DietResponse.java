@@ -55,22 +55,22 @@ public class DietResponse {
     @QueryProjection
     public DietResponse(Double calorie, Double carbo, Double protein, Double fat,
             Double sodium, Double sugar, Double transFat, Double saturatedFat, Double cholesterol) {
-        this.calorie = calorie;
-        this.carbo = carbo;
+        this.calorie = Math.round(calorie * 10) / 10.0;
+        this.carbo = Math.round(carbo * 10) / 10.0;
         this.carboRatio = Math.round((carbo / 328) * 100 * 10) / 10.0;
-        this.protein = protein;
+        this.protein = Math.round(protein * 10) / 10.0;
         this.proteinRatio = Math.round((protein / 60) * 100 * 10) / 10.0;
-        this.fat = fat;
+        this.fat = Math.round(fat * 10) / 10.0;
         this.fatRatio = Math.round((fat / 50) * 100 * 10) / 10.0;
-        this.sodium = sodium;
+        this.sodium = Math.round(sodium * 10) / 10.0;
         this.sodiumRatio = Math.round((sodium / 2000) * 100 * 10) / 10.0;
-        this.sugar = sugar;
+        this.sugar = Math.round(sugar * 10) / 10.0;
         this.sugarRatio = Math.round((sugar / 100) * 100 * 10) / 10.0;
-        this.transFat = transFat;
+        this.transFat = Math.round(transFat * 10) / 10.0;
         this.transFatRatio = Math.round((transFat / 2.2) * 100 * 10) / 10.0;
-        this.saturatedFat = saturatedFat;
+        this.saturatedFat = Math.round(saturatedFat * 10) / 10.0;
         this.saturatedFatRatio = Math.round((saturatedFat / 15) * 100 * 10) / 10.0;
-        this.cholesterol = cholesterol;
+        this.cholesterol = Math.round(cholesterol * 10) / 10.0;
         this.cholesterolRatio = Math.round((cholesterol / 300) * 100 * 10) / 10.0;
 
         this.isCalorieEnough = calorie>=2000? true : false;
