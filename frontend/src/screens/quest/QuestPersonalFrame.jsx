@@ -65,7 +65,7 @@ function QuestPersonalFrame({ quests, seg }) {
                   },
                 ]}
               >
-                12,000보{/* {quest.questContent} */}
+                {quest.questContent}
               </CustomText>
             </View>
           ))}
