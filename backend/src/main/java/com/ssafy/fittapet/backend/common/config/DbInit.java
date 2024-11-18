@@ -23,10 +23,10 @@ public class DbInit {
 
             List<Quest> quests = new ArrayList<>();
 
-            quests.add(createQuest("즐거운 산책", "5000걸음", QuestTier.EASY, QuestType.PERSONAL, QuestCategory.WALK, 4500));
-            quests.add(createQuest("좀 더 멀리", "10000걸음", QuestTier.NORMAL, QuestType.PERSONAL, QuestCategory.WALK, 5000));
-            quests.add(createQuest("걸어서 세계속으로", "15000걸음", QuestTier.HARD, QuestType.PERSONAL, QuestCategory.WALK, 5000));
-            quests.add(createQuest("개운한 시작", "7시간", QuestTier.EASY, QuestType.PERSONAL, QuestCategory.SLEEP, 0));
+            quests.add(createQuest("즐거운 산책", "5000걸음", QuestTier.EASY, QuestType.PERSONAL, QuestCategory.WALK, 0));
+            quests.add(createQuest("좀 더 멀리", "10000걸음", QuestTier.NORMAL, QuestType.PERSONAL, QuestCategory.WALK, 0));
+            quests.add(createQuest("걸어서 세계속으로", "15000걸음", QuestTier.HARD, QuestType.PERSONAL, QuestCategory.WALK, 0));
+            quests.add(createQuest("개운한 시작", "7시간", QuestTier.EASY, QuestType.PERSONAL, QuestCategory.SLEEP, 5000));
             quests.add(createQuest("깊은 숙면", "8시간", QuestTier.NORMAL, QuestType.PERSONAL, QuestCategory.SLEEP, 0));
             quests.add(createQuest("살아계신가요?", "9시간", QuestTier.HARD, QuestType.PERSONAL, QuestCategory.SLEEP, 0));
             quests.add(createQuest("밥은 먹고 하자", "탄단지1", QuestTier.EASY, QuestType.PERSONAL, QuestCategory.DIET, 0));
