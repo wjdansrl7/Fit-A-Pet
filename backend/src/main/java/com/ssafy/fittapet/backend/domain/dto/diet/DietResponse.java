@@ -67,9 +67,9 @@ public class DietResponse {
         this.sugar = sugar;
         this.sugarRatio = Math.round((sugar / 100) * 100 * 10) / 10.0;
         this.transFat = transFat;
-        this.transFatRatio = Math.round((transFat / 15) * 100 * 10) / 10.0;
+        this.transFatRatio = Math.round((transFat / 2.2) * 100 * 10) / 10.0;
         this.saturatedFat = saturatedFat;
-        this.saturatedFatRatio = Math.round((saturatedFat / 2.2) * 100 * 10) / 10.0; // 트랜스지방
+        this.saturatedFatRatio = Math.round((saturatedFat / 15) * 100 * 10) / 10.0;
         this.cholesterol = cholesterol;
         this.cholesterolRatio = Math.round((cholesterol / 300) * 100 * 10) / 10.0;
 
