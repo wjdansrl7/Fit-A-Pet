@@ -81,7 +81,7 @@ function MainScreen({ navigation }) {
         try {
           // 헬스 데이터를 가져옴
           const { steps, sleepHours } = await fetchHealthData();
-          console.log('헬스 데이터 가져옴:', { steps, sleepHours });
+          console.log('헬스 데이터 가져옴:', { steps, sleepHours }, '수며');
 
           // zustand store에서 상태 업데이트 및 퀘스트 완료 체크
           const { updateHealthData, checkQuestCompletion } =

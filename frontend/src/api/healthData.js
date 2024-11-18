@@ -60,7 +60,7 @@ const fetchStepData = async (startTime, endTime) => {
     });
     const [stepRecords] = stepResponse.records;
     // const stepRecords = {
-    //   count: 3000,
+    //   count: 1000,
     //   endTime: '2024-11-13T14:59:59.999Z',
     //   metadata: {
     //     clientRecordId: null,
