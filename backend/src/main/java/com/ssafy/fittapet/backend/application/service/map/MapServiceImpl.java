@@ -132,17 +132,23 @@ public class MapServiceImpl implements MapService {
             if (members.size() > 1) {
                 members.sort(Comparator.comparingLong(Map::getId));
                 guild.updateLeader(members.get(1).getUser());
-                mapRepository.deleteByGuildIdAndUserId(guildId, userId);
+                processGuildMembers(userId, guildId);
             } else {
-                mapRepository.deleteByGuildIdAndUserId(guildId, userId);
-                GuildQuest guildQuest = guildQuestRepository.findByGuildId(guildId);
-                if (guildQuest != null)
-                    userQuestStatusRepository.deleteByUserIdAndGuildQuestId(userId, guildQuest.getId());
+                GuildQuest guildQuest = processGuildMembers(userId, guildId);
+                guildQuestRepository.delete(guildQuest);
                 guildRepository.delete(guild);
             }
-        }
-        else{
+        } else {
             mapRepository.deleteByGuildIdAndUserId(guildId, userId);
         }
+    }
+
+    @Transactional
+    public GuildQuest processGuildMembers(Long userId, Long guildId) {
+        mapRepository.deleteByGuildIdAndUserId(guildId, userId);
+        GuildQuest guildQuest = guildQuestRepository.findByGuildId(guildId);
+        if (guildQuest != null)
+            userQuestStatusRepository.deleteByUserIdAndGuildQuestId(userId, guildQuest.getId());
+        return guildQuest;
     }
 }
