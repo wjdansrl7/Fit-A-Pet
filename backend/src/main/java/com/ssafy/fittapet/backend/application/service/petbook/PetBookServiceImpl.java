@@ -46,7 +46,7 @@ public class PetBookServiceImpl implements PetBookService{
                 .user(loginUser)
                 .pet(randomEggPet)
                 .petExp(0)
-                .petNickname(randomEggPet.getPetType().toString())
+                .petNickname(randomEggPet.getPetType().getValue())
                 .build();
 
         petBookRepository.save(petBook);
