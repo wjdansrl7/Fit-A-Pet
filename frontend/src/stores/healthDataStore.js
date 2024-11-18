@@ -19,10 +19,6 @@ const useHealthDataStore = create((set, get) => ({
   checkQuestCompletion: async () => {
     const { steps, sleepHours, completedQuestIds, dietData } = get();
 
-<<<<<<< HEAD
-=======
-    // 걷기와 수면, 영양 퀘스트를 분리하여 완료 여부 체크
->>>>>>> d17827063757f56e3aa653bbf8e1ef01cfe5c72d
     const walkQuests = totalQuest.filter((quest) => quest.category === 'WALK');
     const sleepQuests = totalQuest.filter(
       (quest) => quest.category === 'SLEEP'
