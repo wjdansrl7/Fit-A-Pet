@@ -51,29 +51,28 @@ function calculateDuration(start, end) {
 // 걷기 데이터 가져오기
 const fetchStepData = async (startTime, endTime) => {
   try {
-    // const stepResponse = await readRecords('Steps', {
-    //   timeRangeFilter: {
-    //     operator: 'between',
-    //     startTime: startTime,
-    //     endTime: endTime,
-    //   },
-    // });
-    // const [stepRecords] = stepResponse.records;
-
-    const stepRecords = {
-      count: 3000,
-      endTime: '2024-11-13T14:59:59.999Z',
-      metadata: {
-        clientRecordId: null,
-        clientRecordVersion: 0,
-        dataOrigin: 'com.sec.android.app.shealth',
-        device: null,
-        id: '616c53db-35b7-41c1-8056-bda65a9660fc',
-        lastModifiedTime: '2024-11-13T00:13:25.184Z',
-        recordingMethod: 0,
+    const stepResponse = await readRecords('Steps', {
+      timeRangeFilter: {
+        operator: 'between',
+        startTime: startTime,
+        endTime: endTime,
       },
-      startTime: '2024-11-12T15:00:00Z',
-    };
+    });
+    const [stepRecords] = stepResponse.records;
+    // const stepRecords = {
+    //   count: 1000,
+    //   endTime: '2024-11-13T14:59:59.999Z',
+    //   metadata: {
+    //     clientRecordId: null,
+    //     clientRecordVersion: 0,
+    //     dataOrigin: 'com.sec.android.app.shealth',
+    //     device: null,
+    //     id: '616c53db-35b7-41c1-8056-bda65a9660fc',
+    //     lastModifiedTime: '2024-11-13T00:13:25.184Z',
+    //     recordingMethod: 0,
+    //   },
+    //   startTime: '2024-11-12T15:00:00Z',
+    // };
 
     return stepRecords ? stepRecords.count : 0; // 기록이 없을 경우 0 반환
   } catch (error) {
@@ -84,31 +83,31 @@ const fetchStepData = async (startTime, endTime) => {
 
 const fetchSleepData = async (sleepStartTime, endTime) => {
   try {
-    // const sleepResponse = await readRecords('SleepSession', {
-    //   timeRangeFilter: {
-    //     operator: 'between',
-    //     startTime: sleepStartTime,
-    //     endTime: endTime,
-    //   },
-    // });
-    // const [sleepRecords] = sleepResponse.records;
-
-    const sleepRecords = {
-      endTime: '2024-11-13T19:30:00Z',
-      metadata: {
-        clientRecordId: null,
-        clientRecordVersion: 0,
-        dataOrigin: 'com.sec.android.app.shealth',
-        device: null,
-        id: '14529272-7986-4549-83dd-64755689de8c',
-        lastModifiedTime: '2024-11-14T04:00:57.468Z',
-        recordingMethod: 0,
+    const sleepResponse = await readRecords('SleepSession', {
+      timeRangeFilter: {
+        operator: 'between',
+        startTime: sleepStartTime,
+        endTime: endTime,
       },
-      notes: null,
-      stages: [],
-      startTime: '2024-11-13T18:00:00Z',
-      title: null,
-    };
+    });
+    const [sleepRecords] = sleepResponse.records;
+
+    // const sleepRecords = {
+    //   endTime: '2024-11-13T19:30:00Z',
+    //   metadata: {
+    //     clientRecordId: null,
+    //     clientRecordVersion: 0,
+    //     dataOrigin: 'com.sec.android.app.shealth',
+    //     device: null,
+    //     id: '14529272-7986-4549-83dd-64755689de8c',
+    //     lastModifiedTime: '2024-11-14T04:00:57.468Z',
+    //     recordingMethod: 0,
+    //   },
+    //   notes: null,
+    //   stages: [],
+    //   startTime: '2024-11-13T18:00:00Z',
+    //   title: null,
+    // };
 
     if (sleepRecords) {
       const duration = calculateDuration(

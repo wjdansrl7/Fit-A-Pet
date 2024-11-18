@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 
 import {
   View,
@@ -14,6 +14,7 @@ import {
   Dimensions,
   ImageBackground,
 } from 'react-native';
+import { useFocusEffect } from '@react-navigation/native';
 
 import { launchCamera } from 'react-native-image-picker'; //ndk
 const { FoodLensModule } = NativeModules;
@@ -76,28 +77,33 @@ function MainScreen({ navigation }) {
     }
   }, [mainPetInfo]);
 
-  // 데이터 가져오기
-  useEffect(() => {
-    const initializeData = async () => {
-      try {
-        // 헬스 데이터 가져오기
-        const { steps, sleepHours } = await fetchHealthData();
-        updateHealthData(steps, sleepHours);
+  // 헬스 데이터 업데이트
+  useFocusEffect(
+    useCallback(() => {
+      const initializeHealthData = async () => {
+        try {
+          // 헬스 데이터를 가져옴
+          const { steps, sleepHours } = await fetchHealthData();
+          // 헬스 데이터 업데이트
+          updateHealthData(steps, sleepHours);
 
-        // 식단 데이터 가져오기
-        const dailyDiet = await getDailyDiet();
-        updateDietData(dailyDiet);
+          const dailyDiet = await getDailyDiet();
+          updateDietData(dailyDiet);
 
-        checkQuestCompletion();
-      } catch (error) {
-        console.error('Error initializing data:', error);
-      }
-    };
+          await checkQuestCompletion();
+        } catch (error) {
+          console.error('헬스 데이터 초기화 중 오류:', error.message);
+        }
+      };
 
-    initializeData().then(() => {
-      refetch();
-    });
-  }, [updateHealthData, updateDietData, checkQuestCompletion]);
+      // 데이터 초기화 호출
+      initializeHealthData();
+
+      return () => {
+        console.log('스크린 포커스 해제됨');
+      };
+    }, [])
+  );
 
   // 닉네임 변경 함수
   const handleUpdateNickname = () => {

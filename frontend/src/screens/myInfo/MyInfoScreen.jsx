@@ -206,7 +206,7 @@ function MyInfoScreen({ navigation }) {
               />
             </View>
             <CustomText style={styles.defaultInfoText}>
-              수면: {sleepHours}시간
+              수면: {sleepHours.toFixed(1)}시간
             </CustomText>
           </View>
         </View>
