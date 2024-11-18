@@ -89,7 +89,7 @@ function MainScreen({ navigation }) {
 
           const dailyDiet = await getDailyDiet();
           updateDietData(dailyDiet);
-
+          console.log('sdk', steps, sleepHours, dailyDiet);
           await checkQuestCompletion();
         } catch (error) {
           console.error('헬스 데이터 초기화 중 오류:', error.message);

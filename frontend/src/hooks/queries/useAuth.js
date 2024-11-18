@@ -16,7 +16,7 @@ import queryClient from '@api/queryClient';
 import { useNavigation } from '@react-navigation/native';
 import useAuthDataStore from '@src/stores/authDataStore';
 import useEggModalDataStore from '@src/stores/eggModalDataStore';
-
+import useHealthDataStore from '@src/stores/healthDataStore';
 function useKakaoLogin() {
   const { setAuthData } = useAuthDataStore();
 
@@ -94,6 +94,8 @@ function useGetProfile() {
 function usePostLogout() {
   const { setAuthData } = useAuthDataStore();
   const navigation = useNavigation();
+  const resetEggModalData = useEggModalDataStore((state) => state.resetStore);
+  const resetHealthData = useHealthDataStore((state) => state.resetStore);
 
   return useMutation({
     mutationFn: postLogout,
@@ -107,6 +109,8 @@ function usePostLogout() {
       // console.log('로그아웃_refreshToken', getEncryptStorage('refreshToken'));
       // console.log('로그아웃_loginStatus', getEncryptStorage('loginStatus'));
       navigation.navigate('AuthHome');
+      resetEggModalData();
+      resetHealthData();
     },
     onError: (error) => {
       console.log('usePostLogout에러 : ', error); // 실패 시 헤더와 스토리지 제거
