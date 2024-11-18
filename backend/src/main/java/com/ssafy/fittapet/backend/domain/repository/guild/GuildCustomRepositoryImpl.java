@@ -59,10 +59,6 @@ public class GuildCustomRepositoryImpl implements GuildCustomRepository {
         QPetBook petBook = QPetBook.petBook;
         QUserQuestStatus userQuestStatus = QUserQuestStatus.userQuestStatus;
 
-        BooleanExpression userQuestStatusCondition = userQuestStatus.guildQuest != null
-                ? userQuestStatus.guildQuest.guild.id.eq(guildId)
-                : null;
-
         return queryFactory
                 .selectDistinct(new QGuildMemberInfoResponse(
                         map.user.id,
@@ -75,7 +71,7 @@ public class GuildCustomRepositoryImpl implements GuildCustomRepository {
                 .leftJoin(userQuestStatus).on(userQuestStatus.user.eq(map.user))
                 .where(map.guild.id.eq(guildId)
                         .and(petBook.id.eq(map.user.petMainId))
-                        .and(userQuestStatusCondition != null ? userQuestStatusCondition : Expressions.FALSE))
+                        .and(userQuestStatus.guildQuest.guild.id.eq(guildId)))
                 .fetch();
     }
 }
