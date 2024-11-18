@@ -229,14 +229,14 @@ function MyInfoScreen({ navigation }) {
       </View>
       <View style={styles.loginLogout}>
         {/* 로그인 */}
-        <View style={styles.logoutButtonContainer}>
+        {/* <View style={styles.logoutButtonContainer}>
           <TouchableOpacity
             onPress={() => navigation.navigate(authNavigations.AUTH_HOME)}
             activeOpacity={0.5}
           >
             <CustomText style={styles.logoutButton}>로그인</CustomText>
           </TouchableOpacity>
-        </View>
+        </View> */}
         {/* 로그아웃 */}
         <View style={styles.logoutButtonContainer}>
           <TouchableOpacity onPress={onClickKakaoLogout} activeOpacity={0.5}>
