@@ -6,8 +6,8 @@ const petImages = {
   },
   사자: {
     알: require('@assets/pets/lion_egg.png'),
-    준성체: require('@assets/pets/lion_egg.png'),
-    성체: require('@assets/pets/lion_egg.png'),
+    준성체: require('@assets/pets/lion_2.png'),
+    성체: require('@assets/pets/lion_3.png'),
   },
   친칠라: {
     알: require('@assets/pets/chinchilla_egg.png'),
@@ -16,7 +16,7 @@ const petImages = {
   },
   족제비: {
     알: require('@assets/pets/weasel_egg.png'),
-    준성체: require('@assets/pets/weasel_egg.png'),
+    준성체: require('@assets/pets/weasel_2.png'),
     성체: require('@assets/pets/weasel_egg.png'),
   },
   범고래: {
@@ -29,7 +29,7 @@ const petImages = {
 const petSpriteImages = {
   벨루가: {
     알: require('@assets/pets/sprite/beluga_egg_sprite.png'),
-    준성체: require('@assets/pets/sprite/lion_2_sprite.png'),
+    준성체: require('@assets/pets/sprite/beluga_2_sprite.png'),
     성체: require('@assets/pets/sprite/beluga_3_sprite.png'),
   },
   사자: {
@@ -44,7 +44,7 @@ const petSpriteImages = {
   },
   족제비: {
     알: require('@assets/pets/sprite/weasel_egg_sprite.png'),
-    준성체: require('@assets/pets/sprite/lion_2_sprite.png'),
+    준성체: require('@assets/pets/sprite/weasel_2_sprite.png'),
     성체: require('@assets/pets/sprite/lion_3_sprite.png'),
   },
   범고래: {
