@@ -18,7 +18,9 @@ import { getDailyDiet } from '@api/healthDataApi';
 function NutritionCheck({ isEnough }) {
   return (
     <View style={styles.checkImageContainer}>
-      {isEnough ? (
+      {isEnough === null ? (
+        <CustomText>-</CustomText>
+      ) : isEnough ? (
         <Image
           resizeMode="contain"
           style={styles.checkImage}
@@ -52,7 +54,7 @@ function MyInfoScreen({ navigation }) {
       try {
         const data = await getDailyDiet(); // API 호출
         setDailyDiet(data); // 데이터 저장
-        console.log(dailyDiet);
+        console.log('저장된데이터', dailyDiet);
       } catch (err) {
         console.log(err);
       }
@@ -93,9 +95,6 @@ function MyInfoScreen({ navigation }) {
 
   return (
     <View style={styles.container}>
-      {/* 스크린 타이틀 */}
-      {/* <CustomText style={styles.screenTitle}>나의 오늘 기록</CustomText> */}
-
       {/* 일일기록 */}
       <View style={styles.screenContainer}>
         {/* 영양 */}
@@ -103,45 +102,50 @@ function MyInfoScreen({ navigation }) {
           onPress={() => setModalVisible(true)}
           activeOpacity={0.8}
         >
-          {dailyDiet && (
-            <View style={styles.categoryContainer}>
-              <View
-                style={{
-                  flexDirection: 'row',
-                  justifyContent: 'center',
-                  gap: 20,
-                }}
-              >
-                <CustomText style={styles.defaultInfoText}>
-                  일일 섭취량: {dailyDiet.calorie.toFixed(2)}kcal
-                </CustomText>
-                <NutritionCheck isEnough={dailyDiet.isCalorieEnough} />
+          <View style={styles.categoryContainer}>
+            <View
+              style={{
+                flexDirection: 'row',
+                justifyContent: 'center',
+                gap: 20,
+              }}
+            >
+              <CustomText style={styles.defaultInfoText}>
+                일일 섭취량: {dailyDiet ? dailyDiet.calorie.toFixed(2) : ' - '}
+                kcal
+              </CustomText>
+              <NutritionCheck
+                isEnough={dailyDiet ? dailyDiet.isCalorieEnough : null}
+              />
+            </View>
+            <View style={styles.categoryContainerBody}>
+              <View style={styles.imageContainer}>
+                <Image
+                  resizeMode="contain"
+                  style={styles.image}
+                  source={require('@assets/myInfo/diet.png')}
+                />
               </View>
-              <View style={styles.categoryContainerBody}>
-                <View style={styles.imageContainer}>
-                  <Image
-                    resizeMode="contain"
-                    style={styles.image}
-                    source={require('@assets/myInfo/diet.png')}
-                  />
+              <View style={styles.dietsInfo}>
+                <View style={styles.dietsTextContainer}>
+                  <CustomText style={styles.dietInfoText}>탄수화물</CustomText>
+                  <CustomText style={styles.dietInfoText}>단백질</CustomText>
+                  <CustomText style={styles.dietInfoText}>지방</CustomText>
                 </View>
-                <View style={styles.dietsInfo}>
-                  <View style={styles.dietsTextContainer}>
-                    <CustomText style={styles.dietInfoText}>
-                      탄수화물
-                    </CustomText>
-                    <CustomText style={styles.dietInfoText}>단백질</CustomText>
-                    <CustomText style={styles.dietInfoText}>지방</CustomText>
-                  </View>
-                  <View style={styles.dietsCheckImageContainer}>
-                    <NutritionCheck isEnough={dailyDiet.isCarboEnough} />
-                    <NutritionCheck isEnough={dailyDiet.isProteinEnough} />
-                    <NutritionCheck isEnough={dailyDiet.isFatEnough} />
-                  </View>
+                <View style={styles.dietsCheckImageContainer}>
+                  <NutritionCheck
+                    isEnough={dailyDiet ? dailyDiet.isCalorieEnough : null}
+                  />
+                  <NutritionCheck
+                    isEnough={dailyDiet ? dailyDiet.isProteinEnough : null}
+                  />
+                  <NutritionCheck
+                    isEnough={dailyDiet ? dailyDiet.isFatEnough : null}
+                  />
                 </View>
               </View>
             </View>
-          )}
+          </View>
         </TouchableOpacity>
         <CustomModal
           isVisible={isModalVisible}
@@ -248,11 +252,6 @@ const styles = StyleSheet.create({
   container: {
     gap: 50,
     // flex: 1,
-  },
-  screenTitle: {
-    textAlign: 'center',
-    fontSize: 24,
-    // marginTop: 20,
   },
   screenContainer: {
     marginTop: 30,

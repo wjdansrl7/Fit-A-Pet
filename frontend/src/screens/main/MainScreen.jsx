@@ -38,7 +38,7 @@ import { fetchHealthData } from '@api/healthData';
 import useHealthDataStore from '@src/stores/healthDataStore';
 import MainEggModal from './MainEggModal';
 import useEggModalDataStore from '@src/stores/eggModalDataStore';
-import { saveDailyDiet } from '@api/healthDataApi';
+import { saveDailyDiet, getDailyDiet } from '@api/healthDataApi';
 function MainScreen({ navigation }) {
   const [isModalVisible, setModalVisible] = useState(false);
   const [petNickname, setPetNickname] = useState('');
@@ -55,7 +55,10 @@ function MainScreen({ navigation }) {
   } = useMainPetInfo();
 
   const { mutate } = useUpdateNickname();
-  const { steps, sleepHours, completedQuestIds } = useHealthDataStore();
+  const { steps, sleepHours, dietData, completedQuestIds } =
+    useHealthDataStore();
+  const { updateHealthData, updateDietData, checkQuestCompletion } =
+    useHealthDataStore();
 
   const { shouldShowModal, newPetType, newPetStatus, setEggModalData } =
     useEggModalDataStore();
@@ -81,19 +84,13 @@ function MainScreen({ navigation }) {
         try {
           // 헬스 데이터를 가져옴
           const { steps, sleepHours } = await fetchHealthData();
-          console.log('헬스 데이터 가져옴:', { steps, sleepHours }, '수며');
-
-          // zustand store에서 상태 업데이트 및 퀘스트 완료 체크
-          const { updateHealthData, checkQuestCompletion } =
-            useHealthDataStore.getState();
-
           // 헬스 데이터 업데이트
           updateHealthData(steps, sleepHours);
 
-          // 퀘스트 완료 여부 체크 및 백엔드 전송
-          await checkQuestCompletion();
+          const dailyDiet = await getDailyDiet();
+          updateDietData(dailyDiet);
 
-          console.log('퀘스트 완료 체크 및 전송 완료');
+          await checkQuestCompletion();
         } catch (error) {
           console.error('헬스 데이터 초기화 중 오류:', error.message);
         }
@@ -261,11 +258,8 @@ function MainScreen({ navigation }) {
           setStep={setStep}
           newPetImage={newPetImage}
         />
-
-        <Text>{completedQuestIds}</Text>
         {/* 상단 - 레벨 및 진행 상태 */}
         <View style={styles.header}>
-          <View></View>
           <CustomText style={styles.petName}>
             {mainPetInfo.petNickname}
           </CustomText>
