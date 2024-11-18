@@ -153,7 +153,7 @@ function MyInfoScreen({ navigation }) {
       <View style={styles.screenContainer}>
         {/* 영양 */}
         <TouchableOpacity
-          onPress={() => dietData ?? setModalVisible(true)}
+          onPress={() => dietData && setModalVisible(true)}
           activeOpacity={0.8}
         >
           <View style={styles.categoryContainer}>
