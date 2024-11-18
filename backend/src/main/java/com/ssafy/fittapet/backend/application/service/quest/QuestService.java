@@ -20,6 +20,4 @@ public interface QuestService {
     Map<String, Object> completeGuildQuest(QuestCompleteRequestDTO dto, Long userId) throws CustomException;
 
     List<QuestQueryResponseDTO> queryQuest(QuestQueryRequestDTO dto);
-
-
 }

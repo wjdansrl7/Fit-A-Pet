@@ -6,7 +6,6 @@ import com.ssafy.fittapet.backend.common.util.JWTUtil;
 import com.ssafy.fittapet.backend.domain.repository.auth.BlacklistRepository;
 import com.ssafy.fittapet.backend.domain.repository.auth.RefreshRepository;
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
@@ -52,42 +51,26 @@ public class SecurityConfig {
                     return configuration;
                 }));
 
-        //csrf disable
         http
                 .csrf(AbstractHttpConfigurer::disable);
 
-        //From 로그인 방식 disable
         http
                 .formLogin(AbstractHttpConfigurer::disable);
 
-        //HTTP Basic 인증 방식 disable
         http
                 .httpBasic(AbstractHttpConfigurer::disable);
 
-        //JWTFilter 추가
         http
                 .addFilterBefore(new JWTFilter(jwtUtil), OAuth2LoginAuthenticationFilter.class);
 
-        //LogoutFilter 등록
         http
                 .addFilterBefore(new CustomLogoutFilter(jwtUtil, blacklistRepository, refreshRepository), LogoutFilter.class);
 
-        //oauth2
-//        http
-//                .oauth2Login((oauth2) -> oauth2
-//                        .userInfoEndpoint((userInfoEndpointConfig) -> userInfoEndpointConfig
-//                                .userService(customOAuth2UserService))
-//                        .successHandler(customSuccessHandler)
-//                );
-
-        //경로별 인가 작업
         http
                 .authorizeHttpRequests((auth) -> auth
-//                        .anyRequest().permitAll());
                         .requestMatchers("/auth/kakao", "/auth/reissue", "/auth/test").permitAll()
                         .anyRequest().authenticated());
 
-        //세션 설정 : STATELESS
         http
                 .sessionManagement((session) -> session
                         .sessionCreationPolicy(SessionCreationPolicy.STATELESS));
