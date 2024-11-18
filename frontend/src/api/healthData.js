@@ -11,7 +11,7 @@ function getTodayTimeRange() {
   const today = new Date();
 
   // 임의로 11월 12일을 오늘로 설정
-  // const today = new Date(2024, 10, 13);
+  // const today = new Date(2024, 10, 18);
 
   const yesterDay = new Date(today.setDate(today.getDate() - 1));
 
@@ -59,6 +59,8 @@ const fetchStepData = async (startTime, endTime) => {
       },
     });
     const [stepRecords] = stepResponse.records;
+    console.log(stepResponse, '걷기');
+    console.log(startTime, endTime);
     // const stepRecords = {
     //   count: 1000,
     //   endTime: '2024-11-13T14:59:59.999Z',
@@ -91,7 +93,8 @@ const fetchSleepData = async (sleepStartTime, endTime) => {
       },
     });
     const [sleepRecords] = sleepResponse.records;
-
+    console.log(sleepResponse, '수면기록');
+    console.log(sleepStartTime, endTime);
     // const sleepRecords = {
     //   endTime: '2024-11-13T19:30:00Z',
     //   metadata: {
@@ -150,7 +153,7 @@ export const fetchHealthData = async () => {
     // 3. 데이터 읽기
     const steps = await fetchStepData(startTime, endTime);
     const sleepHours = await fetchSleepData(sleepStartTime, endTime);
-
+    console.log('읽은', steps, sleepHours);
     return { steps, sleepHours };
   } catch (error) {
     console.error('Health Connect 데이터 가져오기 오류:', error);

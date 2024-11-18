@@ -11,7 +11,7 @@ const petImages = {
   },
   친칠라: {
     알: require('@assets/pets/chinchilla_egg.png'),
-    준성체: require('@assets/pets/chinchilla_egg.png'),
+    준성체: require('@assets/pets/chinchilla_2.png'),
     성체: require('@assets/pets/chinchilla_egg.png'),
   },
   족제비: {
@@ -59,7 +59,7 @@ const petIdImages = {
   2: require('@assets/pets/beluga_2.png'),
   3: require('@assets/pets/beluga_3.png'),
   4: require('@assets/pets/chinchilla_egg.png'),
-  5: require('@assets/pets/chinchilla_egg.png'),
+  5: require('@assets/pets/chinchilla_2.png'),
   6: require('@assets/pets/chinchilla_egg.png'),
   7: require('@assets/pets/lion_egg.png'),
   8: require('@assets/pets/lion_2.png'),
