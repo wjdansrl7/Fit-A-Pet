@@ -1,12 +1,7 @@
 package com.ssafy.fittapet.backend.common.config;
 
-import com.ssafy.fittapet.backend.application.service.map.MapService;
 import com.ssafy.fittapet.backend.common.constant.entity_field.*;
 import com.ssafy.fittapet.backend.domain.entity.*;
-import com.ssafy.fittapet.backend.domain.repository.auth.UserRepository;
-import com.ssafy.fittapet.backend.domain.repository.guild.GuildRepository;
-import com.ssafy.fittapet.backend.domain.repository.map.MapRepository;
-import com.ssafy.fittapet.backend.domain.repository.personal_quest.PersonalQuestRepository;
 import com.ssafy.fittapet.backend.domain.repository.quest.QuestRepository;
 import jakarta.annotation.PostConstruct;
 import lombok.RequiredArgsConstructor;
@@ -19,99 +14,37 @@ import java.util.List;
 @RequiredArgsConstructor
 public class DbInit {
 
-    private final UserRepository userRepository;
     private final QuestRepository questRepository;
-    private final PersonalQuestRepository personalQuestRepository;
-    private final MapService mapService;
-    private final MapRepository mapRepository;
-    private final GuildRepository guildRepository;
 
     @PostConstruct
     void init() {
 
-
         if (questRepository.count() == 0) {
-            /* 퀘스트 더미데이터 생성 */
+
             List<Quest> quests = new ArrayList<>();
-            long reward = 100L;
 
-            for (QuestTier questTier : QuestTier.values()) {
-                for (QuestType questType : QuestType.values()) {
-                    for (QuestCategory questCategory : QuestCategory.values()) {
-                        String questName = questTier.getValue() + "_" + questType.getValue() + "_" + questCategory.getName();
-                        String questContent = questType.getValue() + questCategory.getName();
+            quests.add(createQuest("즐거운 산책", "5000걸음 달성하기", QuestTier.EASY, QuestType.PERSONAL, QuestCategory.WALK, 100));
+            quests.add(createQuest("좀 더 멀리", "10000걸음 달성하기", QuestTier.NORMAL, QuestType.PERSONAL, QuestCategory.WALK, 100));
+            quests.add(createQuest("걸어서 세계속으로", "15000걸음 달성하기", QuestTier.HARD, QuestType.PERSONAL, QuestCategory.WALK, 100));
+            quests.add(createQuest("개운한 시작", "7시간 수면 달성", QuestTier.EASY, QuestType.PERSONAL, QuestCategory.SLEEP, 100));
+            quests.add(createQuest("깊은 숙면", "8시간 수면 달성", QuestTier.NORMAL, QuestType.PERSONAL, QuestCategory.SLEEP, 100));
+            quests.add(createQuest("살아계신가요?", "9시간 수면 달성", QuestTier.HARD, QuestType.PERSONAL, QuestCategory.SLEEP, 100));
+            quests.add(createQuest("밥은 먹고 하자", "1권장 영양량 달성하기", QuestTier.EASY, QuestType.PERSONAL, QuestCategory.DIET, 100));
+            quests.add(createQuest("잘 먹는 사람", "2권장 영양량 달성하기", QuestTier.NORMAL, QuestType.PERSONAL, QuestCategory.DIET, 100));
+            quests.add(createQuest("식단 관리의 신", "3권장 영양량 달성하기", QuestTier.HARD, QuestType.PERSONAL, QuestCategory.DIET, 100));
 
-                        Quest quest = createQuest(questName, questContent, questTier, questType, questCategory, reward);
-                        quests.add(quest);
-                    }
-                }
-            }
+            quests.add(createQuest("길드 걸음 1단계", "5000걸음 달성하기", QuestTier.EASY, QuestType.GROUP, QuestCategory.WALK, 100));
+            quests.add(createQuest("길드 걸음 2단계", "10000걸음 달성하기", QuestTier.NORMAL, QuestType.GROUP, QuestCategory.WALK, 100));
+            quests.add(createQuest("길드 걸음 3단계", "15000걸음 달성하기", QuestTier.HARD, QuestType.GROUP, QuestCategory.WALK, 100));
+            quests.add(createQuest("길드 수면 1단계", "7시간 수면 달성", QuestTier.EASY, QuestType.GROUP, QuestCategory.SLEEP, 100));
+            quests.add(createQuest("길드 수면 2단계", "8시간 수면 달성", QuestTier.NORMAL, QuestType.GROUP, QuestCategory.SLEEP, 100));
+            quests.add(createQuest("길드 수면 3단계", "9시간 수면 달성", QuestTier.HARD, QuestType.GROUP, QuestCategory.SLEEP, 100));
+            quests.add(createQuest("길드 식단 1단계", "1권장 영양량 달성하기", QuestTier.EASY, QuestType.GROUP, QuestCategory.DIET, 100));
+            quests.add(createQuest("길드 식단 2단계", "2권장 영양량 달성하기", QuestTier.NORMAL, QuestType.GROUP, QuestCategory.DIET, 100));
+            quests.add(createQuest("길드 식단 3단계", "3권장 영양량 달성하기", QuestTier.HARD, QuestType.GROUP, QuestCategory.DIET, 100));
+
             questRepository.saveAll(quests);
         }
-
-        if (userRepository.count() == 0) {
-            /* 유저 더미데이터 생성 */
-            List<User> users = new ArrayList<>();
-
-            var user1 = createUser("kakao 111", "김철수", "111", "kakao", "EASY", "USER");
-            var user2 = createUser("kakao 222", "이영희", "222", "kakao", "NORMAL", "USER");
-            var user3 = createUser("kakao 333", "박민수", "333", "kakao", "HARD", "USER");
-            var user4 = createUser("kakao 444", "최영호", "444", "kakao", "EASY", "USER");
-            var user5 = createUser("kakao 555", "장미희", "555", "kakao", "NORMAL", "USER");
-
-            users.add(user1);
-            users.add(user2);
-            users.add(user3);
-            users.add(user4);
-            users.add(user5);
-
-            userRepository.saveAll(users);
-
-            if (personalQuestRepository.count() == 0) {
-                /* 개인 퀘스트 더미데이터 생성 */
-                addPersonalQuests(user1);
-                addPersonalQuests(user2);
-                addPersonalQuests(user3);
-                addPersonalQuests(user4);
-                addPersonalQuests(user5);
-            }
-        }
-
-        if (guildRepository.count() == 0) {
-            guildRepository.save(
-                    Guild.builder().guildLeader(userRepository.findById(3L).orElse(null))
-                            .guildName("Init Guild")
-                            .build()
-            );
-
-            mapRepository.save(
-                    Map.builder()
-                            .guild(guildRepository.findByGuildName("Init Guild"))
-                            .guildPosition(1L)
-                            .user(userRepository.findById(3L).orElse(null))
-                            .build()
-            );
-
-            mapRepository.save(
-                    Map.builder()
-                            .guild(guildRepository.findByGuildName("Init Guild"))
-                            .guildPosition(1L)
-                            .user(userRepository.findById(2L).orElse(null))
-                            .build()
-            );
-        }
-    }
-
-    private User createUser(String userUniqueName, String userName, String providerId, String provider, String
-            userTier, String role) {
-        return User.builder()
-                .userUniqueName(userUniqueName)
-                .userName(userName)
-                .providerId(providerId)
-                .provider(provider)
-                .userTier(UserTier.valueOf(userTier))
-                .role(Role.valueOf(role))
-                .build();
     }
 
     private Quest createQuest(String questName, String questContent, QuestTier questTier, QuestType questType, QuestCategory questCategory, long questReward) {
@@ -123,21 +56,5 @@ public class DbInit {
                 .questCategory(questCategory)
                 .questReward(questReward)
                 .build();
-    }
-
-    private void addPersonalQuests(User user) {
-
-        List<Quest> quests = questRepository.findAllByQuestType(QuestType.PERSONAL);
-        List<PersonalQuest> personalQuests = quests.stream()
-                .map(quest ->
-                        PersonalQuest.builder()
-                                .user(user)
-                                .quest(quest)
-                                .questStatus(quest.getId()/3 <= 4? true : false)
-                                .build()
-                )
-                .toList();
-
-        personalQuestRepository.saveAll(personalQuests);
     }
 }
