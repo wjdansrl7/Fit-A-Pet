@@ -37,7 +37,7 @@ import { fetchHealthData } from '@api/healthData';
 import useHealthDataStore from '@src/stores/healthDataStore';
 import MainEggModal from './MainEggModal';
 import useEggModalDataStore from '@src/stores/eggModalDataStore';
-import { saveDailyDiet } from '@api/healthDataApi';
+import { saveDailyDiet, getDailyDiet } from '@api/healthDataApi';
 function MainScreen({ navigation }) {
   const [isModalVisible, setModalVisible] = useState(false);
   const [petNickname, setPetNickname] = useState('');
@@ -54,7 +54,10 @@ function MainScreen({ navigation }) {
   } = useMainPetInfo();
 
   const { mutate } = useUpdateNickname();
-  const { steps, sleepHours, completedQuestIds } = useHealthDataStore();
+  const { steps, sleepHours, dietData, completedQuestIds } =
+    useHealthDataStore();
+  const { updateHealthData, updateDietData, checkQuestCompletion } =
+    useHealthDataStore();
 
   const { shouldShowModal, newPetType, newPetStatus, setEggModalData } =
     useEggModalDataStore();
@@ -73,18 +76,28 @@ function MainScreen({ navigation }) {
     }
   }, [mainPetInfo]);
 
-  // 헬스 데이터 업데이트
+  // 데이터 가져오기
   useEffect(() => {
-    const initializeHealthData = async () => {
-      const { steps, sleepHours } = await fetchHealthData();
-      const { updateHealthData, checkQuestCompletion } =
-        useHealthDataStore.getState();
-      updateHealthData(steps, sleepHours);
-      checkQuestCompletion();
+    const initializeData = async () => {
+      try {
+        // 헬스 데이터 가져오기
+        const { steps, sleepHours } = await fetchHealthData();
+        updateHealthData(steps, sleepHours);
+
+        // 식단 데이터 가져오기
+        const dailyDiet = await getDailyDiet();
+        updateDietData(dailyDiet);
+
+        checkQuestCompletion();
+      } catch (error) {
+        console.error('Error initializing data:', error);
+      }
     };
 
-    initializeHealthData().then(() => refetch());
-  }, []);
+    initializeData().then(() => {
+      refetch();
+    });
+  }, [updateHealthData, updateDietData, checkQuestCompletion]);
 
   // 닉네임 변경 함수
   const handleUpdateNickname = () => {
@@ -137,8 +150,8 @@ function MainScreen({ navigation }) {
                   .then(() => {
                     console.log('Diet saved successfully:', result);
                     Alert.alert(
-                      'Recognition Successful',
-//                       `Detected food and saved: ${JSON.stringify(result)}`
+                      'Recognition Successful'
+                      //                       `Detected food and saved: ${JSON.stringify(result)}`
                     );
                   })
                   .catch((error) => {
@@ -239,11 +252,8 @@ function MainScreen({ navigation }) {
           setStep={setStep}
           newPetImage={newPetImage}
         />
-
-        <Text>{completedQuestIds}</Text>
         {/* 상단 - 레벨 및 진행 상태 */}
         <View style={styles.header}>
-          <View></View>
           <CustomText style={styles.petName}>
             {mainPetInfo.petNickname}
           </CustomText>
