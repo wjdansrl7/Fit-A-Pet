@@ -7,6 +7,9 @@ import queryClient from '@api/queryClient';
 const useHealthDataStore = create((set, get) => ({
   steps: 0,
   sleepHours: 0,
+
+  dailyDiet: null,
+
   completedQuestIds: [], //이미 달성한 퀘스트ID 저장
 
   // 헬스데이터를 업데이트하는 함수
