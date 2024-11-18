@@ -19,11 +19,11 @@ import { launchCamera } from 'react-native-image-picker'; //ndk
 const { FoodLensModule } = NativeModules;
 
 import MenuButton from './MenuButton';
-import AlbumIcon from '@assets/icons/도감_icon.png';
-import MapIcon from '@assets/icons/지도_icon.png';
-import MyInfoIcon from '@assets/icons/나의기록_icon.png';
-import QuestIcon from '@assets/icons/퀘스트_icon.png';
-import FoodLensIcon from '@assets/icons/식단기록_icon.png';
+import AlbumIcon from '@assets/icons/album_icon.png';
+import MapIcon from '@assets/icons/map_icon.png';
+import MyInfoIcon from '@assets/icons/my_info_icon.png';
+import QuestIcon from '@assets/icons/quest_icon.png';
+import FoodLensIcon from '@assets/icons/food_lens_icon.png';
 
 import CustomText from '@components/CustomText/CustomText';
 import CustomModal from '@components/CustomModal/CustomModal';
