@@ -99,8 +99,8 @@ const useHealthDataStore = create((set, get) => ({
           newPetType: petType,
           newPetStatus: petStatus,
         });
-        queryClient.invalidateQueries(['mainPet']);
       }
+      queryClient.invalidateQueries(['mainPet']);
     } catch (error) {
       console.error(
         `${questType} 퀘스트 ID ${questId} 완료 전송 실패:`,
