@@ -9,7 +9,7 @@ import QuestPersonalFrame from './QuestPersonalFrame';
 import { useGetQuests } from '@hooks/queries/useQuest';
 
 function QuestScreen() {
-  // const quests = {
+  // const data = {
   //   personalWalk: [
   //     {
   //       id: 1,
@@ -17,7 +17,7 @@ function QuestScreen() {
   //       questCategory: 'WALK',
   //       questContent: '5,000 걸음',
   //       questTier: 'EASY',
-  //       questReward: 'EXP +100',
+  //       questReward: '100',
   //       questStatus: true,
   //     },
   //     {
@@ -26,7 +26,7 @@ function QuestScreen() {
   //       questCategory: 'WALK',
   //       questContent: '8,000 걸음',
   //       questTier: 'NORMAL',
-  //       questReward: 'EXP +100',
+  //       questReward: '100',
   //       questStatus: true,
   //     },
   //     {
@@ -35,7 +35,7 @@ function QuestScreen() {
   //       questCategory: 'WALK',
   //       questContent: '12,000 걸음',
   //       questTier: 'HARD',
-  //       questReward: 'EXP +100',
+  //       questReward: '100',
   //       questStatus: false,
   //     },
   //   ],
@@ -46,7 +46,7 @@ function QuestScreen() {
   //       questCategory: 'SLEEP',
   //       questContent: '6시간',
   //       questTier: 'EASY',
-  //       questReward: 'EXP +100',
+  //       questReward: '100',
   //       questStatus: true,
   //     },
   //     {
@@ -55,7 +55,7 @@ function QuestScreen() {
   //       questCategory: 'SLEEP',
   //       questContent: '8시간',
   //       questTier: 'NORMAL',
-  //       questReward: 'EXP +100',
+  //       questReward: '100',
   //       questStatus: true,
   //     },
   //     {
@@ -64,7 +64,7 @@ function QuestScreen() {
   //       questCategory: 'SLEEP',
   //       questContent: '10시간',
   //       questTier: 'HARD',
-  //       questReward: 'EXP +100',
+  //       questReward: '100',
   //       questStatus: false,
   //     },
   //   ],
@@ -75,7 +75,7 @@ function QuestScreen() {
   //       questCategory: 'DIET',
   //       questContent: '한 끼',
   //       questTier: 'EASY',
-  //       questReward: 'EXP +100',
+  //       questReward: '100',
   //       questStatus: true,
   //     },
   //     {
@@ -84,7 +84,7 @@ function QuestScreen() {
   //       questCategory: 'DIET',
   //       questContent: '두 끼',
   //       questTier: 'NORMAL',
-  //       questReward: 'EXP +100',
+  //       questReward: '100',
   //       questStatus: false,
   //     },
   //     {
@@ -93,7 +93,7 @@ function QuestScreen() {
   //       questCategory: 'DIET',
   //       questContent: '세 끼',
   //       questTier: 'NORMAL',
-  //       questReward: 'EXP +100',
+  //       questReward: '100',
   //       questStatus: false,
   //     },
   //   ],
@@ -106,7 +106,7 @@ function QuestScreen() {
   //       questContent: '15,000보 걷기',
   //       questTier: 'EASY',
   //       questReward: '경험치 150, 공적치 100',
-  //       questStatus: false,
+  //       questStatus: true,
   //     },
   //     {
   //       id: 11,
@@ -128,6 +128,7 @@ function QuestScreen() {
   //     },
   //   ],
   // };
+  // const { isSuccess, isError } = useGetQuests();
   const { isSuccess, data, isError } = useGetQuests();
   console.log(data);
 
@@ -154,14 +155,20 @@ function QuestScreen() {
             </View>
 
             {/* 그룹 퀘스트 */}
-            <View style={styles.quest}>
-              <View>
-                <CustomText style={styles.questLabel}>그룹 퀘스트</CustomText>
+            {data.guildQuest.length == 0 ? (
+              <></>
+            ) : (
+              <View style={styles.quest}>
+                <View>
+                  <CustomText style={styles.questLabel}>그룹 퀘스트</CustomText>
+                </View>
+                {data.guildQuest.map((quest, index) => (
+                  <View style={{ position: 'relative' }}>
+                    <QuestGroupFrame key={index} quest={quest} />
+                  </View>
+                ))}
               </View>
-              {data.guildQuest.map((quest, index) => (
-                <QuestGroupFrame key={index} quest={quest} />
-              ))}
-            </View>
+            )}
           </View>
         )}
       </View>
@@ -181,7 +188,17 @@ const styles = StyleSheet.create({
     gap: 20,
     margin: 20,
   },
-
+  completeQuest: {
+    backgroundColor: colors.QUEST_COMPLETE,
+    // opacity: 0.4,
+    borderRadius: 5,
+    paddingHorizontal: 20,
+    gap: 14,
+    padding: 10,
+  },
+  completeQuestText: {
+    color: colors.MAIN_ORANGE,
+  },
   quest: {
     gap: 12,
   },
@@ -194,7 +211,6 @@ const styles = StyleSheet.create({
   },
   questContainer: {
     backgroundColor: colors.BACKGROUND_COLOR,
-    // backgroundColor: colors.BACKGROUND_COLOR,
     borderRadius: 5,
     paddingHorizontal: 20,
     gap: 14,
