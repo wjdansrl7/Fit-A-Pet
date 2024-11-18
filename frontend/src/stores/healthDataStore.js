@@ -1,5 +1,5 @@
 import { create } from 'zustand';
-import { personalQuest, totalQuest } from '@constants/quest';
+import { totalQuest } from '@constants/quest';
 import axiosInstance from '@api/axios';
 import useEggModalDataStore from './eggModalDataStore';
 import queryClient from '@api/queryClient';
