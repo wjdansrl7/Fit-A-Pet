@@ -35,6 +35,16 @@ public class Diet extends BaseEntity {
     private Double fat;
     private Double carbo;
 
+    private Double sodium;
+    private Double sugar;
+
+    @Column(name = "trans_fat")
+    private Double transFat;
+
+    @Column(name = "saturated_fat")
+    private Double saturatedFat;
+    private Double cholesterol;
+
     @Builder
     public Diet(HealthDietRequest healthDietRequest, User user) {
         this.user = user;
@@ -42,6 +52,11 @@ public class Diet extends BaseEntity {
         this.protein = healthDietRequest.getProtein();
         this.fat = healthDietRequest.getFat();
         this.carbo = healthDietRequest.getCarbo();
+        this.sodium = healthDietRequest.getSodium();
+        this.sugar = healthDietRequest.getSugar();
+        this.transFat = healthDietRequest.getTransFat();
+        this.saturatedFat = healthDietRequest.getSaturatedFat();
+        this.cholesterol = healthDietRequest.getCholesterol();
     }
 
 //    @Builder

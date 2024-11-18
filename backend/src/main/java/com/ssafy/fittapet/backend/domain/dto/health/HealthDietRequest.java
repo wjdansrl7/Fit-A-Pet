@@ -8,4 +8,10 @@ public class HealthDietRequest {
     private Double carbo;
     private Double protein;
     private Double fat;
+
+    private Double sodium;
+    private Double sugar;
+    private Double transFat;
+    private Double saturatedFat;
+    private Double cholesterol;
 }

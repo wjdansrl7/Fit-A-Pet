@@ -22,7 +22,12 @@ public class DietCustomRepositoryImpl implements DietCustomRepository {
                         diet.calorie.sum(),
                         diet.carbo.sum(),
                         diet.protein.sum(),
-                        diet.fat.sum()
+                        diet.fat.sum(),
+                        diet.sodium.sum(),
+                        diet.sugar.sum(),
+                        diet.transFat.sum(),
+                        diet.saturatedFat.sum(),
+                        diet.cholesterol.sum()
                 ))
                 .from(diet)
                 .where(diet.user.eq(user))
