@@ -18,7 +18,6 @@ import org.springframework.transaction.annotation.Transactional;
 public class DietServiceImpl implements DietService{
 
     private final DietRepository dietRepository;
-    private final UserRepository userRepository;
 
     @Override
     public void createDietData(HealthDietRequest healthDietRequest, User user) {

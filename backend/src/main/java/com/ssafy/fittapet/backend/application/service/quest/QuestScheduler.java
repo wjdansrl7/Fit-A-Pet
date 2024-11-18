@@ -21,8 +21,6 @@ public class QuestScheduler {
     @Transactional
     public void reportCurrentTime() {
 
-        log.info("Scheduled start");
-
         // 1. 모든 PersonalQuest
         List<PersonalQuest> personalQuests = personalQuestRepository.findAll();
 
@@ -31,7 +29,5 @@ public class QuestScheduler {
 
         // 3. 변경된 PersonalQuest 저장
         personalQuestRepository.saveAll(personalQuests);
-
-        log.info("Scheduled end");
     }
 }
