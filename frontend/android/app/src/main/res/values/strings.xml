@@ -1,0 +1,4 @@
+<resources>
+    <string name="app_name">frontend</string>
+    <string name="kakao_app_key">770305b6a84fbffe93ddfacb5d920a80</string> <!-- 추가할 코드 -->
+</resources>

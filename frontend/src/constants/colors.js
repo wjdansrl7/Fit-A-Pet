@@ -1,0 +1,14 @@
+const colors = {
+  WHITE: '#fff',
+  BLACK: '#000000',
+  BACKGROUND_COLOR: '#F4F4F4',
+  MODAL_COLOR: '#F4F4F4',
+  MAIN_GREEN: '#009F58',
+  MAIN_ORANGE: '#E2573D',
+  STAR_YELLOW: '#FEE500',
+  TAG_BLUE: '#DBFAFF',
+  TAG_RED: '#FFDBDB',
+  TAG_GREEN: '#C4F4B2',
+};
+
+export { colors };
