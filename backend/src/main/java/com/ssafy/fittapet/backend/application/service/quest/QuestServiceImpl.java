@@ -102,8 +102,8 @@ public class QuestServiceImpl implements QuestService {
         PetBook petBook = petBookService.findPetBookById(user.getPetMainId(), user);
 
         response.put("shouldShowModal", petBookService.processQuestCompletion(petBook, reward, user));
-        response.put("petType", petBook.getPet().getPetType());
-        response.put("petStatus", petBook.getPet().getPetStatus());
+        response.put("petType", petBook.getPet().getPetType().getValue());
+        response.put("petStatus", petBook.getPet().getPetStatus().getValue());
 
         // 새로운 알 생성 가능 여부 반환
         return response;
@@ -142,8 +142,8 @@ public class QuestServiceImpl implements QuestService {
             PetBook petBook = petBookService.findPetBookById(user.getPetMainId(), user);
 
             response.put("shouldShowModal", petBookService.processQuestCompletion(petBook, reward, user));
-            response.put("petType", petBook.getPet().getPetType());
-            response.put("petStatus", petBook.getPet().getPetStatus());
+            response.put("petType", petBook.getPet().getPetType().getValue());
+            response.put("petStatus", petBook.getPet().getPetStatus().getValue());
         }
 
         return response;
