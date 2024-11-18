@@ -37,8 +37,6 @@ const useHealthDataStore = create((set, get) => ({
       .filter((quest) => sleepHours >= quest.goal)
       .map((quest) => quest.id);
 
-<<<<<<< HEAD
-=======
     const completedDietQuestIds = dietQuests
       .filter((quest) => {
         // 'isEnough' 상태를 확인할 키 목록
@@ -58,7 +56,6 @@ const useHealthDataStore = create((set, get) => ({
       .map((quest) => quest.id);
 
     // 새로운 완료 퀘스트 ID 필터링
->>>>>>> d17827063757f56e3aa653bbf8e1ef01cfe5c72d
     const newCompletedIds = [
       ...completedWalkQuestIds,
       ...completedSleepQuestIds,
