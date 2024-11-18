@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import {
   Pressable,
   TouchableOpacity,
@@ -13,9 +13,31 @@ import CustomButton from '@components/CustomButton/CustomButton';
 import { authNavigations } from '@src/constants';
 import useAuth from '@hooks/queries/useAuth';
 import useHealthDataStore from '@src/stores/healthDataStore';
+import { getDailyDiet } from '@api/healthDataApi';
+
+function NutritionCheck({ isEnough }) {
+  return (
+    <View style={styles.checkImageContainer}>
+      {isEnough ? (
+        <Image
+          resizeMode="contain"
+          style={styles.checkImage}
+          source={require('@assets/myInfo/O.png')}
+        />
+      ) : (
+        <Image
+          resizeMode="contain"
+          style={styles.checkImage}
+          source={require('@assets/myInfo/X.png')}
+        />
+      )}
+    </View>
+  );
+}
 
 function MyInfoScreen({ navigation }) {
   const [isModalVisible, setModalVisible] = useState(false);
+  const [dailyDiet, setDailyDiet] = useState(null);
 
   const { kakaoLogoutMutation } = useAuth();
   // const { mutate: kakaoLoginMutate } = kakaoLoginMutation();
@@ -25,14 +47,19 @@ function MyInfoScreen({ navigation }) {
     kakaoLogoutMutation.mutate();
   };
 
-  const userInfo = {
-    userName: '장성일',
-    userTier: 'EASY',
-    role: 'USER',
-    petId: 1,
-    petNickname: '뽀삐',
-    petExp: 1500,
-  };
+  useEffect(() => {
+    const fetchDietData = async () => {
+      try {
+        const data = await getDailyDiet(); // API 호출
+        setDailyDiet(data); // 데이터 저장
+        console.log(dailyDiet);
+      } catch (err) {
+        console.log(err);
+      }
+    };
+    fetchDietData();
+  }, []); // 컴포넌트 마운트 시 한 번 실행
+
   const diets = {
     calorie: 1700, // 열량
     nutritionFacts: [
@@ -62,13 +89,6 @@ function MyInfoScreen({ navigation }) {
     ],
   };
 
-  const sleeps = {
-    sleepTime: 8,
-  };
-  const walks = {
-    stepCnt: 8000,
-  };
-
   const { steps, sleepHours } = useHealthDataStore();
 
   return (
@@ -83,50 +103,45 @@ function MyInfoScreen({ navigation }) {
           onPress={() => setModalVisible(true)}
           activeOpacity={0.8}
         >
-          <View style={styles.categoryContainer}>
-            <CustomText style={styles.defaultInfoText}>
-              일일 섭취량: {diets.calorie}kcal
-            </CustomText>
-            <View style={styles.categoryContainerBody}>
-              <View style={styles.imageContainer}>
-                <Image
-                  resizeMode="contain"
-                  style={styles.image}
-                  source={require('@assets/myInfo/diet.png')}
-                />
+          {dailyDiet && (
+            <View style={styles.categoryContainer}>
+              <View
+                style={{
+                  flexDirection: 'row',
+                  justifyContent: 'center',
+                  gap: 20,
+                }}
+              >
+                <CustomText style={styles.defaultInfoText}>
+                  일일 섭취량: {dailyDiet.calorie.toFixed(2)}kcal
+                </CustomText>
+                <NutritionCheck isEnough={dailyDiet.isCalorieEnough} />
               </View>
-              <View style={styles.dietsInfo}>
-                <View style={styles.dietsTextContainer}>
-                  <CustomText style={styles.dietInfoText}>탄수화물</CustomText>
-                  <CustomText style={styles.dietInfoText}>단백질</CustomText>
-                  <CustomText style={styles.dietInfoText}>지방</CustomText>
+              <View style={styles.categoryContainerBody}>
+                <View style={styles.imageContainer}>
+                  <Image
+                    resizeMode="contain"
+                    style={styles.image}
+                    source={require('@assets/myInfo/diet.png')}
+                  />
                 </View>
-                <View style={styles.dietsCheckImageContainer}>
-                  <View style={styles.checkImageContainer}>
-                    <Image
-                      resizeMode="contain"
-                      style={styles.checkImage}
-                      source={require('@assets/myInfo/O.png')}
-                    />
+                <View style={styles.dietsInfo}>
+                  <View style={styles.dietsTextContainer}>
+                    <CustomText style={styles.dietInfoText}>
+                      탄수화물
+                    </CustomText>
+                    <CustomText style={styles.dietInfoText}>단백질</CustomText>
+                    <CustomText style={styles.dietInfoText}>지방</CustomText>
                   </View>
-                  <View style={styles.checkImageContainer}>
-                    <Image
-                      resizeMode="contain"
-                      style={styles.checkImage}
-                      source={require('@assets/myInfo/X.png')}
-                    />
-                  </View>
-                  <View style={styles.checkImageContainer}>
-                    <Image
-                      resizeMode="contain"
-                      style={styles.checkImage}
-                      source={require('@assets/myInfo/O.png')}
-                    />
+                  <View style={styles.dietsCheckImageContainer}>
+                    <NutritionCheck isEnough={dailyDiet.isCarboEnough} />
+                    <NutritionCheck isEnough={dailyDiet.isProteinEnough} />
+                    <NutritionCheck isEnough={dailyDiet.isFatEnough} />
                   </View>
                 </View>
               </View>
             </View>
-          </View>
+          )}
         </TouchableOpacity>
         <CustomModal
           isVisible={isModalVisible}
@@ -203,7 +218,7 @@ function MyInfoScreen({ navigation }) {
               />
             </View>
             <CustomText style={styles.defaultInfoText}>
-              걸음수: {steps}보
+              걸음: {steps}보
             </CustomText>
           </View>
         </View>

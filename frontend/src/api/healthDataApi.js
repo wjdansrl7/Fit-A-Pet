@@ -6,3 +6,9 @@ export const saveDailyDiet = async (dietInfo) => {
   console.log('받을게', data);
   return data;
 };
+
+export const getDailyDiet = async () => {
+  const { data } = await axiosInstance.get('/diets');
+  console.log(data);
+  return data;
+};
