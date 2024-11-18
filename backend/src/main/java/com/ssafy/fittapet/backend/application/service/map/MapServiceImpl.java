@@ -139,7 +139,7 @@ public class MapServiceImpl implements MapService {
                 guildRepository.delete(guild);
             }
         } else {
-            mapRepository.deleteByGuildIdAndUserId(guildId, userId);
+            processGuildMembers(userId, guildId);
         }
     }
 
