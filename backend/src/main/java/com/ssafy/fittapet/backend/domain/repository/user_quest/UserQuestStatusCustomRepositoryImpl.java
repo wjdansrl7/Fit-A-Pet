@@ -37,18 +37,4 @@ public class UserQuestStatusCustomRepositoryImpl implements UserQuestStatusCusto
                 .where(userQuestStatus.user.eq(loginUser))
                 .fetch();
     }
-
-    /**
-     * todo BatchSize 활용
-     */
-    @Override
-    public Optional<UserQuestStatus> findByUserQuestStatusWithQuest(Long completeQuestId) {
-
-        return Optional.ofNullable(queryFactory
-                .selectFrom(userQuestStatus)
-                .join(userQuestStatus.guildQuest, guildQuest).fetchJoin()
-                .join(guildQuest.quest, quest).fetchJoin()
-                .where(userQuestStatus.id.eq(completeQuestId))
-                .fetchOne());
-    }
 }
