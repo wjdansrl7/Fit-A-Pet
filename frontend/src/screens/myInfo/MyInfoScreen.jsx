@@ -15,6 +15,34 @@ import useAuth from '@hooks/queries/useAuth';
 import useHealthDataStore from '@src/stores/healthDataStore';
 import { getDailyDiet } from '@api/healthDataApi';
 
+const sampleData = {
+  calorie: 186.2,
+  carbo: 12.8,
+  carboRatio: 3.9,
+  cholesterol: 36.51,
+  cholesterolRatio: 12.2,
+  fat: 9,
+  fatRatio: 18,
+  isCalorieEnough: false,
+  isCalorieEnoughRatio: null,
+  isCarboEnough: false,
+  isCarboEnoughRatio: null,
+  isFatEnough: true,
+  isFatEnoughRatio: null,
+  isProteinEnough: false,
+  isProteinEnoughRatio: null,
+  protein: 13.8,
+  proteinRatio: 23,
+  saturatedFat: 2.37,
+  saturatedFatRatio: 107.7,
+  sodium: 466.86,
+  sodiumRatio: 23.3,
+  sugar: 6.38,
+  sugarRatio: 6.4,
+  transFat: 0.07,
+  transFatRatio: 0.5,
+};
+
 function NutritionCheck({ isEnough }) {
   return (
     <View style={styles.checkImageContainer}>
@@ -39,7 +67,7 @@ function NutritionCheck({ isEnough }) {
 
 function MyInfoScreen({ navigation }) {
   const [isModalVisible, setModalVisible] = useState(false);
-  const [dailyDiet, setDailyDiet] = useState(null);
+  // const [dailyDiet, setDailyDiet] = useState(null);
 
   const { kakaoLogoutMutation } = useAuth();
   // const { mutate: kakaoLoginMutate } = kakaoLoginMutation();
@@ -49,47 +77,73 @@ function MyInfoScreen({ navigation }) {
     kakaoLogoutMutation.mutate();
   };
 
-  useEffect(() => {
-    const fetchDietData = async () => {
-      try {
-        const data = await getDailyDiet(); // API 호출
-        setDailyDiet(data); // 데이터 저장
-        console.log('저장된데이터', dailyDiet);
-      } catch (err) {
-        console.log(err);
-      }
-    };
-    fetchDietData();
-  }, []); // 컴포넌트 마운트 시 한 번 실행
+  // useEffect(() => {
+  //   const fetchDietData = async () => {
+  //     try {
+  //       const data = await getDailyDiet(); // API 호출
+  //       setDailyDiet(data); // 데이터 저장
+  //       console.log('저장된데이터', dailyDiet);
+  //       console.log(data);
+  //     } catch (err) {
+  //       console.log(err);
+  //     }
+  //   };
+  //   fetchDietData();
+  // }, []); // 컴포넌트 마운트 시 한 번 실행
 
-  const diets = {
-    calorie: 1700, // 열량
-    nutritionFacts: [
-      { nameEn: 'sodium', nameKr: '나트륨', serving: '220mg', ratio: 11 }, // 나트륨
-      { nameEn: 'carbo', nameKr: '탄수화물', serving: '30g', ratio: 9 }, // 탄수화물
-      { nameEn: 'totalSugars', nameKr: '당류', serving: '5.8g', ratio: 6 }, // 당류
-      { nameEn: 'fat', nameKr: '지방', serving: '15g', ratio: 28 }, // 지방
-      {
-        nameEn: 'saturatedFattyAcid',
-        nameKr: '트랜스지방',
-        serving: '0g',
-        ratio: 0,
-      }, //  트랜스지방
-      {
-        nameEn: 'transFattyAcid',
-        nameKr: '포화지방',
-        serving: '2g',
-        ratio: 13,
-      }, //  포화지방
-      {
-        nameEn: 'cholesterol',
-        nameKr: '콜레스테롤',
-        serving: '4.9mg',
-        ratio: 2,
-      }, //  콜레스테롤
-      { nameEn: 'protein', nameKr: '단백질', serving: '5.1g', ratio: 9 }, // 단백질
-    ],
-  };
+  const { dietData } = useHealthDataStore();
+  console.log(dietData);
+
+  const nutritionFacts = [
+    {
+      nameEn: 'sodium',
+      nameKr: '나트륨',
+      serving: `${dietData.sodium}mg`,
+      ratio: dietData.sodiumRatio,
+    }, // 나트륨
+    {
+      nameEn: 'carbo',
+      nameKr: '탄수화물',
+      serving: `${dietData.carbo}g`,
+      ratio: dietData.carboRatio,
+    }, // 탄수화물
+    {
+      nameEn: 'sugar',
+      nameKr: '당류',
+      serving: `${dietData.sugar}g`,
+      ratio: dietData.sugarRatio,
+    }, // 당류
+    {
+      nameEn: 'fat',
+      nameKr: '지방',
+      serving: `${dietData.fat}g`,
+      ratio: dietData.fatRatio,
+    }, // 지방
+    {
+      nameEn: 'transFat',
+      nameKr: '트랜스지방',
+      serving: `${dietData.transFat}g`,
+      ratio: dietData.transFatRatio,
+    }, //  트랜스지방
+    {
+      nameEn: 'saturatedFat',
+      nameKr: '포화지방',
+      serving: `${dietData.saturatedFat}g`,
+      ratio: dietData.saturatedFatRatio,
+    }, //  포화지방
+    {
+      nameEn: 'cholesterol',
+      nameKr: '콜레스테롤',
+      serving: `${dietData.cholesterol}mg`,
+      ratio: dietData.cholesterolRatio,
+    }, //  콜레스테롤
+    {
+      nameEn: 'protein',
+      nameKr: '단백질',
+      serving: `${dietData.protein}g`,
+      ratio: dietData.proteinRatio,
+    }, // 단백질
+  ];
 
   const { steps, sleepHours } = useHealthDataStore();
 
@@ -99,7 +153,7 @@ function MyInfoScreen({ navigation }) {
       <View style={styles.screenContainer}>
         {/* 영양 */}
         <TouchableOpacity
-          onPress={() => setModalVisible(true)}
+          onPress={() => dietData ?? setModalVisible(true)}
           activeOpacity={0.8}
         >
           <View style={styles.categoryContainer}>
@@ -111,11 +165,11 @@ function MyInfoScreen({ navigation }) {
               }}
             >
               <CustomText style={styles.defaultInfoText}>
-                일일 섭취량: {dailyDiet ? dailyDiet.calorie.toFixed(2) : ' - '}
+                일일 섭취량: {dietData ? dietData.calorie.toFixed(2) : ' - '}
                 kcal
               </CustomText>
               <NutritionCheck
-                isEnough={dailyDiet ? dailyDiet.isCalorieEnough : null}
+                isEnough={dietData ? dietData.isCalorieEnough : null}
               />
             </View>
             <View style={styles.categoryContainerBody}>
@@ -134,13 +188,13 @@ function MyInfoScreen({ navigation }) {
                 </View>
                 <View style={styles.dietsCheckImageContainer}>
                   <NutritionCheck
-                    isEnough={dailyDiet ? dailyDiet.isCalorieEnough : null}
+                    isEnough={dietData ? dietData.isCalorieEnough : null}
                   />
                   <NutritionCheck
-                    isEnough={dailyDiet ? dailyDiet.isProteinEnough : null}
+                    isEnough={dietData ? dietData.isProteinEnough : null}
                   />
                   <NutritionCheck
-                    isEnough={dailyDiet ? dailyDiet.isFatEnough : null}
+                    isEnough={dietData ? dietData.isFatEnough : null}
                   />
                 </View>
               </View>
@@ -157,7 +211,7 @@ function MyInfoScreen({ navigation }) {
             <View style={styles.row1}>
               {/* <CustomText style={styles.c1}>영양정보</CustomText> */}
               <CustomText style={styles.c2}>
-                총 섭취량: {diets.calorie}kcal
+                총 섭취량: {dietData.calorie}kcal
               </CustomText>
               {/* <CustomText style={styles.c3}>{diets.calorie}kcal</CustomText> */}
             </View>
@@ -165,7 +219,7 @@ function MyInfoScreen({ navigation }) {
             <View
             //  style={styles.tableOut}
             >
-              {diets.nutritionFacts.map((nutritionFact, index) => (
+              {nutritionFacts.map((nutritionFact, index) => (
                 <View key={index} style={styles.tableIn}>
                   <CustomText style={styles.tableC1}>
                     {nutritionFact.nameKr}
