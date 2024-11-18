@@ -128,15 +128,13 @@ public class MapServiceImpl implements MapService {
         Guild guild = guildRepository.findById(guildId).orElse(null);
         if (Objects.equals(guild.getGuildLeader().getId(), userId)) {
             List<Map> members = mapRepository.findByGuild(guild);
-            // 길드원이 두명 이상이면 가장 오래된 길드원에게 리더를 넘긴다.
             if (members.size() > 1) {
                 members.sort(Comparator.comparingLong(Map::getId));
                 guild.updateLeader(members.get(1).getUser());
                 processGuildMembers(userId, guildId);
             } else {
-                GuildQuest guildQuest = processGuildMembers(userId, guildId);
-                guildQuestRepository.delete(guildQuest);
-                guildRepository.delete(guild);
+                processGuildMembers(userId, guildId);
+                deleteGuildAndQuest(guildId);
             }
         } else {
             processGuildMembers(userId, guildId);
@@ -144,11 +142,21 @@ public class MapServiceImpl implements MapService {
     }
 
     @Transactional
-    public GuildQuest processGuildMembers(Long userId, Long guildId) {
+    public void processGuildMembers(Long userId, Long guildId) {
         mapRepository.deleteByGuildIdAndUserId(guildId, userId);
         GuildQuest guildQuest = guildQuestRepository.findByGuildId(guildId);
-        if (guildQuest != null)
+        if (guildQuest != null) {
             userQuestStatusRepository.deleteByUserIdAndGuildQuestId(userId, guildQuest.getId());
-        return guildQuest;
+        }
+    }
+
+    @Transactional
+    public void deleteGuildAndQuest(Long guildId) {
+        GuildQuest guildQuest = guildQuestRepository.findByGuildId(guildId);
+        if (guildQuest != null) {
+            userQuestStatusRepository.deleteByGuildQuestId(guildQuest.getId());
+            guildQuestRepository.delete(guildQuest);
+        }
+        guildRepository.deleteById(guildId);
     }
 }
