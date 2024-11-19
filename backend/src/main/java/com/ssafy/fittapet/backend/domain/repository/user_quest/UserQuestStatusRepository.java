@@ -1,9 +1,16 @@
 package com.ssafy.fittapet.backend.domain.repository.user_quest;
 
+import com.ssafy.fittapet.backend.domain.entity.GuildQuest;
 import com.ssafy.fittapet.backend.domain.entity.UserQuestStatus;
 import org.springframework.data.jpa.repository.JpaRepository;
 
-public interface UserQuestStatusRepository extends JpaRepository<UserQuestStatus, Long> {
+import java.util.List;
 
-    void deleteByUserIdAndGroupRequestId(Long userId, Long groupRequestId);
+public interface UserQuestStatusRepository extends JpaRepository<UserQuestStatus, Long>, UserQuestStatusCustomRepository {
+
+    void deleteByUserIdAndGuildQuestId(Long userId, Long guildQuestId);
+
+    List<UserQuestStatus> findByGuildQuest(GuildQuest guildQuest);
+
+    void deleteByGuildQuestId(Long guildQuestId);
 }

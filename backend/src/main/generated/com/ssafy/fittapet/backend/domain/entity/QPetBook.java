@@ -32,7 +32,7 @@ public class QPetBook extends EntityPathBase<PetBook> {
 
     public final NumberPath<Long> id = createNumber("id", Long.class);
 
-    public final BooleanPath isMain = createBoolean("isMain");
+    public final BooleanPath issueEgg = createBoolean("issueEgg");
 
     //inherited
     public final DateTimePath<java.time.LocalDateTime> modifiedAt = _super.modifiedAt;
@@ -40,6 +40,8 @@ public class QPetBook extends EntityPathBase<PetBook> {
     public final QPet pet;
 
     public final NumberPath<Integer> petExp = createNumber("petExp", Integer.class);
+
+    public final NumberPath<Integer> petLevel = createNumber("petLevel", Integer.class);
 
     public final StringPath petNickname = createString("petNickname");
 

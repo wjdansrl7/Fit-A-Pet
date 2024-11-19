@@ -1,8 +1,8 @@
 package com.ssafy.fittapet.backend.domain.entity;
 
-import com.ssafy.fittapet.backend.common.constant.QuestCategory;
-import com.ssafy.fittapet.backend.common.constant.QuestTier;
-import com.ssafy.fittapet.backend.common.constant.QuestType;
+import com.ssafy.fittapet.backend.common.constant.entity_field.QuestCategory;
+import com.ssafy.fittapet.backend.common.constant.entity_field.QuestTier;
+import com.ssafy.fittapet.backend.common.constant.entity_field.QuestType;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -32,5 +32,4 @@ public class Quest {
 
     @Enumerated(EnumType.STRING)
     private QuestCategory questCategory;
-
 }

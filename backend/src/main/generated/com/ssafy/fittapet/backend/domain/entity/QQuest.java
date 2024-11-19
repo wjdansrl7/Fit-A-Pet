@@ -21,7 +21,7 @@ public class QQuest extends EntityPathBase<Quest> {
 
     public final NumberPath<Long> id = createNumber("id", Long.class);
 
-    public final EnumPath<com.ssafy.fittapet.backend.common.constant.QuestCategory> questCategory = createEnum("questCategory", com.ssafy.fittapet.backend.common.constant.QuestCategory.class);
+    public final EnumPath<com.ssafy.fittapet.backend.common.constant.entity_field.QuestCategory> questCategory = createEnum("questCategory", com.ssafy.fittapet.backend.common.constant.entity_field.QuestCategory.class);
 
     public final StringPath questContent = createString("questContent");
 
@@ -29,9 +29,9 @@ public class QQuest extends EntityPathBase<Quest> {
 
     public final NumberPath<Long> questReward = createNumber("questReward", Long.class);
 
-    public final EnumPath<com.ssafy.fittapet.backend.common.constant.QuestTier> questTier = createEnum("questTier", com.ssafy.fittapet.backend.common.constant.QuestTier.class);
+    public final EnumPath<com.ssafy.fittapet.backend.common.constant.entity_field.QuestTier> questTier = createEnum("questTier", com.ssafy.fittapet.backend.common.constant.entity_field.QuestTier.class);
 
-    public final EnumPath<com.ssafy.fittapet.backend.common.constant.QuestType> questType = createEnum("questType", com.ssafy.fittapet.backend.common.constant.QuestType.class);
+    public final EnumPath<com.ssafy.fittapet.backend.common.constant.entity_field.QuestType> questType = createEnum("questType", com.ssafy.fittapet.backend.common.constant.entity_field.QuestType.class);
 
     public QQuest(String variable) {
         super(Quest.class, forVariable(variable));
