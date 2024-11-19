@@ -201,8 +201,8 @@ function MainScreen({ navigation }) {
   };
 
   const backgroundImageSource = isDark
-    ? require('@assets/backgrounds/main/sky_day.png')
-    : require('@assets/backgrounds/main/sky_night.png');
+    ? require('@assets/backgrounds/main/sky_night.png')
+    : require('@assets/backgrounds/main/sky_day.png');
 
   // 스프라이트 관련 코드
   const frames = Object.values(petSpriteData.frames).map((frame) => ({
@@ -324,7 +324,7 @@ function MainScreen({ navigation }) {
             <MenuButton
               title={'식단기록'}
               icon={FoodLensIcon}
-              isBlack={isDayTime}
+              isBlack={!isDark}
             ></MenuButton>
           </Pressable>
           {/* 퀘스트 모아보기 페이지로 이동 */}
@@ -333,7 +333,7 @@ function MainScreen({ navigation }) {
             <MenuButton
               title={'퀘스트'}
               icon={QuestIcon}
-              isBlack={isDayTime}
+              isBlack={!isDark}
             ></MenuButton>
           </Pressable>
         </View>
