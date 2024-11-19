@@ -18,6 +18,7 @@ import static com.ssafy.fittapet.backend.domain.entity.QUser.user;
 @Repository
 @RequiredArgsConstructor
 public class PersonalQuestCustomRepositoryImpl implements PersonalQuestCustomRepository {
+
     private final JPAQueryFactory queryFactory;
 
     @Override

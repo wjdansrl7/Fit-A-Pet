@@ -5,12 +5,9 @@ import com.ssafy.fittapet.backend.domain.entity.User;
 
 public interface HealthService {
 
-    // 수면 시간 업데이트
-    Health createSleepTimeCurrentTime(Integer sleepTime, User loginUser);
+    Health saveSleepTimeCurrentTime(Integer sleepTime, User loginUser);
 
-    // 걸음수 업데이트
-    Health createStepCntCurrentTime(Integer walkTime, User loginUser);
+    Health saveStepCntCurrentTime(Integer walkTime, User loginUser);
 
-    // 헬스 데이터 관련 데이터 조회
-    Health getHealthCurrentTime(User loginUser);
+    Health findHealthCurrentTime(User loginUser);
 }

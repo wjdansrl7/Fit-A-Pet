@@ -8,6 +8,7 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @Getter
 public class GuildInfoResponse {
+
     private String guildName;
     private Long guildLeaderId;
 

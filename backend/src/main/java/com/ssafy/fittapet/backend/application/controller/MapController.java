@@ -18,6 +18,7 @@ import java.util.List;
 @RequiredArgsConstructor
 @RequestMapping("/maps")
 public class MapController {
+
     private final MapService mapService;
 
     @GetMapping

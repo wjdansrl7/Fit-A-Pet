@@ -7,6 +7,6 @@ import org.springframework.stereotype.Component;
 @Component
 @RequiredArgsConstructor
 public class GuildQuestValidator {
-    private final GuildQuestRepository guildQuestRepository;
 
+    private final GuildQuestRepository guildQuestRepository;
 }

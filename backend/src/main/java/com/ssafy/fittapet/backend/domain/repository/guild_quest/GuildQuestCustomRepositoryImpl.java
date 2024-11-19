@@ -11,8 +11,8 @@ import org.springframework.stereotype.Repository;
 @Repository
 @RequiredArgsConstructor
 public class GuildQuestCustomRepositoryImpl implements GuildQuestCustomRepository {
-    private final JPAQueryFactory queryFactory;
 
+    private final JPAQueryFactory queryFactory;
 
     @Override
     public GuildQuestInfoResponse findQuestInfoByGuildId(Long guildId) {

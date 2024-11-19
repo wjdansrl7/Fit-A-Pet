@@ -18,6 +18,7 @@ import java.util.List;
 @RequiredArgsConstructor
 @RequestMapping("/guilds")
 public class GuildController {
+
     private final GuildService guildService;
 
     @GetMapping(path = "/{guildId}/entering-code")

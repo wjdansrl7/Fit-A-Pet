@@ -9,10 +9,6 @@ import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
 
-/**
- * 인증된 사용자 정보 저장용
- * SecurityContextHolder 등록한 후 접근
- */
 public class CustomOAuth2User implements OAuth2User, UserDetails {
 
     private final UserDTO userDTO;

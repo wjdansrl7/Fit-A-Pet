@@ -10,6 +10,7 @@ import lombok.NoArgsConstructor;
 @Entity
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class UserQuestStatus {
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "quest_status_id")
@@ -33,10 +34,7 @@ public class UserQuestStatus {
         this.user = user;
     }
 
-    /**
-     * 상태 업데이트
-     */
-    public void updateStatus(boolean check){
+    public void updateStatus(boolean check) {
         this.questStatus = check;
     }
 }

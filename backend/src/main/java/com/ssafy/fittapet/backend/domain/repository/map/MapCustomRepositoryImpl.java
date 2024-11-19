@@ -14,6 +14,7 @@ import java.util.List;
 @Repository
 @RequiredArgsConstructor
 public class MapCustomRepositoryImpl implements MapCustomRepository {
+
     private final JPAQueryFactory queryFactory;
 
     @Override
@@ -47,8 +48,8 @@ public class MapCustomRepositoryImpl implements MapCustomRepository {
                         userQuestStatus.id
                 ))
                 .from(map)
-                .leftJoin(guildQuest).on(guildQuest.guild.eq(map.guild))
-                .leftJoin(userQuestStatus).on(userQuestStatus.guildQuest.eq(guildQuest))
+                .leftJoin(guildQuest).fetchJoin().on(guildQuest.guild.eq(map.guild))
+                .leftJoin(userQuestStatus).fetchJoin().on(userQuestStatus.guildQuest.eq(guildQuest))
                 .where(map.user.id.eq(userId).and(guildQuest.quest.eq(quest)))
                 .fetch();
     }

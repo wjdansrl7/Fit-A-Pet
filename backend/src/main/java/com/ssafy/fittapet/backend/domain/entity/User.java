@@ -30,5 +30,7 @@ public class User extends BaseEntity {
 
     private Long petMainId;
 
-    public void updatePetMainId(Long petMainId) {this.petMainId = petMainId;}
+    public void updatePetMainId(Long petMainId) {
+        this.petMainId = petMainId;
+    }
 }

@@ -7,6 +7,7 @@ import com.ssafy.fittapet.backend.domain.entity.Quest;
 import java.util.List;
 
 public interface MapCustomRepository {
+
     List<MapResponse> findAllByUserId(Long userId);
 
     List<MapGuildQuestDTO> findAllMGQByUserId(Long userId, Quest quest);

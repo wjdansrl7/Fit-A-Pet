@@ -7,6 +7,7 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import java.util.List;
 
 public interface MapRepository extends JpaRepository<Map, Long>, MapCustomRepository {
+
     Long countByGuildId(Long guildId);
 
     void deleteByGuildIdAndUserId(Long guildId, Long userId);

@@ -1,10 +1,7 @@
 package com.ssafy.fittapet.backend.domain.dto.auth;
 
-import lombok.extern.slf4j.Slf4j;
-
 import java.util.Map;
 
-@Slf4j
 public class KakaoResponse implements OAuth2Response {
 
     private final Map<String, Object> attributes;
@@ -12,7 +9,6 @@ public class KakaoResponse implements OAuth2Response {
     private final Map<String, Object> profile;
 
     public KakaoResponse(Map<String, Object> attributes) {
-        log.info("attributes: {}", attributes);
         this.attributes = attributes;
         this.kakaoAccount = (Map<String, Object>) attributes.get("kakao_account");
         this.profile = (Map<String, Object>) kakaoAccount.get("profile");
