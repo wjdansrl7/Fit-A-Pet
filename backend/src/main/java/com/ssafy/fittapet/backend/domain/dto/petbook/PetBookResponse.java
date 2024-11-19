@@ -32,5 +32,4 @@ public class PetBookResponse {
         this.createdAt = createdAt.toLocalDate().toString();
         this.isMain = isMain;
     }
-
 }

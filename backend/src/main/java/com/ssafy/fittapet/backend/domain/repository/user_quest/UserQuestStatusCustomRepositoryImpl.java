@@ -8,11 +8,6 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
-import java.util.Optional;
-
-import static com.ssafy.fittapet.backend.domain.entity.QGuildQuest.guildQuest;
-import static com.ssafy.fittapet.backend.domain.entity.QQuest.quest;
-import static com.ssafy.fittapet.backend.domain.entity.QUserQuestStatus.userQuestStatus;
 
 @Repository
 @RequiredArgsConstructor

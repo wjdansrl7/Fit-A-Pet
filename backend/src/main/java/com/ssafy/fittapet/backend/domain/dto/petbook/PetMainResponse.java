@@ -5,6 +5,7 @@ import lombok.Data;
 
 @Data
 public class PetMainResponse {
+
     private String petNickname;
     private Integer petLevel;
     private Integer petPercent;

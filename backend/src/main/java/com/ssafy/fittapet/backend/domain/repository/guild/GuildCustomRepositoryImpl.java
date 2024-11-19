@@ -1,7 +1,5 @@
 package com.ssafy.fittapet.backend.domain.repository.guild;
 
-import com.querydsl.core.types.dsl.BooleanExpression;
-import com.querydsl.core.types.dsl.Expressions;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import com.ssafy.fittapet.backend.domain.dto.guild.GuildInfoResponse;
 import com.ssafy.fittapet.backend.domain.dto.guild.GuildMemberInfoResponse;
@@ -18,6 +16,7 @@ import java.util.List;
 @Repository
 @RequiredArgsConstructor
 public class GuildCustomRepositoryImpl implements GuildCustomRepository {
+
     private final JPAQueryFactory queryFactory;
 
     @Override
@@ -54,8 +53,6 @@ public class GuildCustomRepositoryImpl implements GuildCustomRepository {
     @Override
     public List<GuildMemberInfoResponse> findAllMemberByGuild(Long guildId) {
         QMap map = QMap.map;
-        QGuild guild = QGuild.guild;
-        QUser user = QUser.user;
         QPetBook petBook = QPetBook.petBook;
         QUserQuestStatus userQuestStatus = QUserQuestStatus.userQuestStatus;
 
@@ -72,7 +69,6 @@ public class GuildCustomRepositoryImpl implements GuildCustomRepository {
                 .where(map.guild.id.eq(guildId)
                         .and(petBook.id.eq(map.user.petMainId))
                 )
-//                        .and(userQuestStatus.guildQuest.guild.id.eq(guildId)))
                 .fetch();
     }
 }

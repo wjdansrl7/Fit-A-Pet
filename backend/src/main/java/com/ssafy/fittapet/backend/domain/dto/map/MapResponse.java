@@ -8,6 +8,7 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @Getter
 public class MapResponse {
+
     private Long guildId;
     private String guildName;
     private Long guildPosition;

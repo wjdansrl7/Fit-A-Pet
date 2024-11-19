@@ -7,8 +7,8 @@ import java.util.List;
 import java.util.Optional;
 
 public interface PetService {
+
     List<Pet> findPetByIdNotInAndPetStatus(List<Long> id, PetStatus petStatus);
 
     Optional<Pet> findPetById(Long id);
-
 }

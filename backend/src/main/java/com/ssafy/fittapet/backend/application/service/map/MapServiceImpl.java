@@ -26,12 +26,11 @@ import static com.ssafy.fittapet.backend.common.constant.error_code.GuildErrorCo
 @Service
 @RequiredArgsConstructor
 public class MapServiceImpl implements MapService {
+
     private final MapRepository mapRepository;
     private final GuildRepository guildRepository;
     private final GuildQuestRepository guildQuestRepository;
     private final UserQuestStatusRepository userQuestStatusRepository;
-
-    private final EnteringCodeUtil enteringCodeUtil;
 
     private final MapValidator mapValidator;
     private final GuildValidator guildValidator;
@@ -46,24 +45,19 @@ public class MapServiceImpl implements MapService {
     @Override
     @Transactional
     public void createGuild(GuildRequest guildRequest, Long userId) throws CustomException {
-        // 1. todo : 로그인한 유저 id
-//        Long userId = 1L;
-//        User user = User.builder().id(userId).build();
-//        User user = userRepository.findById(1L).orElse(null);
         User user = userRepository.findById(userId).orElse(null);
-//        Long userId = user.getId();
-        // 2. position 유효 검사
+
         if (!mapValidator.isAblePosition(userId, guildRequest.getGuildPosition()))
             throw new CustomException(NOT_AVAILABLE_POSITION);
-        // 3. 그룹 이름 유효 검사?
-        if (!guildValidator.isNameUnique(guildRequest.getGuildName())) throw new CustomException(DUPLICATED_NAME);
-        // 4. 그룹 생성
+        if (!guildValidator.isNameUnique(guildRequest.getGuildName()))
+            throw new CustomException(DUPLICATED_NAME);
+
         Guild guild = Guild.builder().
                 guildLeader(user).
                 guildName(guildRequest.getGuildName()).
                 build();
         guild = guildRepository.save(guild);
-        // 5. 맵 db에 정보 저장
+
         Map map = Map.builder().
                 user(user).
                 guild(guild).
@@ -76,26 +70,20 @@ public class MapServiceImpl implements MapService {
     @Transactional
     public Boolean joinGuild(GuildJoinRequest guildJoinRequest, Long userId) throws Exception {
 
-        // todo : 요청자 정보 받아오기
         User user = userRepository.findById(userId).orElse(null);
 
         String enteringCode = guildJoinRequest.getEnteringCode();
         Long guildPosition = guildJoinRequest.getGuildPosition();
 
-        // 초대 코드 기간이 유효하면 guildId, 유효하지 않으면 -1 반환
         Long guildId = EnteringCodeUtil.isCodeValid(enteringCode);
         if (guildId == -1) return false;
-        // 길드 없으면 가입 불가
         Guild guild = guildValidator.isExist(guildId).orElseThrow(() -> new CustomException(NO_GUILD));
-        // 이미 가입되어 있으면 가입 불가
+        assert user != null;
         if (mapValidator.isAlreadyJoined(user.getId(), guildId)) throw new CustomException(ALREADY_JOIN);
-        // 그룹 인원 수가 6명보다 많으면 가입 불가
         if (!mapValidator.isUnder6(guildId)) throw new CustomException(FULL_GUILD);
-        // 위치가 유효하지 않으면 가입 불가
         if (!mapValidator.isAblePosition(user.getId(), guildPosition))
             throw new CustomException(NOT_AVAILABLE_POSITION);
 
-        // 조건 다 만족하면 가입
         mapRepository.save(Map.builder().
                 user(user).
                 guild(guild).
@@ -117,15 +105,13 @@ public class MapServiceImpl implements MapService {
     @Override
     @Transactional
     public void leaveGuild(Long guildId, Long userId) throws CustomException {
-        // map에서 삭제
-        // todo : 요청자 정보 가져오기
         User user = userRepository.findById(userId).orElse(null);
         if (guildValidator.isExist(guildId).isEmpty()) throw new CustomException(NO_GUILD);
+        assert user != null;
         if (!mapValidator.isAlreadyJoined(user.getId(), guildId)) throw new CustomException(NOT_GUILD_MEMBER);
-//        if (guildValidator.isGuildLeader(guildId, userId)) throw new CustomException(LEADER_CANNOT_EXIT);
 
-        // 탈퇴하는 사람이 길드장
         Guild guild = guildRepository.findById(guildId).orElse(null);
+        assert guild != null;
         if (Objects.equals(guild.getGuildLeader().getId(), userId)) {
             List<Map> members = mapRepository.findByGuild(guild);
             if (members.size() > 1) {

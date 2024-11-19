@@ -15,14 +15,12 @@ public class ErrorResponse {
     private final int code;
     private final String message;
 
-    /* handler 에서 사용할 생성자 */
     public ErrorResponse(HttpStatus httpStatus, String message) {
         this.httpStatus = httpStatus;
         this.code = httpStatus.value();
         this.message = message;
     }
 
-    /* 컨트롤러에서 사용할 메서드 */
     public static ResponseEntity<ErrorResponse> error(
             CustomException e) {
         return ResponseEntity
@@ -33,5 +31,4 @@ public class ErrorResponse {
                         .message(e.getErrorCode().getMessage())
                         .build());
     }
-
 }

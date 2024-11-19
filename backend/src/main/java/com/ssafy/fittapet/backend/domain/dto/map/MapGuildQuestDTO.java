@@ -8,6 +8,7 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @Getter
 public class MapGuildQuestDTO {
+
     private Long userId;
     private Long guildId;
     private Long questId;
@@ -21,5 +22,4 @@ public class MapGuildQuestDTO {
         this.questId = questId;
         this.userQuestStatusId = userQuestStatusId;
     }
-
 }

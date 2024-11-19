@@ -9,6 +9,7 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @Getter
 public class GuildQuestInfoResponse {
+
     private Long guildQuestId;
     private String guildQuestName;
     private String guildQuestContent;

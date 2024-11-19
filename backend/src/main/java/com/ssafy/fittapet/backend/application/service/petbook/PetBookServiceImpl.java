@@ -1,28 +1,26 @@
 package com.ssafy.fittapet.backend.application.service.petbook;
 
-import com.ssafy.fittapet.backend.application.service.auth.AuthService;
 import com.ssafy.fittapet.backend.application.service.pet.PetService;
 import com.ssafy.fittapet.backend.domain.entity.Pet;
 import com.ssafy.fittapet.backend.domain.entity.PetBook;
 import com.ssafy.fittapet.backend.domain.entity.User;
 import com.ssafy.fittapet.backend.domain.repository.auth.UserRepository;
 import com.ssafy.fittapet.backend.domain.repository.pet_book.PetBookRepository;
+
 import java.util.List;
 import java.util.Optional;
 import java.util.Random;
 
 import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import static com.ssafy.fittapet.backend.common.constant.entity_field.PetStatus.*;
 
-@Slf4j
 @Service
 @Transactional
 @RequiredArgsConstructor
-public class PetBookServiceImpl implements PetBookService{
+public class PetBookServiceImpl implements PetBookService {
 
     private final PetBookRepository petBookRepository;
     private final PetService petService;
@@ -30,13 +28,12 @@ public class PetBookServiceImpl implements PetBookService{
     private final Random random = new Random();
 
     @Override
-    public PetBook createPetBook(User loginUser) {
+    public void createPetBook(User loginUser) {
         List<Long> ownedPetIds = petBookRepository.findOwnedPetIdsByUser(loginUser);
         List<Pet> availablePets = petService.findPetByIdNotInAndPetStatus(ownedPetIds, EGG);
 
         if (availablePets.isEmpty()) {
-            // TODO: 예외처리 필요
-            return null;
+            return;
         }
 
         Pet randomEggPet = availablePets.get(random.nextInt(availablePets.size()));
@@ -50,11 +47,9 @@ public class PetBookServiceImpl implements PetBookService{
 
         petBookRepository.save(petBook);
 
-//        authService.updateMainPet(petBook.getId(), loginUser);
         loginUser.updatePetMainId(petBook.getId());
         userRepository.save(loginUser);
 
-        return petBook;
     }
 
     @Override
@@ -86,6 +81,7 @@ public class PetBookServiceImpl implements PetBookService{
         petBookRepository.save(petBook);
         return false;
     }
+
     private Long calculateNextPetId(Long currentPetId, int currentLevel) {
         if (currentLevel == 10) {
             return currentPetId + 1;
@@ -94,6 +90,7 @@ public class PetBookServiceImpl implements PetBookService{
         }
         return currentPetId;
     }
+
     public void updatePetNickname(String updatePetNickname, PetBook petBook) {
         PetBook updatingPetBook = petBookRepository.findById(petBook.getId()).orElseThrow(() -> new IllegalArgumentException("해당하는 펫이 없습니다."));
         updatingPetBook.updatePetNickname(updatePetNickname);

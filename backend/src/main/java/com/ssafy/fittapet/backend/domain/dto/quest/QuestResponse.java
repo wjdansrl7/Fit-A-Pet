@@ -9,6 +9,7 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @Getter
 public class QuestResponse {
+
     Long id;
     String questName;
     String questContent;

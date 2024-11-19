@@ -1,6 +1,5 @@
 package com.ssafy.fittapet.backend.application.controller;
 
-import com.ssafy.fittapet.backend.application.service.auth.AuthService;
 import com.ssafy.fittapet.backend.application.service.quest.QuestService;
 import com.ssafy.fittapet.backend.common.exception.CustomException;
 import com.ssafy.fittapet.backend.domain.dto.auth.CustomOAuth2User;
@@ -9,7 +8,6 @@ import com.ssafy.fittapet.backend.domain.dto.quest.QuestQueryRequestDTO;
 import com.ssafy.fittapet.backend.domain.dto.quest.QuestResponse;
 import com.ssafy.fittapet.backend.domain.entity.Quest;
 import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
@@ -22,8 +20,8 @@ import java.util.Map;
 @RequiredArgsConstructor
 @RequestMapping("/quests")
 public class QuestController {
+
     private final QuestService questService;
-    private final AuthService authService;
 
     @GetMapping(path = "/guilds")
     public ResponseEntity<?> searchGuildQuest(

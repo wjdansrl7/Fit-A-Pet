@@ -14,5 +14,4 @@ public class FitaPetBackendApplication {
 	public static void main(String[] args) {
 		SpringApplication.run(FitaPetBackendApplication.class, args);
 	}
-
 }

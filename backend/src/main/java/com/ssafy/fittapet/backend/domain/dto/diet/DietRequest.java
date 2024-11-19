@@ -4,6 +4,7 @@ import lombok.Data;
 
 @Data
 public class DietRequest {
+
     private Integer calorie;
     private NutrientDto sodium;
     private NutrientDto carbo;

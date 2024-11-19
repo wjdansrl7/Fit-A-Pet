@@ -24,9 +24,6 @@ import java.util.Collections;
 @RequiredArgsConstructor
 public class SecurityConfig {
 
-//    @Value("${frontend.server.url}")
-//    private String url;
-
     private final RefreshRepository refreshRepository;
     private final BlacklistRepository blacklistRepository;
     private final JWTUtil jwtUtil;
@@ -38,8 +35,6 @@ public class SecurityConfig {
                 .cors(corsCustomizer -> corsCustomizer.configurationSource(request -> {
 
                     CorsConfiguration configuration = new CorsConfiguration();
-
-//                    configuration.setAllowedOrigins(Collections.singletonList(url));
                     configuration.setAllowedOriginPatterns(Collections.singletonList("*"));
                     configuration.setAllowedMethods(Collections.singletonList("*"));
                     configuration.setAllowCredentials(true);
@@ -68,7 +63,7 @@ public class SecurityConfig {
 
         http
                 .authorizeHttpRequests((auth) -> auth
-                        .requestMatchers("/auth/kakao", "/auth/reissue", "/auth/test").permitAll()
+                        .requestMatchers("/auth/kakao", "/auth/reissue").permitAll()
                         .anyRequest().authenticated());
 
         http

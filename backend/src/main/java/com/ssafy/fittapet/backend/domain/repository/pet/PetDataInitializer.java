@@ -3,8 +3,6 @@ package com.ssafy.fittapet.backend.domain.repository.pet;
 import com.ssafy.fittapet.backend.common.constant.entity_field.PetStatus;
 import com.ssafy.fittapet.backend.common.constant.entity_field.PetType;
 import com.ssafy.fittapet.backend.domain.entity.Pet;
-import com.ssafy.fittapet.backend.domain.repository.auth.UserRepository;
-import com.ssafy.fittapet.backend.domain.repository.pet_book.PetBookRepository;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.context.annotation.Bean;
 import org.springframework.stereotype.Component;
@@ -13,8 +11,9 @@ import java.util.List;
 
 @Component
 public class PetDataInitializer {
+
     @Bean
-    CommandLineRunner initDatabase(PetBookRepository petBookRepository, PetRepository petRepository, UserRepository userRepository) {
+    CommandLineRunner initDatabase(PetRepository petRepository) {
         return args -> {
             if (petRepository.count() == 0) {
                 List<Pet> pets = List.of(

@@ -6,15 +6,6 @@ import lombok.Data;
 
 @Data
 public class DietResponse {
-//    private int calorie;
-//    private NutrientDto sodium;
-//    private NutrientDto carbo;
-//    private NutrientDto totalSugars;
-//    private NutrientDto fat;
-//    private NutrientDto saturatedFattyAcid;
-//    private NutrientDto transFattyAcid;
-//    private NutrientDto cholesterol;
-//    private NutrientDto protein;
 
     private Double calorie;
 
@@ -73,9 +64,9 @@ public class DietResponse {
         this.cholesterol = Math.round(cholesterol * 10) / 10.0;
         this.cholesterolRatio = Math.round((cholesterol / 300) * 100 * 10) / 10.0;
 
-        this.isCalorieEnough = calorie>=2000? true : false;
-        this.isCarboEnough = carbo>=328? true : false;
-        this.isProteinEnough = protein>=60? true : false;
-        this.isFatEnough = fat<50? true : false;
+        this.isCalorieEnough = calorie >= 2000;
+        this.isCarboEnough = carbo >= 328;
+        this.isProteinEnough = protein >= 60;
+        this.isFatEnough = fat < 50;
     }
 }

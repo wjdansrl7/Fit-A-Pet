@@ -15,5 +15,4 @@ public class SignupResponseDto {
     private boolean shouldShowModal;
     private String petType;
     private String petStatus;
-
 }
