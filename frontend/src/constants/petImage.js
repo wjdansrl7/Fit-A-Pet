@@ -39,8 +39,8 @@ const petSpriteImages = {
   },
   친칠라: {
     알: require('@assets/pets/sprite/chinchilla_egg_sprite.png'),
-    준성체: require('@assets/pets/sprite/lion_2_sprite.png'),
-    성체: require('@assets/pets/sprite/lion_3_sprite.png'),
+    준성체: require('@assets/pets/sprite/chinchilla_2_sprite.png'),
+    성체: require('@assets/pets/sprite/chinchilla_3_sprite.png'),
   },
   족제비: {
     알: require('@assets/pets/sprite/weasel_egg_sprite.png'),
@@ -60,7 +60,7 @@ const petIdImages = {
   3: require('@assets/pets/beluga_3.png'),
   4: require('@assets/pets/chinchilla_egg.png'),
   5: require('@assets/pets/chinchilla_2.png'),
-  6: require('@assets/pets/chinchilla_egg.png'),
+  6: require('@assets/pets/chinchilla_3.png'),
   7: require('@assets/pets/lion_egg.png'),
   8: require('@assets/pets/lion_2.png'),
   9: require('@assets/pets/lion_3.png'),

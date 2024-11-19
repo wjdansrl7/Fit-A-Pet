@@ -426,6 +426,7 @@ const styles = StyleSheet.create({
     borderRightWidth: 2,
     paddingRight: 4,
     paddingVertical: 4,
+    fontSize: 16,
   },
   tableC2: {
     width: Dimensions.get('screen').width / 4,
