@@ -8,7 +8,8 @@ import {
 // 오늘 날짜를 설정
 function getTodayTimeRange() {
   // 오늘 날짜
-  const today = new Date();
+  let offset = 1000 * 60 * 60 * 9; // 9시간 밀리세컨트 값
+  let today = new Date(Date.now() + offset);
 
   // 임의로 11월 12일을 오늘로 설정
   // const today = new Date(2024, 10, 18);

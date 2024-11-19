@@ -45,6 +45,7 @@ function MainScreen({ navigation }) {
   const [petLevel, setPetLevel] = useState(0);
   const [petPercent, setPetPercent] = useState(0);
   const [petBookId, setPetBookId] = useState('');
+  const [isDark, setIsDark] = useState(false);
 
   const {
     data: mainPetInfo,
@@ -194,12 +195,14 @@ function MainScreen({ navigation }) {
   // 낮 시간인지 확인
   const isDayTime = 6 <= new Date().getHours() < 18;
 
-  // 밤 시간 테스트용
-  // const isDayTime = false;
+  const handleIsDark = () => {
+    setIsDark(!isDark);
+    console.log(isDark);
+  };
 
-  const backgroundImageSource = isDayTime
-    ? require('@assets/backgrounds/main/sky_day.png')
-    : require('@assets/backgrounds/main/sky_night.png');
+  const backgroundImageSource = isDark
+    ? require('@assets/backgrounds/main/sky_night.png')
+    : require('@assets/backgrounds/main/sky_day.png');
 
   // 스프라이트 관련 코드
   const frames = Object.values(petSpriteData.frames).map((frame) => ({
@@ -255,6 +258,9 @@ function MainScreen({ navigation }) {
           setStep={setStep}
           newPetImage={newPetImage}
         />
+        {/* 배경 토글 */}
+        <Pressable onPress={handleIsDark} style={styles.backgroundChangeBtn} />
+        {/*  */}
         {/* 상단 - 레벨 및 진행 상태 */}
         <View style={styles.header}>
           <CustomText style={styles.petName}>
@@ -318,7 +324,7 @@ function MainScreen({ navigation }) {
             <MenuButton
               title={'식단기록'}
               icon={FoodLensIcon}
-              isBlack={isDayTime}
+              isBlack={!isDark}
             ></MenuButton>
           </Pressable>
           {/* 퀘스트 모아보기 페이지로 이동 */}
@@ -327,7 +333,7 @@ function MainScreen({ navigation }) {
             <MenuButton
               title={'퀘스트'}
               icon={QuestIcon}
-              isBlack={isDayTime}
+              isBlack={!isDark}
             ></MenuButton>
           </Pressable>
         </View>
@@ -376,12 +382,13 @@ const styles = StyleSheet.create({
     flex: 1,
     padding: 20,
   },
-  backgroundImageGround: {
-    padding: 20,
+  backgroundChangeBtn: {
     position: 'absolute',
-    bottom: 0,
-    left: 0,
-    right: 0,
+    right: 10,
+    top: 10,
+    backgroundColor: 'rgba(255, 255, 255, 0.2)',
+    width: 10,
+    height: 10,
   },
   header: {
     justifyContent: 'space-between',
