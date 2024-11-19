@@ -40,7 +40,7 @@ const AnimatedSprite = forwardRef((props, ref) => {
         return;
       }
       currentAnimationName.set(animationName);
-      frameIndex.set(0); // 상태 초기화
+      frameIndex.set(0);
       const selectedFramesIndices = animations[animationName] ?? [];
       frameIndex.value = withRepeat(
         withTiming(selectedFramesIndices.length - 1, {

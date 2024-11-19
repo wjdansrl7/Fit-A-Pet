@@ -1,8 +1,6 @@
 import React, { useState, useEffect, useCallback } from 'react';
-
 import {
   View,
-  Text,
   StyleSheet,
   Image,
   Pressable,
@@ -15,30 +13,38 @@ import {
   ImageBackground,
 } from 'react-native';
 import { useFocusEffect } from '@react-navigation/native';
+import { launchCamera } from 'react-native-image-picker';
 
-import { launchCamera } from 'react-native-image-picker'; //ndk
+// 네이티브 모듈
 const { FoodLensModule } = NativeModules;
 
-import MenuButton from './MenuButton';
+// 애셋 관련 임포트
 import AlbumIcon from '@assets/icons/album_icon.png';
 import MapIcon from '@assets/icons/map_icon.png';
 import MyInfoIcon from '@assets/icons/my_info_icon.png';
 import QuestIcon from '@assets/icons/quest_icon.png';
 import FoodLensIcon from '@assets/icons/food_lens_icon.png';
 
+// 컴포넌트 관련 임포트
+import MenuButton from './MenuButton';
 import CustomText from '@components/CustomText/CustomText';
 import CustomModal from '@components/CustomModal/CustomModal';
+import AnimatedSprite from '@components/AnimatedSprite/AnimatedSprite';
+import MainEggModal from './MainEggModal';
 
+// 상수 및 유틸리티 관련 임포트
 import { colors } from '@constants/colors';
 import { petImages, petSpriteImages } from '@constants/petImage';
-import { useMainPetInfo, useUpdateNickname } from '@hooks/queries/usePet';
 
-import AnimatedSprite from '@components/AnimatedSprite/AnimatedSprite';
+// API 및 데이터 관련 임포트
+import { useMainPetInfo, useUpdateNickname } from '@hooks/queries/usePet';
 import { fetchHealthData } from '@api/healthData';
-import useHealthDataStore from '@src/stores/healthDataStore';
-import MainEggModal from './MainEggModal';
-import useEggModalDataStore from '@src/stores/eggModalDataStore';
 import { saveDailyDiet, getDailyDiet } from '@api/healthDataApi';
+
+// Zustand 스토어 관련 임포트
+import useHealthDataStore from '@src/stores/healthDataStore';
+import useEggModalDataStore from '@src/stores/eggModalDataStore';
+
 function MainScreen({ navigation }) {
   const [isModalVisible, setModalVisible] = useState(false);
   const [petNickname, setPetNickname] = useState('');
@@ -47,24 +53,16 @@ function MainScreen({ navigation }) {
   const [petBookId, setPetBookId] = useState('');
   const [isDark, setIsDark] = useState(false);
 
-  const {
-    data: mainPetInfo,
-    isLoading,
-    isError,
-    error,
-    refetch,
-  } = useMainPetInfo();
+  const { data: mainPetInfo, isLoading } = useMainPetInfo();
 
   const { mutate } = useUpdateNickname();
-  const { steps, sleepHours, dietData, completedQuestIds } =
-    useHealthDataStore();
+
   const { updateHealthData, updateDietData, checkQuestCompletion } =
     useHealthDataStore();
 
   const { shouldShowModal, newPetType, newPetStatus, setEggModalData } =
     useEggModalDataStore();
-  const [isEggModalVisible, setEggModalVisible] = useState(false); // 에그모달 상태
-  const [step, setStep] = useState(1); // 에그모달의 단계 관리
+  const [step, setStep] = useState(1);
   const newPetImage = petImages[newPetType]?.[newPetStatus] || null;
   // 메인펫 정보가 바뀌면 업데이트
   useEffect(() => {
@@ -88,7 +86,6 @@ function MainScreen({ navigation }) {
 
           const dailyDiet = await getDailyDiet();
           updateDietData(dailyDiet);
-          console.log('sdk', steps, sleepHours, dailyDiet);
           await checkQuestCompletion();
         } catch (error) {}
       };
@@ -96,9 +93,7 @@ function MainScreen({ navigation }) {
       // 데이터 초기화 호출
       initializeHealthData();
 
-      return () => {
-        console.log('스크린 포커스 해제됨');
-      };
+      return () => {};
     }, [])
   );
 
@@ -130,16 +125,12 @@ function MainScreen({ navigation }) {
           try {
             FoodLensModule.recognizeFood(imageBase64)
               .then((result) => {
-                console.log(`자장자장: ${result}`); // result 구조 확인
-
-                // JSON 문자열을 객체로 변환
                 const parsedResult = JSON.parse(result);
-
                 const transformedResult = {
-                  calorie: parsedResult.energy ?? 0, // energy → calorie (fallback to 0 if undefined)
-                  carbo: parsedResult.carbohydrate ?? 0, // carbohydrate → carbo (fallback to 0 if undefined)
-                  protein: parsedResult.protein ?? 0, // 그대로
-                  fat: parsedResult.fat ?? 0, // 그대로
+                  calorie: parsedResult.energy ?? 0,
+                  carbo: parsedResult.carbohydrate ?? 0,
+                  protein: parsedResult.protein ?? 0,
+                  fat: parsedResult.fat ?? 0,
                   sugar: parsedResult.sugar ?? 0,
                   sodium: parsedResult.sodium ?? 0,
                   transFat: parsedResult.transFat ?? 0,
@@ -147,15 +138,10 @@ function MainScreen({ navigation }) {
                   cholesterol: parsedResult.cholesterol ?? 0,
                 };
 
-                console.log('보낼게', transformedResult);
-                // 변환된 데이터로 저장 함수 호출
                 saveDailyDiet(transformedResult)
                   .then(() => {
-                    console.log('Diet saved successfully:', result);
-                    Alert.alert(
-                      'Recognition Successful'
-                      //                       `Detected food and saved: ${JSON.stringify(result)}`
-                    );
+                    console.log('Diet saved successfully:', parsedResult);
+                    Alert.alert('Recognition Successful');
                   })
                   .catch((error) => {
                     console.error('Save Error:', error);
@@ -166,11 +152,9 @@ function MainScreen({ navigation }) {
                   });
               })
               .catch((error) => {
-                console.error('Recognition Error:', error);
                 Alert.alert('Recognition Error', 'Failed to recognize food.');
               });
           } catch (error) {
-            console.error('Native Module Error:', error);
             Alert.alert('Error', 'Failed to process the image.');
           }
         }
@@ -182,29 +166,22 @@ function MainScreen({ navigation }) {
     return <ActivityIndicator size="large" color={colors.MAIN_GREEN} />;
   }
 
-  // const petImage =
-  //   // 대표 이미지 로딩
-  //   petImages[mainPetInfo.petType]?.[mainPetInfo.petStatus] || null;
-
   const petSpriteImage =
     petSpriteImages[mainPetInfo?.petType]?.[mainPetInfo?.petStatus] ||
     require('@assets/pets/beluga_egg.png');
 
   const petSpriteData = require('@assets/pets/sprite/sprite.json');
 
-  // 낮 시간인지 확인
   const isDayTime = 6 <= new Date().getHours() < 18;
 
   const handleIsDark = () => {
     setIsDark(!isDark);
-    console.log(isDark);
   };
 
   const backgroundImageSource = isDark
     ? require('@assets/backgrounds/main/sky_night.png')
     : require('@assets/backgrounds/main/sky_day.png');
 
-  // 스프라이트 관련 코드
   const frames = Object.values(petSpriteData.frames).map((frame) => ({
     x: frame.frame.x,
     y: frame.frame.y,
@@ -214,15 +191,13 @@ function MainScreen({ navigation }) {
   }));
   const animations = {
     walk: [0, 1, 0],
-    // 적당히 조절 해야할듯, 아님 동물마다 저장을 하던가
   };
 
-  // 펫북아이디 아니라 회원가입 및 주는 팻 id 값으로 하기
   const handleEggUpdateNickname = async () => {
     if (petNickname.trim()) {
       try {
         mutate({ petBookId, newNickname: petNickname.trim() });
-        setStep(3); // Step3로 이동
+        setStep(3);
       } catch (error) {
         console.error('닉네임 업데이트 실패:', error);
       }
@@ -232,12 +207,11 @@ function MainScreen({ navigation }) {
   };
 
   const handleEggModalClose = async () => {
-    // Zustand 상태 업데이트
     setEggModalData({ shouldShowModal: false });
 
     setTimeout(() => {
       setStep(1);
-    }, 300); // 300ms 딜레이
+    }, 300);
   };
 
   return (
@@ -247,7 +221,6 @@ function MainScreen({ navigation }) {
         style={styles.backgroundImage}
         resizeMode="cover"
       >
-        {/* 닉네임은 새걸 받아온걸로 하기 */}
         <MainEggModal
           isVisible={shouldShowModal}
           step={step}
@@ -258,16 +231,12 @@ function MainScreen({ navigation }) {
           setStep={setStep}
           newPetImage={newPetImage}
         />
-        {/* 배경 토글 */}
         <Pressable onPress={handleIsDark} style={styles.backgroundChangeBtn} />
-        {/*  */}
-        {/* 상단 - 레벨 및 진행 상태 */}
         <View style={styles.header}>
           <CustomText style={styles.petName}>
             {mainPetInfo?.petNickname}
           </CustomText>
 
-          {/* 펫 닉네임 수정 */}
           <Pressable
             style={styles.petNameUpdate}
             onPress={() => setModalVisible(true)}
@@ -282,12 +251,10 @@ function MainScreen({ navigation }) {
             isVisible={isModalVisible}
             wantClose={true}
             title="닉네임 수정"
-            onClose={
-              () => {
-                setPetNickname(mainPetInfo?.petNickname);
-                setModalVisible(false);
-              } // 모달을 닫는 함수
-            }
+            onClose={() => {
+              setPetNickname(mainPetInfo?.petNickname);
+              setModalVisible(false);
+            }}
           >
             <View style={styles.inputContainer}>
               <TextInput
@@ -376,7 +343,6 @@ function MainScreen({ navigation }) {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    // backgroundColor: '#C1EFFF', // 배경 하늘색
   },
   backgroundImage: {
     flex: 1,
@@ -448,7 +414,6 @@ const styles = StyleSheet.create({
     bottom: 180,
     left: 40,
     right: 40,
-    // backgroundColor: 'rgba(0, 0, 0, 0.2)',
   },
   petImage: {
     width: '100%',

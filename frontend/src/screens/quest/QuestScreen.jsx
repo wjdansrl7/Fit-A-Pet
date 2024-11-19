@@ -1,136 +1,19 @@
 import React from 'react';
 import { StyleSheet, View, ScrollView } from 'react-native';
 
+// 상수 관련 임포트
 import { colors } from '@src/constants';
+
+// 컴포넌트 관련 임포트
 import CustomText from '@components/CustomText/CustomText';
 import QuestGroupFrame from './QuestGroupFrame';
 import QuestPersonalFrame from './QuestPersonalFrame';
 
+// API 및 데이터 관련 임포트
 import { useGetQuests } from '@hooks/queries/useQuest';
 
 function QuestScreen() {
-  // const data = {
-  //   personalWalk: [
-  //     {
-  //       id: 1,
-  //       questName: '동네 산책',
-  //       questCategory: 'WALK',
-  //       questContent: '5,000 걸음',
-  //       questTier: 'EASY',
-  //       questReward: '100',
-  //       questStatus: true,
-  //     },
-  //     {
-  //       id: 2,
-  //       questName: '동네 산책',
-  //       questCategory: 'WALK',
-  //       questContent: '8,000 걸음',
-  //       questTier: 'NORMAL',
-  //       questReward: '100',
-  //       questStatus: true,
-  //     },
-  //     {
-  //       id: 3,
-  //       questName: '동네 산책',
-  //       questCategory: 'WALK',
-  //       questContent: '12,000 걸음',
-  //       questTier: 'HARD',
-  //       questReward: '100',
-  //       questStatus: false,
-  //     },
-  //   ],
-  //   personalSleep: [
-  //     {
-  //       id: 4,
-  //       questName: '수면시간 보충!!',
-  //       questCategory: 'SLEEP',
-  //       questContent: '6시간',
-  //       questTier: 'EASY',
-  //       questReward: '100',
-  //       questStatus: true,
-  //     },
-  //     {
-  //       id: 5,
-  //       questName: '수면시간 보충!!',
-  //       questCategory: 'SLEEP',
-  //       questContent: '8시간',
-  //       questTier: 'NORMAL',
-  //       questReward: '100',
-  //       questStatus: true,
-  //     },
-  //     {
-  //       id: 6,
-  //       questName: '수면시간 보충!!',
-  //       questCategory: 'SLEEP',
-  //       questContent: '10시간',
-  //       questTier: 'HARD',
-  //       questReward: '100',
-  //       questStatus: false,
-  //     },
-  //   ],
-  //   personalDiet: [
-  //     {
-  //       id: 7,
-  //       questName: '탄단지 끼니 챙기기 ',
-  //       questCategory: 'DIET',
-  //       questContent: '한 끼',
-  //       questTier: 'EASY',
-  //       questReward: '100',
-  //       questStatus: true,
-  //     },
-  //     {
-  //       id: 8,
-  //       questName: '탄단지 끼니 챙기기 ',
-  //       questCategory: 'DIET',
-  //       questContent: '두 끼',
-  //       questTier: 'NORMAL',
-  //       questReward: '100',
-  //       questStatus: false,
-  //     },
-  //     {
-  //       id: 9,
-  //       questName: '탄단지 끼니 챙기기 ',
-  //       questCategory: 'DIET',
-  //       questContent: '세 끼',
-  //       questTier: 'NORMAL',
-  //       questReward: '100',
-  //       questStatus: false,
-  //     },
-  //   ],
-
-  //   guildQuest: [
-  //     {
-  //       id: 10,
-  //       questName: '지옥의 행군..?',
-  //       questCategory: 'WALK',
-  //       questContent: '15,000보 걷기',
-  //       questTier: 'EASY',
-  //       questReward: '경험치 150, 공적치 100',
-  //       questStatus: true,
-  //     },
-  //     {
-  //       id: 11,
-  //       questName: '내일은 주말!',
-  //       questCategory: 'SLEEP',
-  //       questContent: '수면시간 9시간 채우기',
-  //       questTier: 'NORMAL',
-  //       questReward: '경험치 200, 공적치 100',
-  //       questStatus: false,
-  //     },
-  //     {
-  //       id: 12,
-  //       questName: '삼시세끼 탄단지 섭취',
-  //       questCategory: 'DIET',
-  //       questContent: '하루 세끼 모두 탄단지 섭취하기',
-  //       questTier: 'HARD',
-  //       questReward: '경험치 100, 공적치 100',
-  //       questStatus: false,
-  //     },
-  //   ],
-  // };
-  // const { isSuccess, isError } = useGetQuests();
-  const { isSuccess, data, isError } = useGetQuests();
-  console.log(data);
+  const { isSuccess, data } = useGetQuests();
 
   return (
     <ScrollView contentContainerStyle={styles.scrollContainer}>
@@ -190,7 +73,6 @@ const styles = StyleSheet.create({
   },
   completeQuest: {
     backgroundColor: colors.QUEST_COMPLETE,
-    // opacity: 0.4,
     borderRadius: 5,
     paddingHorizontal: 20,
     gap: 14,
@@ -219,7 +101,6 @@ const styles = StyleSheet.create({
   questHeader: {
     flexDirection: 'row',
     justifyContent: 'space-between',
-    // margin: 10,
   },
   questBody: {
     gap: 10,

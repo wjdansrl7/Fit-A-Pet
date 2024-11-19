@@ -13,7 +13,7 @@ const GuildQuestModal = ({ isVisible, onClose, onSetQuest, quests }) => {
   const getFilteredQuests = () => {
     const processedQuests = quests.map((quest) => ({
       ...quest,
-      questStatus: quest.questStatus ?? false, // questStatus가 없으면 false로 설정
+      questStatus: quest.questStatus ?? false,
     }));
 
     if (selectedCategory === '전체') {

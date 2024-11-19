@@ -11,9 +11,6 @@ function getTodayTimeRange() {
   let offset = 1000 * 60 * 60 * 9; // 9시간 밀리세컨트 값
   let today = new Date(Date.now() + offset);
 
-  // 임의로 11월 12일을 오늘로 설정
-  // const today = new Date(2024, 10, 18);
-
   const yesterDay = new Date(today.setDate(today.getDate() - 1));
 
   // 오늘의 시작 시각 (00:00:00.000)
@@ -60,8 +57,6 @@ const fetchStepData = async (startTime, endTime) => {
       },
     });
     const [stepRecords] = stepResponse.records;
-    console.log(stepResponse, '걷기');
-    console.log(startTime, endTime);
     // const stepRecords = {
     //   count: 1000,
     //   endTime: '2024-11-13T14:59:59.999Z',
@@ -77,10 +72,10 @@ const fetchStepData = async (startTime, endTime) => {
     //   startTime: '2024-11-12T15:00:00Z',
     // };
 
-    return stepRecords ? stepRecords.count : 0; // 기록이 없을 경우 0 반환
+    return stepRecords ? stepRecords.count : 0;
   } catch (error) {
     console.error('Steps 데이터 가져오기 오류:', error);
-    return 0; // 오류 시 0 반환
+    return 0;
   }
 };
 
@@ -94,8 +89,7 @@ const fetchSleepData = async (sleepStartTime, endTime) => {
       },
     });
     const [sleepRecords] = sleepResponse.records;
-    console.log(sleepResponse, '수면기록');
-    console.log(sleepStartTime, endTime);
+
     // const sleepRecords = {
     //   endTime: '2024-11-13T19:30:00Z',
     //   metadata: {
@@ -136,7 +130,6 @@ export const fetchHealthData = async () => {
     // 1. 클라이언트 초기화
     const isInitialized = await initialize();
     if (!isInitialized) {
-      console.log('Health Connect 초기화에 실패했습니다.');
       return;
     }
 
@@ -147,14 +140,12 @@ export const fetchHealthData = async () => {
     ]);
 
     if (!grantedPermissions) {
-      console.log('권한이 거부되었습니다.');
       return;
     }
 
     // 3. 데이터 읽기
     const steps = await fetchStepData(startTime, endTime);
     const sleepHours = await fetchSleepData(sleepStartTime, endTime);
-    console.log('읽은', steps, sleepHours);
     return { steps, sleepHours };
   } catch (error) {
     console.error('Health Connect 데이터 가져오기 오류:', error);

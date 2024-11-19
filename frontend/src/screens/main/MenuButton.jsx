@@ -5,10 +5,7 @@ import CustomText from '@components/CustomText/CustomText';
 function MenuButton({ title, icon, isBlack }) {
   return (
     <View style={styles.menuButton}>
-      <Image
-        source={icon} // 지정된 이미지 경로
-        style={styles.iconImage}
-      />
+      <Image source={icon} style={styles.iconImage} />
       <CustomText
         style={[styles.menuText, isBlack ? { color: 'black' } : null]}
       >

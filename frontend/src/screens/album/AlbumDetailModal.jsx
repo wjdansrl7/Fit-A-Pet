@@ -1,13 +1,5 @@
 import React from 'react';
-import {
-  View,
-  Text,
-  Image,
-  Button,
-  StyleSheet,
-  Pressable,
-  TouchableOpacity,
-} from 'react-native';
+import { View, Image, StyleSheet, TouchableOpacity } from 'react-native';
 import Modal from 'react-native-modal';
 import CustomText from '@components/CustomText/CustomText';
 import DetailEvolutionStage from './DetailEvolutionStage';

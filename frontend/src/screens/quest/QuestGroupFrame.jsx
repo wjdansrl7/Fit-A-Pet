@@ -74,14 +74,13 @@ function QuestGroupFrame({ quest }) {
           </View>
         </View>
       </View>
-      {/* <View style={{ position: 'absolute' }}> */}
       {quest.questStatus && layout.width > 0 && layout.height > 0 && (
         <View
           style={[
             styles.questCompleteTextContainer,
             {
-              top: layout.height / 2 - completeTextHeight / 2, // 부모 컴포넌트 1/2 높이에서 글자 높이의 절반을 빼서 중앙 정렬
-              left: layout.width / 2 - completeTextWidth / 2, // 부모 컴포넌트 1/2 너비에서 글자 너비의 절반을 빼서 중앙 정렬
+              top: layout.height / 2 - completeTextHeight / 2,
+              left: layout.width / 2 - completeTextWidth / 2,
             },
           ]}
         >
@@ -100,7 +99,6 @@ function QuestGroupFrame({ quest }) {
 const styles = StyleSheet.create({
   questContainerfalse: {
     backgroundColor: colors.BACKGROUND_COLOR,
-    // backgroundColor: colors.BACKGROUND_COLOR,
     borderRadius: 5,
     paddingHorizontal: 20,
     gap: 14,
@@ -117,7 +115,6 @@ const styles = StyleSheet.create({
   questHeader: {
     flexDirection: 'row',
     justifyContent: 'space-between',
-    // margin: 10,
   },
   questBody: {
     gap: 10,
@@ -154,13 +151,11 @@ const styles = StyleSheet.create({
   },
   imageContainer: {
     width: Dimensions.get('screen').width / 8,
-    // backgroundColor: colors.TAG_RED,
     alignItems: 'center',
     justifyContent: 'center',
   },
   image: {
     width: '100%',
-    // height: '100%',
   },
   questReward: {
     fontSize: 12,

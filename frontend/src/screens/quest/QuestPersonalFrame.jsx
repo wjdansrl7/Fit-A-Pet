@@ -1,5 +1,5 @@
 import React from 'react';
-import { StyleSheet, View, Image, Dimensions, ScrollView } from 'react-native';
+import { StyleSheet, View, Dimensions } from 'react-native';
 import { colors } from '@src/constants';
 import CustomText from '@components/CustomText/CustomText';
 
@@ -9,14 +9,12 @@ function QuestPersonalFrame({ quests, seg }) {
       {/* 퀘스트 카드 Header */}
       <View style={styles.questHeader}>
         {seg == 'WALK' ? (
-          // {quest.questCategory == 'WALK' ? (
           <CustomText
             style={[styles.questCategory, { backgroundColor: colors.TAG_RED }]}
           >
             걸음
           </CustomText>
         ) : seg == 'SLEEP' ? (
-          // ) : quest.questCategory == 'SLEEP' ? (
           <CustomText
             style={[styles.questCategory, { backgroundColor: colors.TAG_BLUE }]}
           >
@@ -57,11 +55,8 @@ function QuestPersonalFrame({ quests, seg }) {
                   styles.questName,
                   {
                     fontSize: 15,
-                    width: Dimensions.get('screen').width / 5, // 텍스트가 들어갈 최대 너비
+                    width: Dimensions.get('screen').width / 5,
                     textAlign: 'center',
-                    // overflow: 'hidden',
-                    // textOverflow: 'ellipsis', // 잘린 텍스트에 '...' 추가
-                    // whiteSpace: 'nowrap',
                   },
                 ]}
               >
@@ -125,7 +120,6 @@ const styles = StyleSheet.create({
     gap: 8,
   },
   rewardCircleCompleted: {
-    // backgroundColor: colors.WHITE,
     fontSize: 12,
     width: Dimensions.get('screen').width / 5,
     height: Dimensions.get('screen').width / 5,

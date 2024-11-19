@@ -1,5 +1,5 @@
 import React from 'react';
-import { Pressable, StyleSheet, View } from 'react-native';
+import { Pressable } from 'react-native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 
 import CustomText from '@components/CustomText/CustomText';
@@ -9,8 +9,6 @@ import GuildScreen from '@screens/guild/GuildScreen';
 import MainScreen from '@screens/main/MainScreen';
 import MapScreen from '@screens/map/MapScreen';
 import QuestScreen from '@screens/quest/QuestScreen';
-import KakaoLoginScreen from '@screens/auth/KakaoLoginScreen';
-import AuthHomeScreen from '@screens/auth/AuthHomeScreen';
 import MyInfoScreen from '@screens/myInfo/MyInfoScreen';
 import Logout from '@screens/auth/Logout';
 
@@ -20,10 +18,8 @@ const MainStackNavigator = () => {
   return (
     <Stack.Navigator
       initialRouteName="Home"
-      // 헤더 부분 커스텀
       screenOptions={({ navigation }) => ({
         headerStyle: {},
-        // 타이틀 텍스트 스타일
         headerTitleStyle: {
           fontFamily: 'DungGeunMo',
           fontSize: 20,
@@ -43,8 +39,6 @@ const MainStackNavigator = () => {
         ),
       })}
     >
-      {/* {
-        isLoggedIn ? ( */}
       <Stack.Screen
         name="Main"
         component={MainScreen}
@@ -64,16 +58,6 @@ const MainStackNavigator = () => {
         name="Guild"
         component={GuildScreen}
         options={{ title: '길드' }}
-      />
-      {/* <Stack.Screen
-        name={authNavigations.AUTH_HOME}
-        component={AuthHomeScreen}
-        options={{ title: '로고와 로그인' }}
-      /> */}
-      <Stack.Screen
-        name={authNavigations.KAKAO_LOGIN}
-        component={KakaoLoginScreen}
-        options={{ title: '카카오 로그인' }}
       />
       <Stack.Screen
         name="Quest"
@@ -97,7 +81,5 @@ const MainStackNavigator = () => {
     </Stack.Navigator>
   );
 };
-
-const styles = StyleSheet.create({});
 
 export default MainStackNavigator;

@@ -4,7 +4,6 @@ import MainStackNavigator from '../stack/MainStackNavigator';
 import AuthStackNavigator from '../stack/AuthStackNavigator';
 import { colors } from '@constants/colors';
 import useAuth from '@hooks/queries/useAuth';
-import { getEncryptStorage } from '@src/utils';
 import useAuthDataStore from '@src/stores/authDataStore';
 
 function RootNavigator() {
@@ -13,7 +12,6 @@ function RootNavigator() {
   const { refreshTokenMutation } = useAuth();
 
   const [isLogin, setIsLogin] = useState(loginStatus);
-  // console.log('RootNavigator에서 isLogin: ', isLogin);
   const [loading, setLoading] = useState(true); // 로딩 상태 관리
 
   // isLogin 상태가 결정되었을 때 로딩 종료
@@ -24,10 +22,8 @@ function RootNavigator() {
       setLoading(false);
       setIsLogin(loginStatus);
     }
-    // setIsLogin(loginStatus);
   }, [loginStatus]);
 
-  // 로딩 중일 때 보여줄 UI
   if (loading) {
     return (
       <View style={styles.loadingContainer}>
@@ -36,7 +32,6 @@ function RootNavigator() {
     );
   }
 
-  // 로그인 상태에 따른 네비게이터 렌더링
   return <>{isLogin ? <MainStackNavigator /> : <AuthStackNavigator />}</>;
 }
 
@@ -45,7 +40,7 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: 'center',
     alignItems: 'center',
-    backgroundColor: '#fff', // 배경색을 지정하여 깔끔하게 보여줄 수 있음
+    backgroundColor: '#fff',
   },
 });
 

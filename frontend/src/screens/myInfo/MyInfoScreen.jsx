@@ -1,6 +1,5 @@
-import React, { useEffect, useState } from 'react';
+import React, { useState } from 'react';
 import {
-  Pressable,
   TouchableOpacity,
   StyleSheet,
   View,
@@ -10,38 +9,8 @@ import {
 import CustomText from '@components/CustomText/CustomText';
 import CustomModal from '@components/CustomModal/CustomModal';
 import CustomButton from '@components/CustomButton/CustomButton';
-import { authNavigations } from '@src/constants';
 import useAuth from '@hooks/queries/useAuth';
 import useHealthDataStore from '@src/stores/healthDataStore';
-import { getDailyDiet } from '@api/healthDataApi';
-
-const sampleData = {
-  calorie: 186.2,
-  carbo: 12.8,
-  carboRatio: 3.9,
-  cholesterol: 36.51,
-  cholesterolRatio: 12.2,
-  fat: 9,
-  fatRatio: 18,
-  isCalorieEnough: false,
-  isCalorieEnoughRatio: null,
-  isCarboEnough: false,
-  isCarboEnoughRatio: null,
-  isFatEnough: true,
-  isFatEnoughRatio: null,
-  isProteinEnough: false,
-  isProteinEnoughRatio: null,
-  protein: 13.8,
-  proteinRatio: 23,
-  saturatedFat: 2.37,
-  saturatedFatRatio: 107.7,
-  sodium: 466.86,
-  sodiumRatio: 23.3,
-  sugar: 6.38,
-  sugarRatio: 6.4,
-  transFat: 0.07,
-  transFatRatio: 0.5,
-};
 
 function NutritionCheck({ isEnough }) {
   return (
@@ -67,32 +36,14 @@ function NutritionCheck({ isEnough }) {
 
 function MyInfoScreen({ navigation }) {
   const [isModalVisible, setModalVisible] = useState(false);
-  // const [dailyDiet, setDailyDiet] = useState(null);
 
   const { kakaoLogoutMutation } = useAuth();
-  // const { mutate: kakaoLoginMutate } = kakaoLoginMutation();
 
   const onClickKakaoLogout = () => {
-    // console.log('logout click');
     kakaoLogoutMutation.mutate();
   };
 
-  // useEffect(() => {
-  //   const fetchDietData = async () => {
-  //     try {
-  //       const data = await getDailyDiet(); // API 호출
-  //       setDailyDiet(data); // 데이터 저장
-  //       console.log('저장된데이터', dailyDiet);
-  //       console.log(data);
-  //     } catch (err) {
-  //       console.log(err);
-  //     }
-  //   };
-  //   fetchDietData();
-  // }, []); // 컴포넌트 마운트 시 한 번 실행
-
   const { dietData } = useHealthDataStore();
-  console.log(dietData);
 
   const nutritionFacts = [
     {
@@ -209,16 +160,12 @@ function MyInfoScreen({ navigation }) {
         >
           <View>
             <View style={styles.row1}>
-              {/* <CustomText style={styles.c1}>영양정보</CustomText> */}
               <CustomText style={styles.c2}>
                 총 섭취량: {dietData.calorie}kcal
               </CustomText>
-              {/* <CustomText style={styles.c3}>{diets.calorie}kcal</CustomText> */}
             </View>
 
-            <View
-            //  style={styles.tableOut}
-            >
+            <View>
               {nutritionFacts.map((nutritionFact, index) => (
                 <View key={index} style={styles.tableIn}>
                   <CustomText style={styles.tableC1}>
@@ -282,15 +229,6 @@ function MyInfoScreen({ navigation }) {
         </View>
       </View>
       <View style={styles.loginLogout}>
-        {/* 로그인 */}
-        {/* <View style={styles.logoutButtonContainer}>
-          <TouchableOpacity
-            onPress={() => navigation.navigate(authNavigations.AUTH_HOME)}
-            activeOpacity={0.5}
-          >
-            <CustomText style={styles.logoutButton}>로그인</CustomText>
-          </TouchableOpacity>
-        </View> */}
         {/* 로그아웃 */}
         <View style={styles.logoutButtonContainer}>
           <TouchableOpacity onPress={onClickKakaoLogout} activeOpacity={0.5}>
@@ -305,7 +243,6 @@ function MyInfoScreen({ navigation }) {
 const styles = StyleSheet.create({
   container: {
     gap: 50,
-    // flex: 1,
   },
   screenContainer: {
     marginTop: 30,
@@ -338,12 +275,10 @@ const styles = StyleSheet.create({
   },
   checkImageContainer: {
     height: 18,
-    // backgroundColor: colors.TAG_RED,
     alignItems: 'center',
     justifyContent: 'center',
   },
   checkImage: {
-    // width: '100%',
     height: '100%',
   },
   dietInfoText: {
@@ -352,7 +287,6 @@ const styles = StyleSheet.create({
   },
   defaultInfoText: {
     textAlign: 'center',
-    // fontSize: 18,
   },
   dietsInfo: {
     gap: 20,
@@ -373,7 +307,6 @@ const styles = StyleSheet.create({
   },
 
   logoutButton: {
-    // textDecorationLine: 'underline',
     borderBottomWidth: 1,
     textAlign: 'center',
     fontSize: 16,
@@ -402,22 +335,16 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     borderBottomWidth: 2,
     textAlign: 'center',
-    // justifyContent: 'center',
     alignItems: 'center',
   },
   tableOut: {
-    // flexDirection: 'row',
-    // borderBottomWidth: 2,
     textAlign: 'center',
-    // justifyContent: 'center',
     alignItems: 'center',
-    // paddingVertical: 4,
   },
   tableIn: {
     flexDirection: 'row',
     borderBottomWidth: 2,
     textAlign: 'center',
-    // justifyContent: 'center',
     alignItems: 'center',
   },
   tableC1: {

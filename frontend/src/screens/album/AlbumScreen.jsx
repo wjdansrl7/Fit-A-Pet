@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useState } from 'react';
 import {
   View,
   Text,
@@ -10,18 +10,13 @@ import AlbumFrame from './AlbumFrame';
 import AlbumDetailModal from './AlbumDetailModal';
 import { usePetAlbumList } from '@hooks/queries/usePet';
 import { colors } from '@constants/colors';
-import HealthData from './HealthData.jsx';
-import useHealthDataStore from '@src/stores/healthDataStore';
 
 const albumIndex = ['벨루가', '친칠라', '사자', '족제비', '범고래'];
 
 function AlbumScreen() {
   const [selectedPet, setSelectedPet] = useState(null);
   const [isModalVisible, setModalVisible] = useState(false);
-
   const { data: petAlbumList, isLoading, isError, error } = usePetAlbumList();
-
-  const { steps, sleepHours } = useHealthDataStore();
 
   const openModal = (pet) => {
     setSelectedPet(pet);
@@ -43,11 +38,9 @@ function AlbumScreen() {
   const petGrid = Array.from({ length: 8 }).map((_, index) => {
     const pet = petAlbumList.find(
       (p) => albumIndex.indexOf(p.petType) === index
-    ); // 해당 petType으로 위치 확인
-    return pet ? pet : { petId: index }; // 데이터가 없으면 기본값
+    );
+    return pet ? pet : { petId: index };
   });
-
-  console.log(petAlbumList);
 
   return (
     <ScrollView contentContainerStyle={styles.container}>

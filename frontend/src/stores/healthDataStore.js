@@ -7,7 +7,7 @@ const useHealthDataStore = create((set, get) => ({
   steps: 0,
   sleepHours: 0,
   dietData: {},
-  completedQuestIds: [], //이미 달성한 퀘스트ID 저장
+  completedQuestIds: [],
 
   // 헬스데이터를 업데이트하는 함수
   updateHealthData: (newSteps, newSleepHours) =>
@@ -35,7 +35,6 @@ const useHealthDataStore = create((set, get) => ({
 
     const completedDietQuestIds = dietQuests
       .filter((quest) => {
-        // 'isEnough' 상태를 확인할 키 목록
         const enoughKeys = ['isCarboEnough', 'isProteinEnough'];
 
         // fat 조건 추가 (fat > 0인 경우에만 isFatEnough를 포함)
@@ -58,8 +57,6 @@ const useHealthDataStore = create((set, get) => ({
       ...completedDietQuestIds,
     ].filter((id) => !completedQuestIds.includes(id));
 
-    console.log('새로 완료된 퀘스트 ID:', newCompletedIds);
-
     if (newCompletedIds.length > 0) {
       set((state) => ({
         completedQuestIds: [...state.completedQuestIds, ...newCompletedIds],
@@ -67,7 +64,6 @@ const useHealthDataStore = create((set, get) => ({
 
       await get().completeQuestsSequentially(newCompletedIds);
     } else {
-      console.log('새로 완료된 퀘스트 없음');
     }
   },
 
@@ -84,16 +80,9 @@ const useHealthDataStore = create((set, get) => ({
       const response = await axiosInstance.post(endpoint, {
         completeQuestId: questId,
       });
-      console.log(`퀘스트 ID ${questId} 완료 전송 성공:`, response.data);
       const { setEggModalData } = useEggModalDataStore.getState();
       const { petStatus, petType, shouldShowModal } = response.data;
-      console.log(shouldShowModal, '받음?');
-      console.log(response.data, '이거');
       if (shouldShowModal) {
-        console.log('알받기,성공');
-        console.log('shouldShowModal:', shouldShowModal);
-        console.log('newPetType:', petType);
-        console.log('newPetStatus:', petStatus);
         setEggModalData({
           shouldShowModal,
           newPetType: petType,
@@ -114,8 +103,7 @@ const useHealthDataStore = create((set, get) => ({
     try {
       for (const id of questIds) {
         const quest = totalQuest.find((quest) => quest.id === id);
-        await get().sendQuestCompletion(id, quest.type); // 순차적으로 요청을 보냄
-        console.log(`순차요청 ${quest.type} 퀘스트 ID ${id} 완료 전송 성공`);
+        await get().sendQuestCompletion(id, quest.type);
       }
     } catch (error) {
       console.error('순차요청 퀘스트 완료 전송 실패:', error.message);

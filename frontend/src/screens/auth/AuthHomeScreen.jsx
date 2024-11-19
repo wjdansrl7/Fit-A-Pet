@@ -1,20 +1,11 @@
 import React from 'react';
 import { Dimensions, Image, Pressable, StyleSheet, View } from 'react-native';
-
 import useAuth from '@hooks/queries/useAuth';
-// import { kakaoLoginMutation, useGetRefreshToken } from '@hooks/queries/useAuth';
-// import { authNavigations } from '@src/constants';
-// import Config from 'react-native-config';
-// import queryClient from '@api/queryClient';
-// import { setHeader } from '@src/utils/header';
 
-function AuthHomeScreen({ navigation }) {
+function AuthHomeScreen({}) {
   const { kakaoLoginMutation } = useAuth();
-  // const { refreshTokenMutation, kakaoLoginMutation } = useAuth();
-  // const { mutate: kakaoLoginMutate } = kakaoLoginMutation();
 
   const onClickKakoLogin = () => {
-    // console.log('kakao click');
     kakaoLoginMutation.mutate();
   };
 
@@ -24,15 +15,11 @@ function AuthHomeScreen({ navigation }) {
         <Image
           resizeMode="contain"
           style={styles.image}
-          // source={logo}
           source={require('@assets/logo/logo.png')}
         />
       </View>
       <View style={styles.kakaoLoginContainer}>
-        <Pressable
-          onPress={onClickKakoLogin}
-          // onPress={() => navigation.navigate(authNavigations.KAKAO_LOGIN)}
-        >
+        <Pressable onPress={onClickKakoLogin}>
           <Image
             resizeMode="contain"
             style={styles.image}

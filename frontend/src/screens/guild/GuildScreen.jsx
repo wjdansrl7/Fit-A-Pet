@@ -7,7 +7,6 @@ import CustomModal from '@components/CustomModal/CustomModal';
 import CustomText from '@components/CustomText/CustomText';
 import CustomButton from '@components/CustomButton/CustomButton';
 import { petIdImages } from '@constants/petImage';
-
 import {
   useGuildInfo,
   useMemberInfo,
@@ -27,10 +26,6 @@ function GuildScreen({ navigation, route }) {
   const { data: questInfo } = useQuestInfo(guildId);
   const { data: myInfo } = useMyInfo();
   const { mutate: byeGuild } = useByeGuild(guildId);
-  console.log('길드정보', guildInfo);
-  console.log('멤버', memberInfo);
-  console.log('퀘스트', questInfo);
-  console.log('내정보', myInfo);
 
   const guildName = guildInfo?.guildName;
   const { mutate: chooseQuest } = useChooseQuest();
@@ -67,9 +62,7 @@ function GuildScreen({ navigation, route }) {
         navigation.navigate('Map');
       },
       onError: (error) => {
-        console.log(error.code, error.message);
         if (error.response?.status === 406) {
-          console.log('에러걸림');
           setByeError('leader');
         }
       },
@@ -138,7 +131,6 @@ function GuildScreen({ navigation, route }) {
         isVisible={activeModal === 'quest'}
         onClose={closeModal}
         onSetQuest={(newQuest) => {
-          console.log(newQuest);
           refetchQuest(newQuest);
           closeModal();
         }}

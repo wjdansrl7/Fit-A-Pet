@@ -1,4 +1,4 @@
-import React, { useRef, useState, useEffect } from 'react';
+import React, { useState, useEffect } from 'react';
 import {
   StyleSheet,
   View,
@@ -6,13 +6,20 @@ import {
   ImageBackground,
   Image,
 } from 'react-native';
-import CustomText from '@components/CustomText/CustomText';
 
+// 컴포넌트 관련 임포트
+import CustomText from '@components/CustomText/CustomText';
+import MapModal from '@screens/map/MapModal';
+
+// 애셋 관련 임포트
 import map from '@assets/backgrounds/map/map.png';
 import ActiveHouse from '@assets/backgrounds/map/ActiveHouse.png';
 import InActiveHouse from '@assets/backgrounds/map/InActiveHouse.png';
-import MapModal from '@screens/map/MapModal';
+
+// 상수 관련 임포트
 import { colors } from '@src/constants';
+
+// API 및 데이터 관련 임포트
 import {
   useMapInfo,
   useCreateGuild,
@@ -22,9 +29,9 @@ import {
 function MapScreen({ navigation }) {
   const [isModalVisible, setModalVisible] = useState(false);
   const [modalViewState, setModalViewState] = useState('init');
-  const [modalErrorState, setModalErrorState] = useState(null); // 에러 상태: 'duplicate', 'invalidCode', 'full'
+  const [modalErrorState, setModalErrorState] = useState(null);
   const [selectedHouse, setSelectedHouse] = useState(null);
-  const { data, isSuccess, refetch } = useMapInfo(); // refetch 추가
+  const { data, isSuccess, refetch } = useMapInfo();
   const { mutateAsync: createGuildAsync } = useCreateGuild();
   const { mutateAsync: joinGuildAsync } = useJoinGuild();
 
@@ -62,12 +69,10 @@ function MapScreen({ navigation }) {
       setHouses(updatedHouses);
     }
   }, [data, isSuccess]);
-  console.log(houses);
   const handleCreateGuild = async (guildCreateInfo) => {
     try {
       const result = await createGuildAsync(guildCreateInfo);
       setModalErrorState(result);
-      console.log(result);
       if (result === 'success') {
         await refetch();
         setModalVisible(false);
@@ -83,7 +88,6 @@ function MapScreen({ navigation }) {
     try {
       const result = await joinGuildAsync(guildJoinInfo);
       setModalErrorState(result);
-      console.log(result);
       if (result === 'success') {
         await refetch();
         setModalVisible(false);
@@ -130,7 +134,6 @@ function MapScreen({ navigation }) {
           </TouchableOpacity>
         ))}
 
-        {/* 단일 모달 컴포넌트 */}
         <MapModal
           isVisible={isModalVisible}
           viewState={modalViewState}

@@ -43,7 +43,6 @@ export const useUpdateNickname = () => {
       queryClient.invalidateQueries(['mainPetInfo']);
     },
     onError: (error) => {
-      Alert.alert('Error', '닉네임 변경에 실패했습니다.');
       console.error(error);
     },
   });
@@ -62,7 +61,6 @@ export const useUpdateMain = () => {
       queryClient.invalidateQueries(['mainPetInfo']);
     },
     onError: (error) => {
-      Alert.alert('Error', '메인 펫 변경에 실패했습니다.');
       console.error(error);
     },
   });

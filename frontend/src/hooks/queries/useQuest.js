@@ -1,6 +1,4 @@
 import { useQuery } from '@tanstack/react-query';
-// import { useQuery, useMutation } from '@tanstack/react-query';
-
 import { getQuests } from '@api/questApi';
 
 export const useGetQuests = () => {

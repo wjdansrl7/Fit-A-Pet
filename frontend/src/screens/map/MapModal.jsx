@@ -64,7 +64,7 @@ const MapModal = ({
       }
       onClose={() => {
         onClose();
-        setErrorState(null); // 모달 닫을 때 에러 상태 초기화
+        setErrorState(null);
       }}
     >
       {viewState === 'init' && (
