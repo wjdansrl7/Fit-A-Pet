@@ -17,12 +17,12 @@ const petImages = {
   족제비: {
     알: require('@assets/pets/weasel_egg.png'),
     준성체: require('@assets/pets/weasel_2.png'),
-    성체: require('@assets/pets/weasel_egg.png'),
+    성체: require('@assets/pets/weasel_3.png'),
   },
   범고래: {
     알: require('@assets/pets/whale_egg.png'),
-    준성체: require('@assets/pets/whale_egg.png'),
-    성체: require('@assets/pets/whale_egg.png'),
+    준성체: require('@assets/pets/whale_2.png'),
+    성체: require('@assets/pets/whale_3.png'),
   },
 };
 
@@ -45,12 +45,12 @@ const petSpriteImages = {
   족제비: {
     알: require('@assets/pets/sprite/weasel_egg_sprite.png'),
     준성체: require('@assets/pets/sprite/weasel_2_sprite.png'),
-    성체: require('@assets/pets/sprite/lion_3_sprite.png'),
+    성체: require('@assets/pets/sprite/weasel_3_sprite.png'),
   },
   범고래: {
     알: require('@assets/pets/sprite/whale_egg_sprite.png'),
-    준성체: require('@assets/pets/sprite/lion_2_sprite.png'),
-    성체: require('@assets/pets/sprite/lion_3_sprite.png'),
+    준성체: require('@assets/pets/sprite/whale_2_sprite.png'),
+    성체: require('@assets/pets/sprite/whale_3_sprite.png'),
   },
 };
 
