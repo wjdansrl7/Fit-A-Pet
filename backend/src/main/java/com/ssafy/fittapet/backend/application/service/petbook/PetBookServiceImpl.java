@@ -25,7 +25,6 @@ import static com.ssafy.fittapet.backend.common.constant.entity_field.PetStatus.
 public class PetBookServiceImpl implements PetBookService{
 
     private final PetBookRepository petBookRepository;
-//    private final AuthService authService;
     private final PetService petService;
     private final UserRepository userRepository;
     private final Random random = new Random();
