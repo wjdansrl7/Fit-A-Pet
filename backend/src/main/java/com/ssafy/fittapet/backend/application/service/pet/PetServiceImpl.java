@@ -14,7 +14,9 @@ import java.util.Optional;
 @Transactional
 @RequiredArgsConstructor
 public class PetServiceImpl implements PetService {
+
     private final PetRepository petRepository;
+
     @Override
     public List<Pet> findPetByIdNotInAndPetStatus(List<Long> id, PetStatus petStatus) {
         return petRepository.findByIdNotInAndPetStatus(id, petStatus);

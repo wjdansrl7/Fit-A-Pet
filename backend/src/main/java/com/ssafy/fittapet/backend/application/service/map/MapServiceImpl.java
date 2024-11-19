@@ -17,19 +17,20 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.Comparator;
 import java.util.List;
+import java.util.Objects;
 
 import static com.ssafy.fittapet.backend.common.constant.error_code.GuildErrorCode.*;
 
 @Service
 @RequiredArgsConstructor
 public class MapServiceImpl implements MapService {
+
     private final MapRepository mapRepository;
     private final GuildRepository guildRepository;
     private final GuildQuestRepository guildQuestRepository;
     private final UserQuestStatusRepository userQuestStatusRepository;
-
-    private final EnteringCodeUtil enteringCodeUtil;
 
     private final MapValidator mapValidator;
     private final GuildValidator guildValidator;
@@ -44,23 +45,19 @@ public class MapServiceImpl implements MapService {
     @Override
     @Transactional
     public void createGuild(GuildRequest guildRequest, Long userId) throws CustomException {
-        // 1. todo : 로그인한 유저 id
-//        Long userId = 1L;
-//        User user = User.builder().id(userId).build();
-//        User user = userRepository.findById(1L).orElse(null);
         User user = userRepository.findById(userId).orElse(null);
-//        Long userId = user.getId();
-        // 2. position 유효 검사
-        if(!mapValidator.isAblePosition(userId, guildRequest.getGuildPosition())) throw new CustomException(NOT_AVAILABLE_POSITION);
-        // 3. 그룹 이름 유효 검사?
-        if(!guildValidator.isNameUnique(guildRequest.getGuildName())) throw new CustomException(DUPLICATED_NAME);
-        // 4. 그룹 생성
+
+        if (!mapValidator.isAblePosition(userId, guildRequest.getGuildPosition()))
+            throw new CustomException(NOT_AVAILABLE_POSITION);
+        if (!guildValidator.isNameUnique(guildRequest.getGuildName()))
+            throw new CustomException(DUPLICATED_NAME);
+
         Guild guild = Guild.builder().
                 guildLeader(user).
                 guildName(guildRequest.getGuildName()).
                 build();
         guild = guildRepository.save(guild);
-        // 5. 맵 db에 정보 저장
+
         Map map = Map.builder().
                 user(user).
                 guild(guild).
@@ -73,57 +70,79 @@ public class MapServiceImpl implements MapService {
     @Transactional
     public Boolean joinGuild(GuildJoinRequest guildJoinRequest, Long userId) throws Exception {
 
-            // todo : 요청자 정보 받아오기
-            User user = userRepository.findById(userId).orElse(null);
+        User user = userRepository.findById(userId).orElse(null);
 
-            String enteringCode = guildJoinRequest.getEnteringCode();
-            Long guildPosition = guildJoinRequest.getGuildPosition();
+        String enteringCode = guildJoinRequest.getEnteringCode();
+        Long guildPosition = guildJoinRequest.getGuildPosition();
 
-            // 초대 코드 기간이 유효하면 guildId, 유효하지 않으면 -1 반환
-            Long guildId = EnteringCodeUtil.isCodeValid(enteringCode);
-            if(guildId == -1) return false;
-            // 길드 없으면 가입 불가
-            Guild guild = guildValidator.isExist(guildId).orElseThrow(() -> new CustomException(NO_GUILD));
-            // 이미 가입되어 있으면 가입 불가
-            if(mapValidator.isAlreadyJoined(user.getId(), guildId)) throw new CustomException(ALREADY_JOIN);
-            // 그룹 인원 수가 6명보다 많으면 가입 불가
-            if(!mapValidator.isUnder6(guildId)) throw new CustomException(FULL_GUILD);
-            // 위치가 유효하지 않으면 가입 불가
-            if(!mapValidator.isAblePosition(user.getId(), guildPosition)) throw new CustomException(NOT_AVAILABLE_POSITION);
+        Long guildId = EnteringCodeUtil.isCodeValid(enteringCode);
+        if (guildId == -1) return false;
+        Guild guild = guildValidator.isExist(guildId).orElseThrow(() -> new CustomException(NO_GUILD));
+        assert user != null;
+        if (mapValidator.isAlreadyJoined(user.getId(), guildId)) throw new CustomException(ALREADY_JOIN);
+        if (!mapValidator.isUnder6(guildId)) throw new CustomException(FULL_GUILD);
+        if (!mapValidator.isAblePosition(user.getId(), guildPosition))
+            throw new CustomException(NOT_AVAILABLE_POSITION);
 
-            // 조건 다 만족하면 가입
-            mapRepository.save(Map.builder().
+        mapRepository.save(Map.builder().
+                user(user).
+                guild(guild).
+                guildPosition(guildPosition).
+                build());
+
+        GuildQuest guildQuest = guildQuestRepository.findByGuildId(guildId);
+        if (guildQuest != null) {
+            userQuestStatusRepository.save(UserQuestStatus.builder().
+                    questStatus(false).
+                    guildQuest(guildQuest).
                     user(user).
-                    guild(guild).
-                    guildPosition(guildPosition).
                     build());
+        }
 
-            GuildQuest guildQuest = guildQuestRepository.findByGuildId(guildId);
-            if(guildQuest != null){
-                userQuestStatusRepository.save(UserQuestStatus.builder().
-                        questStatus(false).
-                        guildQuest(guildQuest).
-                        user(user).
-                        build());
-            }
-
-            return true;
+        return true;
     }
 
     @Override
     @Transactional
     public void leaveGuild(Long guildId, Long userId) throws CustomException {
-        // map에서 삭제
-        // todo : 요청자 정보 가져오기
         User user = userRepository.findById(userId).orElse(null);
-        if(guildValidator.isExist(guildId).isEmpty()) throw new CustomException(NO_GUILD);
-        if(!mapValidator.isAlreadyJoined(user.getId(), guildId)) throw new CustomException(NOT_GUILD_MEMBER);
-        if(guildValidator.isGuildLeader(guildId, userId)) throw new CustomException(LEADER_CANNOT_EXIT);
+        if (guildValidator.isExist(guildId).isEmpty()) throw new CustomException(NO_GUILD);
+        assert user != null;
+        if (!mapValidator.isAlreadyJoined(user.getId(), guildId)) throw new CustomException(NOT_GUILD_MEMBER);
 
-        mapRepository.deleteByGuildIdAndUserId(guildId, user.getId());
+        Guild guild = guildRepository.findById(guildId).orElse(null);
+        assert guild != null;
+        if (Objects.equals(guild.getGuildLeader().getId(), userId)) {
+            List<Map> members = mapRepository.findByGuild(guild);
+            if (members.size() > 1) {
+                members.sort(Comparator.comparingLong(Map::getId));
+                guild.updateLeader(members.get(1).getUser());
+                processGuildMembers(userId, guildId);
+            } else {
+                processGuildMembers(userId, guildId);
+                deleteGuildAndQuest(guildId);
+            }
+        } else {
+            processGuildMembers(userId, guildId);
+        }
+    }
 
-        // userQuestStatus에서 삭제
+    @Transactional
+    public void processGuildMembers(Long userId, Long guildId) {
+        mapRepository.deleteByGuildIdAndUserId(guildId, userId);
         GuildQuest guildQuest = guildQuestRepository.findByGuildId(guildId);
-        if(guildQuest != null) userQuestStatusRepository.deleteByUserIdAndGuildQuestId(user.getId(), guildQuest.getId());
+        if (guildQuest != null) {
+            userQuestStatusRepository.deleteByUserIdAndGuildQuestId(userId, guildQuest.getId());
+        }
+    }
+
+    @Transactional
+    public void deleteGuildAndQuest(Long guildId) {
+        GuildQuest guildQuest = guildQuestRepository.findByGuildId(guildId);
+        if (guildQuest != null) {
+            userQuestStatusRepository.deleteByGuildQuestId(guildQuest.getId());
+            guildQuestRepository.delete(guildQuest);
+        }
+        guildRepository.deleteById(guildId);
     }
 }

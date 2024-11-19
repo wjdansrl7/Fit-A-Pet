@@ -11,6 +11,7 @@ import java.util.List;
 import java.util.Map;
 
 public interface QuestService {
+
     List<Quest> searchGuildQuest(String category) throws CustomException;
 
     Map<String, List<QuestResponse>> getMyQuestList(Long userId);
@@ -20,6 +21,4 @@ public interface QuestService {
     Map<String, Object> completeGuildQuest(QuestCompleteRequestDTO dto, Long userId) throws CustomException;
 
     List<QuestQueryResponseDTO> queryQuest(QuestQueryRequestDTO dto);
-
-
 }

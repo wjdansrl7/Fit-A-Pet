@@ -4,6 +4,7 @@ import lombok.Getter;
 
 @Getter
 public class GuildJoinRequest {
+
     String enteringCode;
     Long guildPosition;
 }

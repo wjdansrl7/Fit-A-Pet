@@ -24,22 +24,22 @@ import static com.ssafy.fittapet.backend.common.constant.error_code.QuestErrorCo
 @Service
 @RequiredArgsConstructor
 public class GuildServiceImpl implements GuildService {
+
     private final GuildRepository guildRepository;
     private final GuildQuestRepository guildQuestRepository;
-
-    private final GuildValidator guildValidator;
-    private final QuestValidator questValidator;
     private final UserQuestStatusRepository userQuestStatusRepository;
     private final MapRepository mapRepository;
+
+    private final QuestValidator questValidator;
+    private final GuildValidator guildValidator;
 
 
     @Override
     public String getEnteringCode(Long guildId, Long userId) {
-        // 생성날짜 + 그룹 id로 인코딩된 코드 받아오기
         try {
             Optional<Guild> guild = guildRepository.findById(guildId);
-            if(guild.isEmpty() || guild == null) throw new CustomException(NO_GUILD);
-            if(!guildValidator.isGuildLeader(guildId, userId)) throw new CustomException(NOT_GUILD_LEADER);
+            if (guild.isEmpty()) throw new CustomException(NO_GUILD);
+            if (!guildValidator.isGuildLeader(guildId, userId)) throw new CustomException(NOT_GUILD_LEADER);
             return EnteringCodeUtil.encrypt(guildId);
         } catch (Exception e) {
             throw new RuntimeException(e);
@@ -48,42 +48,33 @@ public class GuildServiceImpl implements GuildService {
 
     @Override
     public GuildInfoResponse getGuildInfo(Long guildId) throws CustomException {
-        // todo : 길드원 validation
-        if(guildValidator.isExist(guildId).isEmpty()) throw new CustomException(NO_GUILD);
+        if (guildValidator.isExist(guildId).isEmpty()) throw new CustomException(NO_GUILD);
         return guildRepository.findInfoById(guildId);
     }
 
     @Override
     public void updateGuildQuest(Long guildId, Long questId) throws CustomException {
-        // validation
-        // todo : 길드장 validation
-        // 길드 존재하는지
-        Guild guild = guildValidator.isExist(guildId).orElseThrow(()-> new CustomException(NO_GUILD));
-        // 퀘스트 존재하는지
+        Guild guild = guildValidator.isExist(guildId).orElseThrow(() -> new CustomException(NO_GUILD));
         Quest quest = questValidator.isExist(questId).orElseThrow(() -> new CustomException(NO_QUEST));
 
-        // GuildQuest 테이블 확인
         GuildQuest guildQuest = guildQuestRepository.findByGuildId(guildId);
-        if(guildQuest == null){
+        if (guildQuest == null) {
             guildQuest = guildQuestRepository.save(GuildQuest.builder().
                     guild(guild).
                     quest(quest).
                     build());
-            List<Map> list =  mapRepository.findByGuild(guild);
-            for(Map map : list){
+            List<Map> list = mapRepository.findByGuild(guild);
+            for (Map map : list) {
                 userQuestStatusRepository.save(UserQuestStatus.builder().
                         questStatus(false).
                         guildQuest(guildQuest).
                         user(map.getUser()).
                         build());
             }
-        }
-        else{
-            if(guildQuest.getQuest().getId().equals(questId)) throw new CustomException(ALREADY_SET_QUEST);
+        } else {
+            if (guildQuest.getQuest().getId().equals(questId)) throw new CustomException(ALREADY_SET_QUEST);
             guildQuest.setQuest(quest);
             guildQuest = guildQuestRepository.save(guildQuest);
-
-            // todo : 유저 퀘스트 상태 테이블 데이터 관련 처리
             List<UserQuestStatus> list = userQuestStatusRepository.findByGuildQuest(guildQuest);
             for (UserQuestStatus userQuestStatus : list) {
                 userQuestStatus.updateStatus(false);
@@ -95,17 +86,13 @@ public class GuildServiceImpl implements GuildService {
 
     @Override
     public List<GuildMemberInfoResponse> getMemberInfo(Long guildId) throws CustomException {
-        // todo : 길드원 validation
         Guild guild = guildValidator.isExist(guildId).orElseThrow(() -> new CustomException(NO_GUILD));
-
         return guildRepository.findAllMemberByGuild(guild.getId());
     }
 
     @Override
     public GuildQuestInfoResponse getQuestInfo(Long guildId) throws CustomException {
-        // todo : 길드원 validation
-        Guild guild = guildValidator.isExist(guildId).orElseThrow(() -> new CustomException(NO_GUILD));
-
+        guildValidator.isExist(guildId).orElseThrow(() -> new CustomException(NO_GUILD));
         return guildQuestRepository.findQuestInfoByGuildId(guildId);
     }
 }

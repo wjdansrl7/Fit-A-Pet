@@ -26,6 +26,7 @@ public class Health extends BaseEntity {
         this.stepCnt = stepCnt;
         this.sleepTime = sleepTime;
     }
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "health_id")

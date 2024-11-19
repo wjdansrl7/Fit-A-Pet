@@ -16,6 +16,7 @@ import java.util.List;
 @Repository
 @RequiredArgsConstructor
 public class GuildCustomRepositoryImpl implements GuildCustomRepository {
+
     private final JPAQueryFactory queryFactory;
 
     @Override
@@ -52,8 +53,6 @@ public class GuildCustomRepositoryImpl implements GuildCustomRepository {
     @Override
     public List<GuildMemberInfoResponse> findAllMemberByGuild(Long guildId) {
         QMap map = QMap.map;
-        QGuild guild = QGuild.guild;
-        QUser user = QUser.user;
         QPetBook petBook = QPetBook.petBook;
         QUserQuestStatus userQuestStatus = QUserQuestStatus.userQuestStatus;
 
@@ -68,7 +67,8 @@ public class GuildCustomRepositoryImpl implements GuildCustomRepository {
                 .leftJoin(petBook).on(petBook.user.eq(map.user))
                 .leftJoin(userQuestStatus).on(userQuestStatus.user.eq(map.user))
                 .where(map.guild.id.eq(guildId)
-                        .and(petBook.id.eq(map.user.petMainId)))
+                        .and(petBook.id.eq(map.user.petMainId))
+                )
                 .fetch();
     }
 }

@@ -32,5 +32,4 @@ public class Quest {
 
     @Enumerated(EnumType.STRING)
     private QuestCategory questCategory;
-
 }

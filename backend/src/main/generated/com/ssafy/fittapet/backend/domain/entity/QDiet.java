@@ -28,6 +28,8 @@ public class QDiet extends EntityPathBase<Diet> {
 
     public final NumberPath<Double> carbo = createNumber("carbo", Double.class);
 
+    public final NumberPath<Double> cholesterol = createNumber("cholesterol", Double.class);
+
     //inherited
     public final DateTimePath<java.time.LocalDateTime> createdAt = _super.createdAt;
 
@@ -42,6 +44,14 @@ public class QDiet extends EntityPathBase<Diet> {
     public final DateTimePath<java.time.LocalDateTime> modifiedAt = _super.modifiedAt;
 
     public final NumberPath<Double> protein = createNumber("protein", Double.class);
+
+    public final NumberPath<Double> saturatedFat = createNumber("saturatedFat", Double.class);
+
+    public final NumberPath<Double> sodium = createNumber("sodium", Double.class);
+
+    public final NumberPath<Double> sugar = createNumber("sugar", Double.class);
+
+    public final NumberPath<Double> transFat = createNumber("transFat", Double.class);
 
     public final QUser user;
 

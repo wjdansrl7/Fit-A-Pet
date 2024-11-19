@@ -18,7 +18,8 @@ import lombok.NoArgsConstructor;
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @AllArgsConstructor
-public class PetBook extends BaseEntity{
+public class PetBook extends BaseEntity {
+
     @Builder
     public PetBook(User user, Pet pet, Integer petExp, String petNickname) {
         this.user = user;
@@ -28,7 +29,7 @@ public class PetBook extends BaseEntity{
     }
 
     @Id
-    @Column(name="pet_book_id")
+    @Column(name = "pet_book_id")
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
@@ -51,30 +52,32 @@ public class PetBook extends BaseEntity{
     public void updatePet(Pet pet) {
         this.pet = pet;
     }
+
     public void updatePetNickname(String petNickname) {
         this.petNickname = petNickname;
     }
+
     public void updateIssueEgg(boolean issueEgg) {
         this.issueEgg = issueEgg;
     }
+
     public void levelUp(Integer expGained) {
         this.petExp += expGained;
         if (this.petExp >= getRequiredExpForNextLevel()) {
             this.petLevel = this.petExp / 500 + 1;
         }
     }
+
     public Integer getNextLevelPercentage() {
         int requiredExp = getRequiredExpForNextLevel();
         return (int) ((this.petExp / (double) requiredExp) * 100);
     }
+
     private int getRequiredExpForNextLevel() {
         return this.petLevel * 500;
     }
+
     public boolean needsEvolution() {
         return this.petLevel.equals(pet.getEvolutionLevel());
     }
-
-
-
-
 }

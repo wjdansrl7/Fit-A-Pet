@@ -3,10 +3,6 @@ package com.ssafy.fittapet.backend.domain.repository.pet;
 import com.ssafy.fittapet.backend.common.constant.entity_field.PetStatus;
 import com.ssafy.fittapet.backend.common.constant.entity_field.PetType;
 import com.ssafy.fittapet.backend.domain.entity.Pet;
-import com.ssafy.fittapet.backend.domain.entity.PetBook;
-import com.ssafy.fittapet.backend.domain.entity.User;
-import com.ssafy.fittapet.backend.domain.repository.auth.UserRepository;
-import com.ssafy.fittapet.backend.domain.repository.pet_book.PetBookRepository;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.context.annotation.Bean;
 import org.springframework.stereotype.Component;
@@ -15,8 +11,9 @@ import java.util.List;
 
 @Component
 public class PetDataInitializer {
+
     @Bean
-    CommandLineRunner initDatabase(PetBookRepository petBookRepository, PetRepository petRepository, UserRepository userRepository) {
+    CommandLineRunner initDatabase(PetRepository petRepository) {
         return args -> {
             if (petRepository.count() == 0) {
                 List<Pet> pets = List.of(
@@ -37,17 +34,6 @@ public class PetDataInitializer {
                         Pet.builder().petType(PetType.WHALE).petStatus(PetStatus.ADULT).evolutionLevel(30).build()
                 );
                 petRepository.saveAll(pets);
-
-                if (petBookRepository.count() == 0) {
-                    List<PetBook> petBooks = List.of(
-                            PetBook.builder().pet(petRepository.findById(1L).orElse(null)).petNickname("뭉기").petExp(1).user(userRepository.findById(1L).orElse(null)).build()
-                    );
-                    petBookRepository.saveAll(petBooks);
-
-                    User user = userRepository.findById(1L).orElse(null);
-                    user.updatePetMainId(1L);
-                    userRepository.save(user);
-                }
             }
         };
     }

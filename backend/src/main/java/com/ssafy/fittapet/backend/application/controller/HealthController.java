@@ -1,6 +1,5 @@
 package com.ssafy.fittapet.backend.application.controller;
 
-
 import com.ssafy.fittapet.backend.application.service.auth.AuthService;
 import com.ssafy.fittapet.backend.application.service.health.HealthService;
 import com.ssafy.fittapet.backend.domain.dto.auth.CustomOAuth2User;
@@ -9,7 +8,6 @@ import com.ssafy.fittapet.backend.domain.dto.health.HealthStepRequest;
 import com.ssafy.fittapet.backend.domain.entity.Health;
 import com.ssafy.fittapet.backend.domain.entity.User;
 import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
@@ -19,11 +17,11 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-@Slf4j
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/healths")
 public class HealthController {
+
     private final HealthService healthService;
     private final AuthService authService;
 
@@ -64,6 +62,4 @@ public class HealthController {
 
         return new ResponseEntity<>(healthCurrentTime.getSleepTime(), HttpStatus.OK);
     }
-
-
 }

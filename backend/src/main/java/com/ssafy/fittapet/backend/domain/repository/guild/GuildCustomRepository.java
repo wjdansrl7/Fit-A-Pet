@@ -7,6 +7,7 @@ import com.ssafy.fittapet.backend.domain.dto.map.MapResponse;
 import java.util.List;
 
 public interface GuildCustomRepository {
+
     List<MapResponse> findAllByUserId(Long userId);
 
     GuildInfoResponse findInfoById(Long id);

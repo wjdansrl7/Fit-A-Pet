@@ -6,6 +6,7 @@ import lombok.Data;
 @AllArgsConstructor
 @Data
 public class NutrientDto {
+
     private double serving;
     private Integer ratio;
 }

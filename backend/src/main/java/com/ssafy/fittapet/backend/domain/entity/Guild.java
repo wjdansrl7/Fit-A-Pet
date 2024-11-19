@@ -10,6 +10,7 @@ import lombok.NoArgsConstructor;
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class Guild extends BaseEntity {
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "guild_id")
@@ -26,5 +27,9 @@ public class Guild extends BaseEntity {
     public Guild(String guildName, User guildLeader) {
         this.guildName = guildName;
         this.guildLeader = guildLeader;
+    }
+
+    public void updateLeader(User user) {
+        this.guildLeader = user;
     }
 }

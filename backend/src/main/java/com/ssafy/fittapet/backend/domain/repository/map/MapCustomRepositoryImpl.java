@@ -14,6 +14,7 @@ import java.util.List;
 @Repository
 @RequiredArgsConstructor
 public class MapCustomRepositoryImpl implements MapCustomRepository {
+
     private final JPAQueryFactory queryFactory;
 
     @Override

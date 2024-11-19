@@ -1,7 +1,9 @@
 package com.ssafy.fittapet.backend.domain.entity;
 
 import jakarta.persistence.Embeddable;
+
 import java.io.Serializable;
+
 import lombok.Builder;
 import lombok.Getter;
 

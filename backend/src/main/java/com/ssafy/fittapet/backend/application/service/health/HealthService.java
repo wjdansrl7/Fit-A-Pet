@@ -4,8 +4,10 @@ import com.ssafy.fittapet.backend.domain.entity.Health;
 import com.ssafy.fittapet.backend.domain.entity.User;
 
 public interface HealthService {
-    Health saveSleepTimeCurrentTime(Integer sleepTime, User loginUser);
-    Health saveStepCntCurrentTime(Integer walkTime, User loginUser);
-    Health findHealthCurrentTime(User loginUser);
 
+    Health saveSleepTimeCurrentTime(Integer sleepTime, User loginUser);
+
+    Health saveStepCntCurrentTime(Integer walkTime, User loginUser);
+
+    Health findHealthCurrentTime(User loginUser);
 }

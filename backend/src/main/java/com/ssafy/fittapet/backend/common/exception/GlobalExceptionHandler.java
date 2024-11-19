@@ -1,7 +1,6 @@
 package com.ssafy.fittapet.backend.common.exception;
 
 import com.ssafy.fittapet.backend.common.constant.error_code.ErrorCode;
-import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.BindException;
@@ -13,11 +12,9 @@ import org.springframework.web.bind.annotation.RestControllerAdvice;
 import java.util.HashMap;
 import java.util.Map;
 
-@Slf4j
 @RestControllerAdvice
 public class GlobalExceptionHandler {
 
-    /* 입력 에러 */
     @ExceptionHandler(BindException.class)
     @ResponseStatus(HttpStatus.EXPECTATION_FAILED)
     public ResponseEntity<ErrorResponse> handleException(
@@ -33,15 +30,12 @@ public class GlobalExceptionHandler {
         }
         String errorMapString = errorMap.toString();
 
-        log.error("입력 에러 : {}", errorMapString);
-
         return ResponseEntity
                 .badRequest()
                 .body(new ErrorResponse(
                         HttpStatus.BAD_REQUEST, errorMapString));
     }
 
-    /* 사용자 정의 에러 (컨트롤러에서 사용할 메서드) */
     @ExceptionHandler(CustomException.class)
     public ResponseEntity<ErrorResponse> handleException(
             CustomException e) {
@@ -51,13 +45,11 @@ public class GlobalExceptionHandler {
         ErrorResponse errorResponse = new ErrorResponse(
                 httpStatus, errorCode.getMessage());
 
-        log.error("사용자 정의 에러 : {}", e.getMessage());
         return ResponseEntity
                 .status(httpStatus)
                 .body(errorResponse);
     }
 
-    /* 모든 예외 */
     @ExceptionHandler(Exception.class)
     public ResponseEntity<ErrorResponse> handleException(
             Exception e) {
@@ -65,7 +57,6 @@ public class GlobalExceptionHandler {
         ErrorResponse errorResponse = new ErrorResponse(
                 httpStatus, e.getMessage());
 
-        log.error("서버 에러 : {}", e.getMessage(), e);
         return ResponseEntity
                 .status(httpStatus)
                 .body(errorResponse);
