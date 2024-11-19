@@ -1,6 +1,5 @@
 import React, { useState } from 'react';
 import {
-  Pressable,
   TouchableOpacity,
   StyleSheet,
   View,
@@ -10,72 +9,120 @@ import {
 import CustomText from '@components/CustomText/CustomText';
 import CustomModal from '@components/CustomModal/CustomModal';
 import CustomButton from '@components/CustomButton/CustomButton';
-import { authNavigations } from '@src/constants';
+import useAuth from '@hooks/queries/useAuth';
+import useHealthDataStore from '@src/stores/healthDataStore';
+
+function NutritionCheck({ isEnough }) {
+  return (
+    <View style={styles.checkImageContainer}>
+      {isEnough === null ? (
+        <CustomText>-</CustomText>
+      ) : isEnough ? (
+        <Image
+          resizeMode="contain"
+          style={styles.checkImage}
+          source={require('@assets/myInfo/O.png')}
+        />
+      ) : (
+        <Image
+          resizeMode="contain"
+          style={styles.checkImage}
+          source={require('@assets/myInfo/X.png')}
+        />
+      )}
+    </View>
+  );
+}
 
 function MyInfoScreen({ navigation }) {
   const [isModalVisible, setModalVisible] = useState(false);
 
-  const userInfo = {
-    userName: '장성일',
-    userTier: 'EASY',
-    role: 'USER',
-    petId: 1,
-    petNickname: '뽀삐',
-    petExp: 1500,
-  };
-  const diets = {
-    calorie: 1700, // 열량
-    nutritionFacts: [
-      { nameEn: 'sodium', nameKr: '나트륨', serving: '220mg', ratio: 11 }, // 나트륨
-      { nameEn: 'carbo', nameKr: '탄수화물', serving: '30g', ratio: 9 }, // 탄수화물
-      { nameEn: 'totalSugars', nameKr: '당류', serving: '5.8g', ratio: 6 }, // 당류
-      { nameEn: 'fat', nameKr: '지방', serving: '15g', ratio: 28 }, // 지방
-      {
-        nameEn: 'saturatedFattyAcid',
-        nameKr: '트랜스지방',
-        serving: '0g',
-        ratio: 0,
-      }, //  트랜스지방
-      {
-        nameEn: 'transFattyAcid',
-        nameKr: '포화지방',
-        serving: '2g',
-        ratio: 13,
-      }, //  포화지방
-      {
-        nameEn: 'cholesterol',
-        nameKr: '콜레스테롤',
-        serving: '4.9mg',
-        ratio: 2,
-      }, //  콜레스테롤
-      { nameEn: 'protein', nameKr: '단백질', serving: '5.1g', ratio: 9 }, // 단백질
-    ],
+  const { kakaoLogoutMutation } = useAuth();
+
+  const onClickKakaoLogout = () => {
+    kakaoLogoutMutation.mutate();
   };
 
-  const sleeps = {
-    sleepTime: 8,
-  };
-  const walks = {
-    stepCnt: 8000,
-  };
+  const { dietData } = useHealthDataStore();
+
+  const nutritionFacts = [
+    {
+      nameEn: 'sodium',
+      nameKr: '나트륨',
+      serving: `${dietData.sodium}mg`,
+      ratio: dietData.sodiumRatio,
+    }, // 나트륨
+    {
+      nameEn: 'carbo',
+      nameKr: '탄수화물',
+      serving: `${dietData.carbo}g`,
+      ratio: dietData.carboRatio,
+    }, // 탄수화물
+    {
+      nameEn: 'sugar',
+      nameKr: '당류',
+      serving: `${dietData.sugar}g`,
+      ratio: dietData.sugarRatio,
+    }, // 당류
+    {
+      nameEn: 'fat',
+      nameKr: '지방',
+      serving: `${dietData.fat}g`,
+      ratio: dietData.fatRatio,
+    }, // 지방
+    {
+      nameEn: 'transFat',
+      nameKr: '트랜스지방',
+      serving: `${dietData.transFat}g`,
+      ratio: dietData.transFatRatio,
+    }, //  트랜스지방
+    {
+      nameEn: 'saturatedFat',
+      nameKr: '포화지방',
+      serving: `${dietData.saturatedFat}g`,
+      ratio: dietData.saturatedFatRatio,
+    }, //  포화지방
+    {
+      nameEn: 'cholesterol',
+      nameKr: '콜레스테롤',
+      serving: `${dietData.cholesterol}mg`,
+      ratio: dietData.cholesterolRatio,
+    }, //  콜레스테롤
+    {
+      nameEn: 'protein',
+      nameKr: '단백질',
+      serving: `${dietData.protein}g`,
+      ratio: dietData.proteinRatio,
+    }, // 단백질
+  ];
+
+  const { steps, sleepHours } = useHealthDataStore();
+
   return (
     <View style={styles.container}>
-      {/* 스크린 타이틀 */}
-      <CustomText style={styles.screenTitle}>
-        {userInfo.userName}님의 오늘 기록
-      </CustomText>
-
       {/* 일일기록 */}
       <View style={styles.screenContainer}>
         {/* 영양 */}
         <TouchableOpacity
-          onPress={() => setModalVisible(true)}
+          onPress={() => dietData && setModalVisible(true)}
           activeOpacity={0.8}
         >
           <View style={styles.categoryContainer}>
-            <CustomText style={styles.defaultInfoText}>
-              일일 섭취량: {diets.calorie}kcal
-            </CustomText>
+            <View
+              style={{
+                flexDirection: 'row',
+                justifyContent: 'center',
+                gap: 20,
+              }}
+            >
+              <CustomText style={styles.defaultInfoText}>
+                일일 섭취량: {dietData ? dietData.calorie.toFixed(2) : ' - '}
+                kcal
+              </CustomText>
+              <NutritionCheck
+                isEnough={dietData ? dietData.isCalorieEnough : null}
+              />
+            </View>
             <View style={styles.categoryContainerBody}>
               <View style={styles.imageContainer}>
                 <Image
@@ -91,27 +138,15 @@ function MyInfoScreen({ navigation }) {
                   <CustomText style={styles.dietInfoText}>지방</CustomText>
                 </View>
                 <View style={styles.dietsCheckImageContainer}>
-                  <View style={styles.checkImageContainer}>
-                    <Image
-                      resizeMode="contain"
-                      style={styles.checkImage}
-                      source={require('@assets/myInfo/O.png')}
-                    />
-                  </View>
-                  <View style={styles.checkImageContainer}>
-                    <Image
-                      resizeMode="contain"
-                      style={styles.checkImage}
-                      source={require('@assets/myInfo/X.png')}
-                    />
-                  </View>
-                  <View style={styles.checkImageContainer}>
-                    <Image
-                      resizeMode="contain"
-                      style={styles.checkImage}
-                      source={require('@assets/myInfo/O.png')}
-                    />
-                  </View>
+                  <NutritionCheck
+                    isEnough={dietData ? dietData.isCalorieEnough : null}
+                  />
+                  <NutritionCheck
+                    isEnough={dietData ? dietData.isProteinEnough : null}
+                  />
+                  <NutritionCheck
+                    isEnough={dietData ? dietData.isFatEnough : null}
+                  />
                 </View>
               </View>
             </View>
@@ -125,17 +160,13 @@ function MyInfoScreen({ navigation }) {
         >
           <View>
             <View style={styles.row1}>
-              {/* <CustomText style={styles.c1}>영양정보</CustomText> */}
               <CustomText style={styles.c2}>
-                총 섭취량: {diets.calorie}kcal
+                총 섭취량: {dietData.calorie}kcal
               </CustomText>
-              {/* <CustomText style={styles.c3}>{diets.calorie}kcal</CustomText> */}
             </View>
 
-            <View
-            //  style={styles.tableOut}
-            >
-              {diets.nutritionFacts.map((nutritionFact, index) => (
+            <View>
+              {nutritionFacts.map((nutritionFact, index) => (
                 <View key={index} style={styles.tableIn}>
                   <CustomText style={styles.tableC1}>
                     {nutritionFact.nameKr}
@@ -164,6 +195,7 @@ function MyInfoScreen({ navigation }) {
             onPress={() => setModalVisible(false)}
           />
         </CustomModal>
+
         {/* 수면 */}
         <View style={styles.categoryContainer}>
           <View style={styles.categoryContainerBody}>
@@ -175,10 +207,11 @@ function MyInfoScreen({ navigation }) {
               />
             </View>
             <CustomText style={styles.defaultInfoText}>
-              수면: {sleeps.sleepTime}시간
+              수면: {sleepHours.toFixed(1)}시간
             </CustomText>
           </View>
         </View>
+
         {/* 걸음수 */}
         <View style={styles.categoryContainer}>
           <View style={styles.categoryContainerBody}>
@@ -190,27 +223,15 @@ function MyInfoScreen({ navigation }) {
               />
             </View>
             <CustomText style={styles.defaultInfoText}>
-              걸음수: {walks.stepCnt}보
+              걸음: {steps}보
             </CustomText>
           </View>
         </View>
       </View>
       <View style={styles.loginLogout}>
-        {/* 로그인 */}
-        <View style={styles.logoutButtonContainer}>
-          <TouchableOpacity
-            onPress={() => navigation.navigate(authNavigations.AUTH_HOME)}
-            activeOpacity={0.5}
-          >
-            <CustomText style={styles.logoutButton}>로그인</CustomText>
-          </TouchableOpacity>
-        </View>
         {/* 로그아웃 */}
         <View style={styles.logoutButtonContainer}>
-          <TouchableOpacity
-            onPress={() => navigation.navigate(authNavigations.LOGOUT)}
-            activeOpacity={0.5}
-          >
+          <TouchableOpacity onPress={onClickKakaoLogout} activeOpacity={0.5}>
             <CustomText style={styles.logoutButton}>로그아웃</CustomText>
           </TouchableOpacity>
         </View>
@@ -223,32 +244,29 @@ const styles = StyleSheet.create({
   container: {
     gap: 50,
   },
-  screenTitle: {
-    textAlign: 'center',
-    fontSize: 24,
-    marginTop: 40,
-  },
   screenContainer: {
-    gap: 60,
+    marginTop: 30,
+    gap: 30,
   },
   categoryContainer: {
+    marginTop: 20,
     gap: 20,
   },
   categoryContainerBody: {
-    gap: 40,
+    gap: 30,
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'center',
   },
   imageContainer: {
     width: Dimensions.get('screen').width / 3,
-    // backgroundColor: colors.TAG_RED,
+    height: Dimensions.get('screen').width / 3,
     alignItems: 'center',
     justifyContent: 'center',
   },
   image: {
     width: '100%',
-    // height: '100%',
+    height: '100%',
   },
   dietsCheckImageContainer: {
     gap: 17,
@@ -257,12 +275,10 @@ const styles = StyleSheet.create({
   },
   checkImageContainer: {
     height: 18,
-    // backgroundColor: colors.TAG_RED,
     alignItems: 'center',
     justifyContent: 'center',
   },
   checkImage: {
-    // width: '100%',
     height: '100%',
   },
   dietInfoText: {
@@ -271,7 +287,6 @@ const styles = StyleSheet.create({
   },
   defaultInfoText: {
     textAlign: 'center',
-    // fontSize: 18,
   },
   dietsInfo: {
     gap: 20,
@@ -292,7 +307,6 @@ const styles = StyleSheet.create({
   },
 
   logoutButton: {
-    // textDecorationLine: 'underline',
     borderBottomWidth: 1,
     textAlign: 'center',
     fontSize: 16,
@@ -321,22 +335,16 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     borderBottomWidth: 2,
     textAlign: 'center',
-    // justifyContent: 'center',
     alignItems: 'center',
   },
   tableOut: {
-    // flexDirection: 'row',
-    // borderBottomWidth: 2,
     textAlign: 'center',
-    // justifyContent: 'center',
     alignItems: 'center',
-    // paddingVertical: 4,
   },
   tableIn: {
     flexDirection: 'row',
     borderBottomWidth: 2,
     textAlign: 'center',
-    // justifyContent: 'center',
     alignItems: 'center',
   },
   tableC1: {
@@ -345,6 +353,7 @@ const styles = StyleSheet.create({
     borderRightWidth: 2,
     paddingRight: 4,
     paddingVertical: 4,
+    fontSize: 16,
   },
   tableC2: {
     width: Dimensions.get('screen').width / 4,

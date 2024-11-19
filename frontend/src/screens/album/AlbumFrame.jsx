@@ -1,5 +1,5 @@
 import React from 'react';
-import { View, StyleSheet, Text, Image, Pressable } from 'react-native';
+import { View, StyleSheet, Image, Pressable, Dimensions } from 'react-native';
 import CustomText from '@components/CustomText/CustomText';
 import { petImages } from '@constants/petImage';
 
@@ -25,12 +25,13 @@ function AlbumFrame({ pet, onPress }) {
 
 const styles = StyleSheet.create({
   container: {
-    width: 150, // 사각형의 너비
-    height: 200, // 사각형의 높이
+    width: Dimensions.get('screen').width / 2.5,
+    height: 200,
     borderWidth: 4,
     borderColor: '#713C10',
-    backgroundColor: 'white', // 배경 색상
+    backgroundColor: 'white',
     borderRadius: 8,
+    marginBottom: 20,
   },
 
   doubleContainer: {
@@ -44,7 +45,6 @@ const styles = StyleSheet.create({
   },
 
   imageContainer: {
-    backgroundColor: 'tomato',
     width: 100,
     height: 100,
   },
@@ -57,7 +57,7 @@ const styles = StyleSheet.create({
   },
   placeholder: {
     fontSize: 120,
-    color: '#444',
+    color: '#555',
   },
 });
 

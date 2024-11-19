@@ -1,22 +1,14 @@
 import React from 'react';
-import {
-  View,
-  Text,
-  Image,
-  Button,
-  StyleSheet,
-  Pressable,
-  TouchableOpacity,
-} from 'react-native';
+import { View, Image, StyleSheet, TouchableOpacity } from 'react-native';
 import Modal from 'react-native-modal';
 import CustomText from '@components/CustomText/CustomText';
 import DetailEvolutionStage from './DetailEvolutionStage';
-
 import { petImages } from '@constants/petImage';
+import { useUpdateMain } from '@hooks/queries/usePet';
 
-// 일단 도감 전체에서 받아온 데이터 사용
-// 실제로는 도감 상세 API 호출
 const AlbumDetailModal = ({ isVisible, onClose, pet }) => {
+  const { mutate } = useUpdateMain();
+
   if (!pet) {
     return null;
   }
@@ -62,13 +54,16 @@ const AlbumDetailModal = ({ isVisible, onClose, pet }) => {
             activeOpacity={0.8}
             style={[
               styles.button,
-              pet.isMain ? { backgroundColor: 'gray' } : null,
+              pet.main ? { backgroundColor: 'gray' } : null,
             ]}
-            onPress={onClose}
-            disabled={pet.isMain}
+            onPress={() => {
+              mutate(pet.petBookId);
+              onClose();
+            }}
+            disabled={pet.main}
           >
             <CustomText style={styles.buttonText}>
-              {pet.isMain ? '메인 펫으로 설정 됨' : '메인 펫으로 설정'}
+              {pet.main ? '메인 펫으로 설정 됨' : '메인 펫으로 설정'}
             </CustomText>
           </TouchableOpacity>
         </View>

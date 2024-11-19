@@ -1,5 +1,5 @@
 import React from 'react';
-import { StyleSheet, View, Image, Dimensions, ScrollView } from 'react-native';
+import { StyleSheet, View, Dimensions } from 'react-native';
 import { colors } from '@src/constants';
 import CustomText from '@components/CustomText/CustomText';
 
@@ -9,14 +9,12 @@ function QuestPersonalFrame({ quests, seg }) {
       {/* 퀘스트 카드 Header */}
       <View style={styles.questHeader}>
         {seg == 'WALK' ? (
-          // {quest.questCategory == 'WALK' ? (
           <CustomText
             style={[styles.questCategory, { backgroundColor: colors.TAG_RED }]}
           >
             걸음
           </CustomText>
         ) : seg == 'SLEEP' ? (
-          // ) : quest.questCategory == 'SLEEP' ? (
           <CustomText
             style={[styles.questCategory, { backgroundColor: colors.TAG_BLUE }]}
           >
@@ -41,44 +39,31 @@ function QuestPersonalFrame({ quests, seg }) {
               {quest.questStatus ? (
                 <View style={styles.rewardCircleCompleted}>
                   <CustomText style={styles.questNameCompleted}>
-                    COMPLETED
+                    COMPLETE
                   </CustomText>
                 </View>
               ) : (
                 <View style={[styles[`rewardCircle${seg}`]]}>
                   <CustomText style={styles.questName}>
-                    {' '}
-                    {quest.questReward}
+                    +{quest.questReward}
                   </CustomText>
                 </View>
               )}
-              <CustomText style={styles.questName}>
+              <CustomText
+                numberOfLines={1}
+                style={[
+                  styles.questName,
+                  {
+                    fontSize: 15,
+                    width: Dimensions.get('screen').width / 5,
+                    textAlign: 'center',
+                  },
+                ]}
+              >
                 {quest.questContent}
               </CustomText>
             </View>
           ))}
-          {/* <View style={styles.rewardContainer2}>
-            <View style={[styles[`rewardCircle${quest.questCategory}`]]}>
-              <CustomText style={styles.questName}>
-                {' '}
-                {quest.questReward}
-              </CustomText>
-            </View>
-            <CustomText style={styles.questName}>
-              {quest.questLevel2}
-            </CustomText>
-          </View>
-          <View style={styles.rewardContainer2}>
-            <View style={[styles[`rewardCircle${quest.questCategory}`]]}>
-              <CustomText style={styles.questName}>
-                {' '}
-                {quest.questReward}
-              </CustomText>
-            </View>
-            <CustomText style={styles.questName}>
-              {quest.questLevel3}
-            </CustomText>
-          </View> */}
         </View>
       </View>
     </View>
@@ -113,7 +98,6 @@ const styles = StyleSheet.create({
   },
   questNameCompleted: {
     fontSize: 12,
-    color: '#868E96',
     color: colors.MAIN_ORANGE,
   },
   imageContainer: {
@@ -136,7 +120,6 @@ const styles = StyleSheet.create({
     gap: 8,
   },
   rewardCircleCompleted: {
-    // backgroundColor: colors.WHITE,
     fontSize: 12,
     width: Dimensions.get('screen').width / 5,
     height: Dimensions.get('screen').width / 5,

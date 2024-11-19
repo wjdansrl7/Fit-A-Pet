@@ -6,30 +6,38 @@ import {
   ImageBackground,
   Image,
 } from 'react-native';
-import CustomText from '@components/CustomText/CustomText';
 
-import map2x from '@assets/backgrounds/map/map2x.webp';
+// 컴포넌트 관련 임포트
+import CustomText from '@components/CustomText/CustomText';
+import MapModal from '@screens/map/MapModal';
+
+// 애셋 관련 임포트
+import map from '@assets/backgrounds/map/map.png';
 import ActiveHouse from '@assets/backgrounds/map/ActiveHouse.png';
 import InActiveHouse from '@assets/backgrounds/map/InActiveHouse.png';
-import MapModal from '@screens/map/MapModal';
+
+// 상수 관련 임포트
 import { colors } from '@src/constants';
+
+// API 및 데이터 관련 임포트
 import {
   useMapInfo,
   useCreateGuild,
   useJoinGuild,
 } from '@hooks/queries/useMap';
+
 function MapScreen({ navigation }) {
   const [isModalVisible, setModalVisible] = useState(false);
   const [modalViewState, setModalViewState] = useState('init');
-  const [modalErrorState, setModalErrorState] = useState(null); // 에러 상태: 'duplicate', 'invalidCode', 'full'
+  const [modalErrorState, setModalErrorState] = useState(null);
   const [selectedHouse, setSelectedHouse] = useState(null);
-  const { data, isSuccess, refetch } = useMapInfo(); // refetch 추가
+  const { data, isSuccess, refetch } = useMapInfo();
   const { mutateAsync: createGuildAsync } = useCreateGuild();
   const { mutateAsync: joinGuildAsync } = useJoinGuild();
 
   const housePosition = {
-    1: { top: 120, right: 20 },
-    2: { top: 380, left: 40 },
+    1: { top: 80, right: 20 },
+    2: { bottom: 200, left: 40 },
     3: { bottom: 150, right: 20 },
   };
 
@@ -61,12 +69,10 @@ function MapScreen({ navigation }) {
       setHouses(updatedHouses);
     }
   }, [data, isSuccess]);
-  console.log(houses);
   const handleCreateGuild = async (guildCreateInfo) => {
     try {
       const result = await createGuildAsync(guildCreateInfo);
       setModalErrorState(result);
-      console.log(result);
       if (result === 'success') {
         await refetch();
         setModalVisible(false);
@@ -82,7 +88,6 @@ function MapScreen({ navigation }) {
     try {
       const result = await joinGuildAsync(guildJoinInfo);
       setModalErrorState(result);
-      console.log(result);
       if (result === 'success') {
         await refetch();
         setModalVisible(false);
@@ -107,7 +112,7 @@ function MapScreen({ navigation }) {
   return (
     <View style={styles.container}>
       <ImageBackground
-        source={map2x}
+        source={map}
         style={styles.backgroundImage}
         resizeMode="cover"
       >
@@ -129,7 +134,6 @@ function MapScreen({ navigation }) {
           </TouchableOpacity>
         ))}
 
-        {/* 단일 모달 컴포넌트 */}
         <MapModal
           isVisible={isModalVisible}
           viewState={modalViewState}
@@ -166,7 +170,7 @@ const styles = StyleSheet.create({
   houseName: {
     marginTop: 5,
     color: colors.WHITE,
-    fontSize: 16,
+    fontSize: 20,
   },
 });
 

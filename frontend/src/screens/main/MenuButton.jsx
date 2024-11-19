@@ -1,22 +1,16 @@
 import React from 'react';
-import { View, Text, Pressable, StyleSheet, Image } from 'react-native';
+import { View, StyleSheet, Image } from 'react-native';
 import CustomText from '@components/CustomText/CustomText';
 
-function MenuButton({ title, icon }) {
+function MenuButton({ title, icon, isBlack }) {
   return (
     <View style={styles.menuButton}>
-      {icon ? (
-        <Image
-          source={icon} // 지정된 이미지 경로
-          style={styles.iconImage}
-        ></Image>
-      ) : (
-        <Image
-          source={require('@assets/heart_icon.png')} // 핑크 하트 이미지 경로
-          style={styles.iconImage}
-        />
-      )}
-      <CustomText style={styles.menuText}>{title}</CustomText>
+      <Image source={icon} style={styles.iconImage} />
+      <CustomText
+        style={[styles.menuText, isBlack ? { color: 'black' } : null]}
+      >
+        {title}
+      </CustomText>
     </View>
   );
 }
@@ -32,6 +26,7 @@ const styles = StyleSheet.create({
   },
   menuText: {
     fontSize: 20,
+    color: 'white',
   },
 });
 

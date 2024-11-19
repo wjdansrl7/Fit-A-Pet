@@ -1,4 +1,18 @@
 <resources>
-    <string name="app_name">frontend</string>
+    <string name="app_name">Fit-a-Pet</string>
+
     <string name="kakao_app_key">770305b6a84fbffe93ddfacb5d920a80</string> <!-- 추가할 코드 -->
+    <string name="foodlens_app_token">1937718df588467bb109f57d1641703a</string>
+    <string name="foodlens_company_token">90b7e646d9d44acb99395581d4d927a4</string>
+
+    <string name="food_position">Food Position</string>
+    <string name="carbohydrate">Carb</string>
+    <string name="protein">Protein</string>
+    <string name="fat">Fat</string>
+    <string name="name">Name</string>
+    <string name="totalsugars">Total Sugars</string>
+    <string name="sodium">Sodium</string>
+    <string name="energy">Calorie</string>
+    <string name="amount">Amount</string>
+
 </resources>

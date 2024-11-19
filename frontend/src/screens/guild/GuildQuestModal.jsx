@@ -8,14 +8,25 @@ import { colors } from '@src/constants';
 const GuildQuestModal = ({ isVisible, onClose, onSetQuest, quests }) => {
   const [selectedCategory, setSelectedCategory] = useState('전체');
   const [selectedQuest, setSelectedQuest] = useState(null);
+
+  // questStatus를 추가하며 필터링
   const getFilteredQuests = () => {
+    const processedQuests = quests.map((quest) => ({
+      ...quest,
+      questStatus: quest.questStatus ?? false,
+    }));
+
     if (selectedCategory === '전체') {
-      return quests;
+      return processedQuests;
     }
-    return quests.filter((quest) => quest.questCategory === selectedCategory);
+
+    return processedQuests.filter(
+      (quest) => quest.questCategory === selectedCategory
+    );
   };
 
   const filteredQuests = getFilteredQuests() || [];
+
   const handleQuestSelect = () => {
     if (selectedQuest) {
       onSetQuest(selectedQuest);
@@ -49,15 +60,16 @@ const GuildQuestModal = ({ isVisible, onClose, onSetQuest, quests }) => {
 
       <ScrollView
         showsVerticalScrollIndicator={false}
-        contentContainerStyle={styles.scrollView}
+        contentContainerStyle={styles.scrollContainerView}
+        style={styles.scrollView}
       >
         {filteredQuests.map((quest) => (
           <TouchableOpacity
             activeOpacity={0.8}
-            key={quest.questId}
+            key={quest.id}
             style={[
               styles.questFrameContainer,
-              selectedQuest === quest
+              selectedQuest?.id === quest.id
                 ? styles.selectedQuest
                 : styles.unselectedQuest,
             ]}
@@ -99,8 +111,11 @@ const styles = StyleSheet.create({
     backgroundColor: colors.BACKGROUND_COLOR,
   },
   scrollView: {
-    width: 270,
-    gap: 12,
+    flex: 1,
+    width: 250,
+  },
+  scrollContainerView: {
+    gap: 10,
   },
   questFrameContainer: {
     borderRadius: 5,

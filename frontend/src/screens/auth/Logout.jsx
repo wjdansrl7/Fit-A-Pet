@@ -10,6 +10,4 @@ function Logout() {
   );
 }
 
-const styles = StyleSheet.create({});
-
 export default Logout;
